@@ -239,6 +239,18 @@
     padding: 9px 0;
     clip-path: none;
   }
+  .tab-group-label {
+    flex: 0 0 auto;
+    align-self: center;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    padding: 0 4px 0 2px;
+    opacity: 0.7;
+    white-space: nowrap;
+  }
 
   /* Wheel / Mako spinner */
   .wheel-wrap {
@@ -1153,15 +1165,20 @@
     <div class="tabs-wrap">
       <div class="tabs-label">▸ Pick the situation</div>
       <div class="tabs" id="tabs">
+        <div class="tab-group-label">Before Game</div>
+        <div class="tab" data-cat="cage">Cage</div>
+        <div class="tab" data-cat="warmup">Warm-Up</div>
+        <div class="tab" data-cat="pregame">Pre-Game</div>
+        <div class="tab divider">·</div>
+        <div class="tab-group-label">Hitting</div>
         <div class="tab active" data-cat="anyab">Any AB</div>
         <div class="tab" data-cat="leadoff">Lead-Off</div>
         <div class="tab" data-cat="risp">RISP</div>
         <div class="tab" data-cat="twoouts">2 Outs</div>
-        <div class="tab" data-cat="twostrikes">2 Strikes</div>
         <div class="tab divider">·</div>
-        <div class="tab" data-cat="cage">Cage</div>
-        <div class="tab" data-cat="defense">Defense</div>
-        <div class="tab" data-cat="mental">Mental</div>
+        <div class="tab-group-label">Defense</div>
+        <div class="tab" data-cat="defense">My Defense</div>
+        <div class="tab" data-cat="teamdefense">Team D</div>
       </div>
     </div>
 
@@ -1341,13 +1358,16 @@ const CHALLENGES = {
   anyab: [
     { name: "See It Deep",        tier: "bronze",  pts: 1, goal: "See at least 3 pitches before swinging or putting it in play.", reward: "Quality AB" },
     { name: "First-Pitch Hunter", tier: "bronze",  pts: 1, goal: "Fastball in the zone first pitch → swing. No takes.", reward: "Aggressive Approach" },
+    { name: "Reset Routine",      tier: "bronze",  pts: 1, goal: "Use your between-pitch reset (breath, step out, sign) every pitch of this AB.", reward: "Calm Mind" },
     { name: "Barrel It Up",       tier: "silver",  pts: 2, goal: "Put one ball in play hard — line drive or hard grounder. No pop-ups.", reward: "Hard Contact" },
     { name: "Stay Back",          tier: "silver",  pts: 2, goal: "Hit a ball to center or the opposite field.", reward: "Oppo Discipline" },
     { name: "Patient Hunter",     tier: "silver",  pts: 2, goal: "Work the count to 2-1 or better before your swing decision.", reward: "Plate Discipline" },
     { name: "Single or Better",   tier: "silver",  pts: 2, goal: "Get a base hit — single, double, triple, or homer.", reward: "Base Knock" },
+    { name: "Body Language",      tier: "silver",  pts: 2, goal: "Coming off a K or error → your body language this AB is a 10/10. Head up.", reward: "Bounce Back" },
     { name: "Double or Better",   tier: "gold",    pts: 3, goal: "Drive one into the gap or down the line — extra-base hit only.", reward: "Gap Power" },
     { name: "Quality AB Streak",  tier: "diamond", pts: 5, goal: "3 quality at-bats in a row (hit, hard contact, walk, or 6+ pitches).", reward: "Locked In" },
-    { name: "Go Yard",            tier: "diamond", pts: 5, goal: "Hit a home run. Called shot bonus if you tell Dad before the AB.", reward: "Bomb Squad" }
+    { name: "Go Yard",            tier: "diamond", pts: 5, goal: "Hit a home run. Called shot bonus if you tell Dad before the AB.", reward: "Bomb Squad" },
+    { name: "Flush It",           tier: "diamond", pts: 5, goal: "Had a bad AB last time → respond with a quality AB right now.", reward: "Short Memory" }
   ],
   leadoff: [
     { name: "First-Pitch Hunter", tier: "bronze",  pts: 1, goal: "Fastball strike first pitch → attack it. Set the tone.", reward: "Tone Setter" },
@@ -1379,14 +1399,6 @@ const CHALLENGES = {
     { name: "Clutch Up",          tier: "diamond", pts: 5, goal: "2 outs, runners on → drive a run in.", reward: "Clutch Badge" },
     { name: "Go Yard",            tier: "diamond", pts: 5, goal: "Two-out bomb. Most damage you can do.", reward: "Bomb Squad" }
   ],
-  twostrikes: [
-    { name: "Spoil One",          tier: "bronze",  pts: 1, goal: "Foul off a borderline pitch. Stay alive.", reward: "Battler" },
-    { name: "Choke Up",           tier: "silver",  pts: 2, goal: "Choke up, shorten your load → make contact.", reward: "Adjust Mode" },
-    { name: "Backside",           tier: "silver",  pts: 2, goal: "Two-strike approach → contact to the opposite field.", reward: "Oppo Discipline" },
-    { name: "Battle to BIP",      tier: "gold",    pts: 3, goal: "Foul, walk, or put it in play. Do NOT strike out.", reward: "No K" },
-    { name: "Single or Better",   tier: "gold",    pts: 3, goal: "Get a hit from down in the count.", reward: "Two-Strike Knock" },
-    { name: "Comeback Hit",       tier: "diamond", pts: 5, goal: "Get a hit while down 0-2 in the count.", reward: "Refuse to Lose" }
-  ],
   cage: [
     { name: "5 in a Row",         tier: "bronze",  pts: 1, goal: "5 straight line drives off the tee. Miss one → restart.", reward: "Consistency" },
     { name: "Backside Drive",     tier: "silver",  pts: 2, goal: "5 of 10 front-toss balls hit to center or oppo gap.", reward: "Stay Through It" },
@@ -1395,6 +1407,22 @@ const CHALLENGES = {
     { name: "Zone Master",        tier: "gold",    pts: 3, goal: "10 pitches → swing only at strikes. Coach calls ball/strike.", reward: "Strike Zone Lock" },
     { name: "Situation Round",    tier: "diamond", pts: 5, goal: "10 pitches, 10 different situations called out — execute the right swing each time.", reward: "Game IQ" }
   ],
+  warmup: [
+    { name: "Loud Warm-Up",       tier: "bronze",  pts: 1, goal: "Team is talking and bringing energy through the whole warm-up.", reward: "Team Energy" },
+    { name: "Arm Care Done",      tier: "bronze",  pts: 1, goal: "Complete the full arm-care / band routine before you throw.", reward: "Durable Arm" },
+    { name: "Clean Catch Play",   tier: "silver",  pts: 2, goal: "10 throws in a row in catch play — no airmails, partner stays planted.", reward: "Accurate Arm" },
+    { name: "Chest-High",         tier: "silver",  pts: 2, goal: "Every throw hits your partner chest-high — an easy target.", reward: "On Target" },
+    { name: "Crisp Infield/Out",  tier: "gold",    pts: 3, goal: "Pre-game infield/outfield — every throw on the bag, on target.", reward: "Sharp Reps" },
+    { name: "Zero Sloppy Reps",   tier: "diamond", pts: 5, goal: "Whole warm-up, start to finish — no lazy or missed throws.", reward: "Pro Warm-Up" }
+  ],
+  pregame: [
+    { name: "Show Up Ready",      tier: "bronze",  pts: 1, goal: "On time, gear set, no scramble before first pitch.", reward: "Prepared" },
+    { name: "Run Your Routine",   tier: "bronze",  pts: 1, goal: "Run your exact pre-game routine — every step, same as always.", reward: "Consistency" },
+    { name: "Visualize It",       tier: "silver",  pts: 2, goal: "Picture good ABs and plays in your head before first pitch.", reward: "Mental Reps" },
+    { name: "Scout the Arm",      tier: "silver",  pts: 2, goal: "Watch the opposing pitcher warm up — note his stuff and tempo.", reward: "Game Plan" },
+    { name: "Set the Goal",       tier: "gold",    pts: 3, goal: "Set one clear goal for the game and commit to it out loud.", reward: "Locked Target" },
+    { name: "Lock In",            tier: "diamond", pts: 5, goal: "Phone away, dialed in — and lead a teammate into focus too.", reward: "Game Face" }
+  ],
   defense: [
     { name: "Clean Hops",         tier: "bronze",  pts: 1, goal: "Field 5 ground balls clean — no bobbles.", reward: "Soft Hands" },
     { name: "Backhand Picks",     tier: "silver",  pts: 2, goal: "3 clean backhand picks in a row.", reward: "Range Right" },
@@ -1402,11 +1430,16 @@ const CHALLENGES = {
     { name: "Lockdown Inning",    tier: "gold",    pts: 3, goal: "Make every play hit your way in an inning — no errors, no missed balls.", reward: "Gold Glove Inning" },
     { name: "Web Gem",            tier: "diamond", pts: 5, goal: "Make a play that gets the dugout up.", reward: "SportsCenter Top 10" }
   ],
-  mental: [
-    { name: "Reset Routine",      tier: "bronze",  pts: 1, goal: "Use your between-pitch reset every pitch of one AB.", reward: "Calm Mind" },
-    { name: "Body Language",      tier: "silver",  pts: 2, goal: "Strike out / make an error → next pitch body language is 10/10.", reward: "Bounce Back" },
-    { name: "Dugout Energy",      tier: "gold",    pts: 3, goal: "Be the loudest teammate for a full inning.", reward: "Captain Mode" },
-    { name: "Flush It",           tier: "diamond", pts: 5, goal: "Bad AB → next opportunity respond with a quality AB.", reward: "Short Memory" }
+  teamdefense: [
+    { name: "Back It Up",         tier: "bronze",  pts: 1, goal: "Be in position to back up a base or a throw on the play.", reward: "Team First" },
+    { name: "Talk Every Pitch",   tier: "bronze",  pts: 1, goal: "Communicate every pitch — outs, where you're going with the ball.", reward: "Field General" },
+    { name: "Hit the Cutoff",     tier: "silver",  pts: 2, goal: "Clean relay — hit the cutoff man, or be the cutoff in the right spot.", reward: "Smart Throw" },
+    { name: "Call the Ball",      tier: "silver",  pts: 2, goal: "Loud, early call on a fly ball in your area — no collisions, no drops.", reward: "No Doubt" },
+    { name: "Pre-Pitch Plan",     tier: "silver",  pts: 2, goal: "Know what you do with the ball BEFORE every pitch of the inning.", reward: "Ready Every Pitch" },
+    { name: "Cover Your Bag",     tier: "gold",    pts: 3, goal: "Execute your base coverage on a steal, bunt, or pickoff.", reward: "Lockdown" },
+    { name: "Rundown Discipline", tier: "gold",    pts: 3, goal: "Execute your role in a rundown — no free bases given away.", reward: "No Mistakes" },
+    { name: "Dugout Energy",      tier: "gold",    pts: 3, goal: "Be the loudest teammate for a full inning — every pitch, every play.", reward: "Captain Mode" },
+    { name: "Clean Team Inning",  tier: "diamond", pts: 5, goal: "Full inning: zero errors, every backup and cutoff executed.", reward: "Gold Glove Inning" }
   ]
 };
 
@@ -1414,7 +1447,7 @@ const DEDUCTIONS = {
   minor: {
     pts: -1,
     label: 'MINOR · −1 PT',
-    reasons: ['K looking', 'Weak rollover', 'No hustle', 'Missed sign', 'Lazy turn at first']
+    reasons: ['K looking', 'Weak rollover', 'No hustle', 'Missed sign', 'Lazy turn at first', 'Errant / missed throw in warm-up']
   },
   moderate: {
     pts: -2,
