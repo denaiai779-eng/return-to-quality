@@ -401,6 +401,17 @@
     font-size: 12px;
     letter-spacing: 2px;
   }
+  .team-badge {
+    display: inline-block;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    color: #0a1628;
+    background: linear-gradient(135deg, var(--cyan), var(--cyan-deep));
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+  }
   .complete-row { display: flex; gap: 8px; margin-top: 14px; }
   .complete-row button {
     flex: 1;
@@ -1178,8 +1189,10 @@
         <div class="tab-group-label">Defense</div>
         <div class="tab" data-cat="defense">My Defense</div>
         <div class="tab divider">·</div>
-        <div class="tab-group-label">Team</div>
+        <div class="tab-group-label">Team Warm-Up</div>
         <div class="tab" data-cat="warmup">Warm-Up</div>
+        <div class="tab divider">·</div>
+        <div class="tab-group-label">Team Defense</div>
         <div class="tab" data-cat="teamdefense">Team D</div>
       </div>
     </div>
@@ -1836,7 +1849,18 @@ function renderCoachFeed() {
     return;
   }
   const now = Date.now();
-  el.innerHTML = teamFeed.map(r => {
+  // Collapse the 12 identical rows from a team challenge into one "WHOLE TEAM" line
+  const collapsed = [];
+  for (const r of teamFeed) {
+    const isTeamEvt = (r.name || '').startsWith('Team — ') || (r.name || '').startsWith('Team Miss — ');
+    const last = collapsed[collapsed.length - 1];
+    if (isTeamEvt && last && last._team && last.name === r.name && last.pts === r.pts) {
+      last._count++;
+    } else {
+      collapsed.push({ ...r, _team: isTeamEvt, _count: 1 });
+    }
+  }
+  el.innerHTML = collapsed.map(r => {
     const d = new Date(r.ts);
     const mins = Math.floor((now - d.getTime()) / 60000);
     let timeStr;
@@ -1846,10 +1870,11 @@ function renderCoachFeed() {
     else timeStr = (d.getMonth()+1) + '/' + d.getDate();
     const isDed = r.type === 'deduction' || r.pts < 0;
     const sign = r.pts >= 0 ? '+' : '';
-    const firstName = (r.player_name || '').split(' ')[0];
+    const who = r._team ? '👥 WHOLE TEAM' : (r.player_name || '').split(' ')[0];
+    const label = r._team ? r.name.replace(/^Team (Miss )?— /, '') : r.name;
     return `<div class="coach-feed-row ${isDed ? 'deduction' : ''}">
-      <div class="cf-player">${firstName}</div>
-      <div class="cf-name">${r.name}</div>
+      <div class="cf-player">${who}</div>
+      <div class="cf-name">${label}</div>
       <div class="cf-pts">${sign}${r.pts}</div>
       <div class="cf-time">${timeStr}</div>
     </div>`;
@@ -1907,19 +1932,24 @@ function missPenalty(tier) {
   return (tier === 'gold' || tier === 'diamond') ? 2 : 1;
 }
 
+const TEAM_CATEGORIES = ['warmup', 'teamdefense'];
+function isTeamCat() { return TEAM_CATEGORIES.includes(currentCat); }
+
 function showResult(c) {
   currentResult = c;
   const r = document.getElementById('result');
   const miss = missPenalty(c.tier);
+  const team = isTeamCat();
   r.className = `result ${c.tier}`;
   r.innerHTML = `
     <div class="tier-pill ${c.tier}">${c.tier.toUpperCase()} · ${c.pts} PT${c.pts > 1 ? 'S' : ''}</div>
+    ${team ? '<div class="team-badge">👥 TEAM CHALLENGE · POINTS GO TO ALL 12</div>' : ''}
     <h2>${c.name.toUpperCase()}</h2>
     <div class="goal">${c.goal}</div>
     <div class="reward">🏆 ${c.reward}</div>
     <div class="complete-row">
-      <button class="btn-done" id="btnDone">✓ DID IT  +${c.pts}</button>
-      <button class="btn-miss" id="btnMiss">✗ DIDN'T  −${miss}</button>
+      <button class="btn-done" id="btnDone">✓ DID IT  +${c.pts}${team ? ' ALL' : ''}</button>
+      <button class="btn-miss" id="btnMiss">✗ DIDN'T  −${miss}${team ? ' ALL' : ''}</button>
     </div>
     <button class="btn-na" id="btnNA">N/A — didn't come up</button>
   `;
@@ -1928,35 +1958,65 @@ function showResult(c) {
   document.getElementById('btnNA').addEventListener('click', resetResult);
 }
 
+// Apply points (+ or −) to EVERY player on the roster — used for team challenges
+async function applyTeamPoints(c, pts, type) {
+  const thisMonday = getMonday(new Date());
+  const label = (type === 'deduction' ? 'Team Miss — ' : 'Team — ') + c.name;
+  const playerUpdates = [];
+  const logEntries = [];
+  for (const p of allPlayersData) {
+    const curWeekly = p.week_start === thisMonday ? (p.weekly || 0) : 0;
+    let newSeason = (p.season || 0) + pts;
+    if (newSeason < 0) newSeason = 0;
+    playerUpdates.push({
+      id: p.id, team_id: TEAM_ID, name: p.name, num: p.num,
+      weekly: curWeekly + pts, season: newSeason, week_start: thisMonday
+    });
+    logEntries.push({
+      team_id: TEAM_ID, player_id: p.id, player_name: p.name,
+      name: label, tier: c.tier, pts: pts, type: type
+    });
+  }
+  const { error: upErr } = await supabase.from('players').upsert(playerUpdates);
+  if (upErr) throw upErr;
+  const { error: logErr } = await supabase.from('log').insert(logEntries);
+  if (logErr) throw logErr;
+}
+
 async function missChallenge() {
   if (!currentResult || !currentPlayerId) return;
   const c = currentResult;
   const penalty = missPenalty(c.tier);
+  const team = isTeamCat();
   const player = ROSTER.find(p => p.id === currentPlayerId);
   try {
-    const thisMonday = getMonday(new Date());
-    const me = allPlayersData.find(p => p.id === currentPlayerId);
-    let newSeason = (me ? me.season : 0) - penalty;
-    if (newSeason < 0) newSeason = 0;
-    const newWeekly = (me && me.week_start === thisMonday ? (me.weekly || 0) : 0) - penalty;
-    const { error: updateErr } = await supabase
-      .from('players')
-      .update({ weekly: newWeekly, season: newSeason, week_start: thisMonday })
-      .eq('id', currentPlayerId);
-    if (updateErr) throw updateErr;
-    const { error: logErr } = await supabase
-      .from('log')
-      .insert({
-        team_id: TEAM_ID,
-        player_id: currentPlayerId,
-        player_name: player.name,
-        name: 'Missed — ' + c.name,
-        tier: c.tier,
-        pts: -penalty,
-        type: 'deduction'
-      });
-    if (logErr) throw logErr;
-    floatPop(`-${penalty}`, true);
+    if (team) {
+      await applyTeamPoints(c, -penalty, 'deduction');
+    } else {
+      const thisMonday = getMonday(new Date());
+      const me = allPlayersData.find(p => p.id === currentPlayerId);
+      let newSeason = (me ? me.season : 0) - penalty;
+      if (newSeason < 0) newSeason = 0;
+      const newWeekly = (me && me.week_start === thisMonday ? (me.weekly || 0) : 0) - penalty;
+      const { error: updateErr } = await supabase
+        .from('players')
+        .update({ weekly: newWeekly, season: newSeason, week_start: thisMonday })
+        .eq('id', currentPlayerId);
+      if (updateErr) throw updateErr;
+      const { error: logErr } = await supabase
+        .from('log')
+        .insert({
+          team_id: TEAM_ID,
+          player_id: currentPlayerId,
+          player_name: player.name,
+          name: 'Missed — ' + c.name,
+          tier: c.tier,
+          pts: -penalty,
+          type: 'deduction'
+        });
+      if (logErr) throw logErr;
+    }
+    floatPop(`-${penalty}${team ? ' ALL' : ''}`, true);
     if (navigator.vibrate) navigator.vibrate([60, 30, 60]);
     const missBtn = document.getElementById('btnMiss');
     if (missBtn) { missBtn.disabled = true; missBtn.classList.add('missed'); missBtn.textContent = '✗ MISSED'; }
@@ -1973,30 +2033,35 @@ async function missChallenge() {
 async function completeChallenge() {
   if (!currentResult || !currentPlayerId) return;
   const c = currentResult;
+  const team = isTeamCat();
   const player = ROSTER.find(p => p.id === currentPlayerId);
   try {
-    const thisMonday = getMonday(new Date());
-    const me = allPlayersData.find(p => p.id === currentPlayerId);
-    const newWeekly = (me && me.week_start === thisMonday ? (me.weekly || 0) : 0) + c.pts;
-    const newSeason = (me ? me.season : 0) + c.pts;
-    const { error: updateErr } = await supabase
-      .from('players')
-      .update({ weekly: newWeekly, season: newSeason, week_start: thisMonday })
-      .eq('id', currentPlayerId);
-    if (updateErr) throw updateErr;
-    const { error: logErr } = await supabase
-      .from('log')
-      .insert({
-        team_id: TEAM_ID,
-        player_id: currentPlayerId,
-        player_name: player.name,
-        name: c.name,
-        tier: c.tier,
-        pts: c.pts,
-        type: 'challenge'
-      });
-    if (logErr) throw logErr;
-    floatPop(`+${c.pts}`);
+    if (team) {
+      await applyTeamPoints(c, c.pts, 'challenge');
+    } else {
+      const thisMonday = getMonday(new Date());
+      const me = allPlayersData.find(p => p.id === currentPlayerId);
+      const newWeekly = (me && me.week_start === thisMonday ? (me.weekly || 0) : 0) + c.pts;
+      const newSeason = (me ? me.season : 0) + c.pts;
+      const { error: updateErr } = await supabase
+        .from('players')
+        .update({ weekly: newWeekly, season: newSeason, week_start: thisMonday })
+        .eq('id', currentPlayerId);
+      if (updateErr) throw updateErr;
+      const { error: logErr } = await supabase
+        .from('log')
+        .insert({
+          team_id: TEAM_ID,
+          player_id: currentPlayerId,
+          player_name: player.name,
+          name: c.name,
+          tier: c.tier,
+          pts: c.pts,
+          type: 'challenge'
+        });
+      if (logErr) throw logErr;
+    }
+    floatPop(`+${c.pts}${team ? ' ALL' : ''}`);
     if (navigator.vibrate) navigator.vibrate([30, 30, 30]);
     const btn = document.getElementById('btnDone');
     if (btn) {
