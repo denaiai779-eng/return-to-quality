@@ -404,13 +404,28 @@
     background: linear-gradient(135deg, var(--green), #00a86b);
     color: var(--navy-1);
   }
-  .btn-skip {
-    background: transparent;
-    color: var(--muted);
-    border: 1px solid rgba(126, 146, 179, 0.4) !important;
+  .btn-miss {
+    background: linear-gradient(135deg, #ff4757, #c0392b);
+    color: #fff;
   }
   .btn-done.completed { background: var(--navy-2); color: var(--green); }
-  .btn-done:disabled, .btn-skip:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-miss.missed { background: var(--navy-2); color: var(--red); }
+  .btn-done:disabled, .btn-miss:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-na {
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    padding: 9px;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid rgba(126, 146, 179, 0.3);
+    border-radius: 4px;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    cursor: pointer;
+  }
+  .btn-na:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .pop-points {
     position: absolute;
@@ -1180,7 +1195,8 @@
           <li style="margin: 5px 0;">Tap <b>RELEASE THE MAKO</b> → spin reveals a challenge</li>
           <li style="margin: 5px 0;">Read it to Emory before his AB / cage rep</li>
           <li style="margin: 5px 0;">If he does it → tap <b>✓ DID IT</b> (points bank)</li>
-          <li style="margin: 5px 0;">If he didn't → tap <b>SKIP</b> (no penalty)</li>
+          <li style="margin: 5px 0;">If he had the chance and didn't → tap <b>✗ DIDN'T</b> (−1 Bronze/Silver, −2 Gold/Diamond)</li>
+          <li style="margin: 5px 0;">If it never came up — walk, inning ended — tap <b>N/A</b> (no change)</li>
           <li style="margin: 5px 0;">For lazy ABs / bad behavior → tap <b>− TAKE AWAY</b> and pick the reason (points deducted)</li>
           <li style="margin: 5px 0;">Stack points toward weekly + season rewards. Weekly resets Mondays.</li>
         </ol>
@@ -1852,9 +1868,14 @@ function spin() {
   }, 3500);
 }
 
+function missPenalty(tier) {
+  return (tier === 'gold' || tier === 'diamond') ? 2 : 1;
+}
+
 function showResult(c) {
   currentResult = c;
   const r = document.getElementById('result');
+  const miss = missPenalty(c.tier);
   r.className = `result ${c.tier}`;
   r.innerHTML = `
     <div class="tier-pill ${c.tier}">${c.tier.toUpperCase()} · ${c.pts} PT${c.pts > 1 ? 'S' : ''}</div>
@@ -1862,12 +1883,56 @@ function showResult(c) {
     <div class="goal">${c.goal}</div>
     <div class="reward">🏆 ${c.reward}</div>
     <div class="complete-row">
-      <button class="btn-skip" id="btnSkip">SKIP</button>
       <button class="btn-done" id="btnDone">✓ DID IT  +${c.pts}</button>
+      <button class="btn-miss" id="btnMiss">✗ DIDN'T  −${miss}</button>
     </div>
+    <button class="btn-na" id="btnNA">N/A — didn't come up</button>
   `;
   document.getElementById('btnDone').addEventListener('click', completeChallenge);
-  document.getElementById('btnSkip').addEventListener('click', resetResult);
+  document.getElementById('btnMiss').addEventListener('click', missChallenge);
+  document.getElementById('btnNA').addEventListener('click', resetResult);
+}
+
+async function missChallenge() {
+  if (!currentResult || !currentPlayerId) return;
+  const c = currentResult;
+  const penalty = missPenalty(c.tier);
+  const player = ROSTER.find(p => p.id === currentPlayerId);
+  try {
+    const thisMonday = getMonday(new Date());
+    const me = allPlayersData.find(p => p.id === currentPlayerId);
+    let newSeason = (me ? me.season : 0) - penalty;
+    if (newSeason < 0) newSeason = 0;
+    const newWeekly = (me && me.week_start === thisMonday ? (me.weekly || 0) : 0) - penalty;
+    const { error: updateErr } = await supabase
+      .from('players')
+      .update({ weekly: newWeekly, season: newSeason, week_start: thisMonday })
+      .eq('id', currentPlayerId);
+    if (updateErr) throw updateErr;
+    const { error: logErr } = await supabase
+      .from('log')
+      .insert({
+        team_id: TEAM_ID,
+        player_id: currentPlayerId,
+        player_name: player.name,
+        name: 'Missed — ' + c.name,
+        tier: c.tier,
+        pts: -penalty,
+        type: 'deduction'
+      });
+    if (logErr) throw logErr;
+    floatPop(`-${penalty}`, true);
+    if (navigator.vibrate) navigator.vibrate([60, 30, 60]);
+    const missBtn = document.getElementById('btnMiss');
+    if (missBtn) { missBtn.disabled = true; missBtn.classList.add('missed'); missBtn.textContent = '✗ MISSED'; }
+    const doneBtn = document.getElementById('btnDone');
+    if (doneBtn) doneBtn.disabled = true;
+    const naBtn = document.getElementById('btnNA');
+    if (naBtn) naBtn.disabled = true;
+  } catch (e) {
+    console.error('Save failed:', e);
+    alert('Could not save — check connection.');
+  }
 }
 
 async function completeChallenge() {
