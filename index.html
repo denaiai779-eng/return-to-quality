@@ -660,6 +660,136 @@
   }
   .lb-row.me .lb-pts { color: var(--cyan); }
 
+  /* Rewards view */
+  .reward-summary {
+    max-width: 600px;
+    margin: 14px auto;
+    padding: 16px 18px;
+    background: linear-gradient(135deg, rgba(0, 191, 255, 0.12), rgba(0, 119, 204, 0.06));
+    border: 1px solid rgba(0, 191, 255, 0.4);
+    border-radius: 12px;
+    box-shadow: 0 0 30px rgba(0, 191, 255, 0.15);
+  }
+  .reward-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6px 0;
+  }
+  .reward-summary-row + .reward-summary-row { border-top: 1px dashed rgba(0, 191, 255, 0.2); }
+  .rs-label {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--cyan);
+    text-transform: uppercase;
+  }
+  .rs-value {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 15px;
+    color: var(--white);
+    letter-spacing: 1px;
+  }
+  .rs-value b { color: var(--gold); }
+  .rewards-section {
+    max-width: 600px;
+    margin: 22px auto;
+    padding: 0 14px;
+  }
+  .rewards-section h3 {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 16px;
+    letter-spacing: 4px;
+    color: var(--cyan);
+    margin: 10px 0 12px;
+    text-transform: uppercase;
+    padding-left: 4px;
+    border-left: 3px solid var(--cyan);
+  }
+  .reward-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .reward-card {
+    background: linear-gradient(160deg, rgba(13, 40, 71, 0.85), rgba(10, 22, 40, 0.85));
+    border: 2px solid rgba(0, 191, 255, 0.2);
+    border-radius: 14px;
+    padding: 16px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .reward-card.tier-bronze  { border-color: var(--bronze); }
+  .reward-card.tier-silver  { border-color: var(--silver); }
+  .reward-card.tier-gold    { border-color: var(--gold); box-shadow: 0 0 20px rgba(255,216,74,0.15); }
+  .reward-card.tier-diamond { border-color: var(--diamond); box-shadow: 0 0 26px rgba(0,191,255,0.2); }
+  .reward-card.reached {
+    background: linear-gradient(160deg, rgba(0, 214, 143, 0.12), rgba(0, 168, 107, 0.06));
+    border-color: rgba(0, 214, 143, 0.5);
+  }
+  .rc-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .rc-name {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+  .rc-name.tier-bronze  { color: var(--bronze); }
+  .rc-name.tier-silver  { color: var(--silver); }
+  .rc-name.tier-gold    { color: var(--gold); }
+  .rc-name.tier-diamond { color: #7ee0ff; }
+  .rc-pts {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 14px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+  }
+  .rc-reward {
+    color: var(--ink);
+    font-size: 13px;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .rc-bar {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .rc-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--cyan-deep), var(--cyan));
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+  .reward-card.reached .rc-fill {
+    background: linear-gradient(90deg, #00a86b, var(--green));
+  }
+  .rc-status {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .rc-status .away { color: var(--cyan); }
+  .reward-card.reached .rc-status { color: var(--green); }
+  .reward-card.reached::after {
+    content: '✓ EARNED';
+    position: absolute;
+    top: 14px; right: 16px;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--green);
+  }
+
   /* Coach view */
   .coach-stats {
     display: grid;
@@ -1090,6 +1220,23 @@
   <div class="lb-list" id="lbList"></div>
 </div>
 
+<!-- REWARDS VIEW -->
+<div class="view" id="view-rewards">
+  <div class="lb-header">
+    <h2>REWARDS</h2>
+    <div class="sub" id="rewardsPlayerName">Loading…</div>
+  </div>
+  <div class="reward-summary" id="rewardSummary"></div>
+  <div class="rewards-section">
+    <h3>This Week</h3>
+    <div class="reward-grid" id="weeklyRewards"></div>
+  </div>
+  <div class="rewards-section">
+    <h3>Season Tiers</h3>
+    <div class="reward-grid" id="seasonRewards"></div>
+  </div>
+</div>
+
 <!-- COACH VIEW -->
 <div class="view" id="view-coach">
   <div class="lb-header">
@@ -1145,7 +1292,8 @@
 <nav class="bottom-nav">
   <div class="bottom-nav-inner">
     <button data-view="main" class="active">⚾ Mako</button>
-    <button data-view="leaderboard">🏆 Team</button>
+    <button data-view="rewards">🏆 Rewards</button>
+    <button data-view="leaderboard">📊 Team</button>
     <button data-view="coach">👔 Coach</button>
   </div>
 </nav>
@@ -1266,16 +1414,16 @@ const DEDUCTIONS = {
 
 const REWARDS = {
   weekly: [
-    { pts: 25, name: 'Bronze Week',  tier: 'bronze',  desc: 'Real engagement, executed some' },
-    { pts: 45, name: 'Silver Week',  tier: 'silver',  desc: 'Consistent good week' },
-    { pts: 60, name: 'Gold Week',    tier: 'gold',    desc: 'Locked in, near-perfect execution' },
-    { pts: 80, name: 'Diamond Week', tier: 'diamond', desc: 'Lights out — rare' }
+    { pts: 25, name: 'Bronze Week',  tier: 'bronze',  reward: 'Snack of choice · extra screen time · stay up an hour later' },
+    { pts: 45, name: 'Silver Week',  tier: 'silver',  reward: '$5 · pack of cards · sleepover · movie pick' },
+    { pts: 60, name: 'Gold Week',    tier: 'gold',    reward: '$10 · dinner of his choice · day-out activity' },
+    { pts: 80, name: 'Diamond Week', tier: 'diamond', reward: '$20 · new gear · video game · big experience' }
   ],
   season: [
-    { pts: 500,  name: 'Rookie',       tier: 'bronze',  desc: 'Earned — ~12-15 weeks of execution' },
-    { pts: 1000, name: 'Pro',          tier: 'silver',  desc: 'Half-season grind' },
-    { pts: 2000, name: 'All-Star',     tier: 'gold',    desc: 'Full season locked-in' },
-    { pts: 4000, name: 'Hall of Fame', tier: 'diamond', desc: 'Multi-season or absolute lights out' }
+    { pts: 500,  name: 'Rookie',       tier: 'bronze',  reward: 'Makos gear · trading card pack · small purchase' },
+    { pts: 1000, name: 'Pro',          tier: 'silver',  reward: 'Batting gloves · bat grip · cleats accessory · $25' },
+    { pts: 2000, name: 'All-Star',     tier: 'gold',    reward: 'New bat OR new glove' },
+    { pts: 4000, name: 'Hall of Fame', tier: 'diamond', reward: 'Big-ticket: gaming console · premium gear · trip/experience' }
   ]
 };
 
@@ -1327,6 +1475,13 @@ async function fetchPlayers() {
   renderMyScores();
   renderLeaderboard();
   renderPlayerSelect();
+  if (document.getElementById('view-rewards').classList.contains('active')) {
+    renderRewardsView();
+  }
+  if (document.getElementById('view-coach').classList.contains('active')) {
+    renderCoachStats();
+    renderCoachPlayers();
+  }
 }
 
 // === Fetch log for the current player ===
@@ -1484,6 +1639,75 @@ function renderLeaderboard() {
       <div class="lb-pts">${r.displayPts}</div>
     </div>`;
   }).join('');
+}
+
+// === Rewards View ===
+function openRewardsView() {
+  if (!currentPlayerId) {
+    showView('view-select');
+    return;
+  }
+  showView('view-rewards');
+  renderRewardsView();
+}
+
+function renderRewardsView() {
+  if (!currentPlayerId) return;
+  const me = allPlayersData.find(p => p.id === currentPlayerId);
+  const p = ROSTER.find(r => r.id === currentPlayerId);
+  if (!p) return;
+  document.getElementById('rewardsPlayerName').textContent = `${p.name.toUpperCase()} · #${p.num}`;
+
+  const thisMonday = getMonday(new Date());
+  const weekly = me && me.week_start === thisMonday ? (me.weekly || 0) : 0;
+  const season = me ? (me.season || 0) : 0;
+
+  // Summary: next reward callouts
+  const nextWeekly = REWARDS.weekly.find(t => weekly < t.pts);
+  const nextSeason = REWARDS.season.find(t => season < t.pts);
+  let summary = '';
+  if (nextWeekly) {
+    summary += `<div class="reward-summary-row"><div class="rs-label">Next Weekly</div><div class="rs-value"><b>${nextWeekly.pts - weekly} pts</b> to ${nextWeekly.name}</div></div>`;
+  } else {
+    summary += `<div class="reward-summary-row"><div class="rs-label">Weekly</div><div class="rs-value" style="color: var(--green);">✓ ALL EARNED</div></div>`;
+  }
+  if (nextSeason) {
+    summary += `<div class="reward-summary-row"><div class="rs-label">Next Season</div><div class="rs-value"><b>${nextSeason.pts - season} pts</b> to ${nextSeason.name}</div></div>`;
+  } else {
+    summary += `<div class="reward-summary-row"><div class="rs-label">Season</div><div class="rs-value" style="color: var(--green);">✓ HALL OF FAME</div></div>`;
+  }
+  document.getElementById('rewardSummary').innerHTML = summary;
+
+  // Reward cards
+  renderRewardCards('weeklyRewards', REWARDS.weekly, weekly);
+  renderRewardCards('seasonRewards', REWARDS.season, season);
+}
+
+function renderRewardCards(elId, tiers, current) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  let html = '';
+  for (let i = 0; i < tiers.length; i++) {
+    const t = tiers[i];
+    const prev = i === 0 ? 0 : tiers[i-1].pts;
+    const reached = current >= t.pts;
+    const span = t.pts - prev;
+    const within = Math.max(0, current - prev);
+    const pct = reached ? 100 : Math.min(100, (within / span) * 100);
+    const status = reached
+      ? '✓ Unlocked'
+      : `<span class="away">${t.pts - current}</span> pts to go · ${current}/${t.pts}`;
+    html += `<div class="reward-card tier-${t.tier} ${reached ? 'reached' : ''}">
+      <div class="rc-head">
+        <div class="rc-name tier-${t.tier}">${t.name}</div>
+        <div class="rc-pts">${t.pts} PTS</div>
+      </div>
+      <div class="rc-reward">🏆 ${t.reward}</div>
+      <div class="rc-bar"><div class="rc-fill" style="width: ${pct.toFixed(1)}%;"></div></div>
+      <div class="rc-status">${status}</div>
+    </div>`;
+  }
+  el.innerHTML = html;
 }
 
 // === Coach View ===
@@ -1783,6 +2007,8 @@ document.querySelectorAll('.bottom-nav button').forEach(b => {
     if (view === 'main') {
       if (!currentPlayerId) showView('view-select');
       else showView('view-main');
+    } else if (view === 'rewards') {
+      openRewardsView();
     } else if (view === 'leaderboard') {
       showView('view-leaderboard');
     } else if (view === 'coach') {
