@@ -1476,18 +1476,19 @@ const DEDUCTIONS = {
   }
 };
 
+// Rewards are TIME / RECOGNITION / PRIVILEGE — never cash. The standard, not the bribe.
 const REWARDS = {
   weekly: [
-    { pts: 25, name: 'Bronze Week',  tier: 'bronze',  reward: 'Snack of choice · extra screen time · stay up an hour later' },
-    { pts: 45, name: 'Silver Week',  tier: 'silver',  reward: '$5 · pack of cards · sleepover · movie pick' },
-    { pts: 60, name: 'Gold Week',    tier: 'gold',    reward: '$10 · dinner of his choice · day-out activity' },
-    { pts: 80, name: 'Diamond Week', tier: 'diamond', reward: '$20 · new gear · video game · big experience' }
+    { pts: 25, name: 'Bronze Week',  tier: 'bronze',  reward: 'Pick the family dinner · control the car music · 30 min extra up' },
+    { pts: 45, name: 'Silver Week',  tier: 'silver',  reward: 'Movie pick for family night · 1-on-1 time with Dad · pick the weekend breakfast' },
+    { pts: 60, name: 'Gold Week',    tier: 'gold',    reward: 'Plan the weekend family activity · skip a chore · friend sleepover' },
+    { pts: 80, name: 'Diamond Week', tier: 'diamond', reward: 'A full day with Dad, your call · Player of the Week recognition' }
   ],
   season: [
-    { pts: 500,  name: 'Rookie',       tier: 'bronze',  reward: 'Makos gear · trading card pack · small purchase' },
-    { pts: 1000, name: 'Pro',          tier: 'silver',  reward: 'Batting gloves · bat grip · cleats accessory · $25' },
-    { pts: 2000, name: 'All-Star',     tier: 'gold',    reward: 'New bat OR new glove' },
-    { pts: 4000, name: 'Hall of Fame', tier: 'diamond', reward: 'Big-ticket: gaming console · premium gear · trip/experience' }
+    { pts: 500,  name: 'Rookie',       tier: 'bronze',  reward: 'Your name on the family Wall of Quality · a 1-on-1 training day' },
+    { pts: 1000, name: 'Pro',          tier: 'silver',  reward: 'An experience day — you choose what the family does together' },
+    { pts: 2000, name: 'All-Star',     tier: 'gold',    reward: 'The day out you have been wanting — together' },
+    { pts: 4000, name: 'Hall of Fame', tier: 'diamond', reward: 'A season-defining experience you will never forget' }
   ]
 };
 
