@@ -660,6 +660,158 @@
   }
   .lb-row.me .lb-pts { color: var(--cyan); }
 
+  /* Coach view */
+  .coach-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    max-width: 600px;
+    margin: 12px auto;
+    padding: 0 14px;
+  }
+  .coach-stat {
+    background: linear-gradient(160deg, rgba(13, 40, 71, 0.85), rgba(10, 22, 40, 0.85));
+    border: 1px solid rgba(0, 191, 255, 0.25);
+    border-radius: 8px;
+    padding: 10px 12px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .coach-stat::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  }
+  .coach-stat.wide { grid-column: 1 / -1; }
+  .coach-stat .cs-label {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .coach-stat .cs-val {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 28px;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .coach-stat .cs-top {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 18px;
+    color: var(--white);
+    letter-spacing: 1px;
+  }
+  .coach-section {
+    max-width: 600px;
+    margin: 18px auto;
+    padding: 0 14px;
+  }
+  .coach-section h3 {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 16px;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    margin: 12px 0 10px;
+    text-transform: uppercase;
+  }
+  .coach-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+  .coach-section-head h3 { margin: 0; }
+  .coach-toggle { display: flex; gap: 4px; }
+  .coach-toggle button {
+    padding: 6px 12px;
+    background: rgba(13, 40, 71, 0.6);
+    border: 1px solid rgba(0, 191, 255, 0.25);
+    color: var(--muted);
+    border-radius: 6px;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+  }
+  .coach-toggle button.active {
+    background: linear-gradient(135deg, var(--cyan), var(--cyan-deep));
+    color: var(--navy-1);
+    border-color: var(--cyan);
+  }
+  .coach-player {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    margin-bottom: 5px;
+    background: linear-gradient(160deg, rgba(13, 40, 71, 0.75), rgba(10, 22, 40, 0.75));
+    border: 1px solid rgba(0, 191, 255, 0.15);
+    border-radius: 8px;
+    font-size: 13px;
+  }
+  .coach-player .cp-num {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    color: var(--cyan);
+    font-size: 14px;
+    min-width: 30px;
+    text-align: center;
+    background: rgba(0, 191, 255, 0.1);
+    border-radius: 4px;
+    padding: 2px 4px;
+  }
+  .coach-player .cp-name {
+    flex: 1;
+    color: var(--white);
+    font-weight: 700;
+  }
+  .coach-player .cp-pts {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 20px;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+  .coach-player.zero .cp-pts { color: var(--muted); }
+  .coach-player.negative .cp-pts { color: var(--red); }
+  .coach-feed-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(0, 191, 255, 0.1);
+    font-size: 12px;
+  }
+  .coach-feed-row:last-child { border-bottom: 0; }
+  .coach-feed-row.deduction { background: rgba(255, 71, 87, 0.05); }
+  .coach-feed-row .cf-player {
+    color: var(--white);
+    font-weight: 700;
+    min-width: 80px;
+    flex-shrink: 0;
+    font-size: 12px;
+  }
+  .coach-feed-row .cf-name {
+    color: var(--ink);
+    flex: 1;
+    font-size: 12px;
+  }
+  .coach-feed-row .cf-pts {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 16px;
+    color: var(--gold);
+  }
+  .coach-feed-row.deduction .cf-pts { color: var(--red); }
+  .coach-feed-row .cf-time {
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-left: 8px;
+  }
+
   /* Bottom nav */
   .bottom-nav {
     position: fixed;
@@ -914,6 +1066,45 @@
   <div class="lb-list" id="lbList"></div>
 </div>
 
+<!-- COACH VIEW -->
+<div class="view" id="view-coach">
+  <div class="lb-header">
+    <h2>COACH VIEW</h2>
+    <div class="sub">Detroit Metro Stars · Blue</div>
+  </div>
+  <div class="coach-stats">
+    <div class="coach-stat">
+      <div class="cs-label">Team Weekly</div>
+      <div class="cs-val" id="cstWeekly">0</div>
+    </div>
+    <div class="coach-stat">
+      <div class="cs-label">Team Season</div>
+      <div class="cs-val" id="cstSeason">0</div>
+    </div>
+    <div class="coach-stat wide">
+      <div class="cs-label">Top This Week</div>
+      <div class="cs-top" id="cstTop">—</div>
+    </div>
+  </div>
+  <div class="coach-section">
+    <div class="coach-section-head">
+      <h3>All Players</h3>
+      <div class="coach-toggle">
+        <button class="active" data-cmode="week">Weekly</button>
+        <button data-cmode="season">Season</button>
+      </div>
+    </div>
+    <div id="coachPlayers"></div>
+  </div>
+  <div class="coach-section">
+    <h3>Team Activity</h3>
+    <div id="coachFeed"></div>
+  </div>
+  <div style="text-align: center; padding: 20px; color: var(--muted); font-size: 10px; letter-spacing: 2px;">
+    <button id="lockCoach" style="background: transparent; color: var(--muted); border: 1px solid #2a3759; padding: 8px 16px; border-radius: 4px; font-family: 'Bebas Neue', Impact, sans-serif; letter-spacing: 2px; cursor: pointer;">🔒 LOCK COACH MODE</button>
+  </div>
+</div>
+
 <!-- TAKE AWAY SHEET -->
 <div class="takeaway-sheet" id="takeawaySheet">
   <div class="sheet-backdrop" id="sheetBackdrop"></div>
@@ -931,6 +1122,7 @@
   <div class="bottom-nav-inner">
     <button data-view="main" class="active">⚾ Mako</button>
     <button data-view="leaderboard">🏆 Team</button>
+    <button data-view="coach">👔 Coach</button>
   </div>
 </nav>
 
@@ -1071,6 +1263,10 @@ let spinning = false;
 let currentResult = null;
 let lbMode = 'weekly';
 let allPlayersData = []; // snapshot of all players' scores
+let coachMode = 'week'; // 'week' or 'season' for player sort
+let teamFeed = []; // recent team-wide log
+const COACH_PIN = '0606';
+const COACH_UNLOCK_KEY = 'rtq_coach_unlocked_v1';
 
 function getMonday(d) {
   const date = new Date(d);
@@ -1262,6 +1458,101 @@ function renderLeaderboard() {
       <div class="lb-num">#${r.num}</div>
       <div class="lb-name">${r.name}${isMe ? ' (you)' : ''}</div>
       <div class="lb-pts">${r.displayPts}</div>
+    </div>`;
+  }).join('');
+}
+
+// === Coach View ===
+function isCoachUnlocked() {
+  return localStorage.getItem(COACH_UNLOCK_KEY) === 'yes';
+}
+function promptCoachPin() {
+  const pin = prompt('Enter coach PIN:');
+  if (pin === null) return false;
+  if (pin === COACH_PIN) {
+    localStorage.setItem(COACH_UNLOCK_KEY, 'yes');
+    return true;
+  }
+  alert('Wrong PIN.');
+  return false;
+}
+async function openCoachView() {
+  if (!isCoachUnlocked() && !promptCoachPin()) return;
+  showView('view-coach');
+  await fetchTeamFeed();
+  renderCoachStats();
+  renderCoachPlayers();
+  renderCoachFeed();
+}
+async function fetchTeamFeed() {
+  const { data, error } = await supabase
+    .from('log')
+    .select('*')
+    .eq('team_id', TEAM_ID)
+    .order('ts', { ascending: false })
+    .limit(30);
+  if (!error) teamFeed = data || [];
+}
+function renderCoachStats() {
+  const thisMonday = getMonday(new Date());
+  let teamWeekly = 0, teamSeason = 0;
+  let topPlayer = null, topPts = -Infinity;
+  for (const p of allPlayersData) {
+    const w = p.week_start === thisMonday ? (p.weekly || 0) : 0;
+    teamWeekly += w;
+    teamSeason += (p.season || 0);
+    if (w > topPts) { topPts = w; topPlayer = p; }
+  }
+  document.getElementById('cstWeekly').textContent = teamWeekly;
+  document.getElementById('cstSeason').textContent = teamSeason;
+  document.getElementById('cstTop').textContent = topPlayer && topPts > 0
+    ? `#${topPlayer.num} ${topPlayer.name.split(' ')[0]} · ${topPts}`
+    : '— No points yet —';
+}
+function renderCoachPlayers() {
+  const el = document.getElementById('coachPlayers');
+  if (!el) return;
+  const thisMonday = getMonday(new Date());
+  const rows = allPlayersData.map(p => {
+    const w = p.week_start === thisMonday ? (p.weekly || 0) : 0;
+    return { ...p, displayPts: coachMode === 'week' ? w : (p.season || 0) };
+  });
+  rows.sort((a,b) => (b.displayPts || 0) - (a.displayPts || 0));
+  el.innerHTML = rows.map(r => {
+    let cls = 'coach-player';
+    if (r.displayPts === 0) cls += ' zero';
+    else if (r.displayPts < 0) cls += ' negative';
+    return `<div class="${cls}">
+      <div class="cp-num">#${r.num}</div>
+      <div class="cp-name">${r.name}</div>
+      <div class="cp-pts">${r.displayPts}</div>
+    </div>`;
+  }).join('');
+}
+function renderCoachFeed() {
+  const el = document.getElementById('coachFeed');
+  if (!el) return;
+  if (!teamFeed.length) {
+    el.innerHTML = '<div class="log-empty">No activity yet.</div>';
+    return;
+  }
+  const now = Date.now();
+  el.innerHTML = teamFeed.map(r => {
+    const d = new Date(r.ts);
+    const mins = Math.floor((now - d.getTime()) / 60000);
+    let timeStr;
+    if (mins < 1) timeStr = 'now';
+    else if (mins < 60) timeStr = mins + 'm ago';
+    else if (mins < 1440) timeStr = Math.floor(mins/60) + 'h ago';
+    else timeStr = (d.getMonth()+1) + '/' + d.getDate();
+    const isDed = r.type === 'deduction' || r.pts < 0;
+    const sign = r.pts >= 0 ? '+' : '';
+    const firstName = (r.player_name || '').split(' ')[0];
+    return `<div class="coach-feed-row ${isDed ? 'deduction' : ''}">
+      <div class="cf-player">${firstName}</div>
+      <div class="cf-name">${r.name}</div>
+      <div class="cf-pts">${sign}${r.pts}</div>
+      <div class="cf-time">${timeStr}</div>
     </div>`;
   }).join('');
 }
@@ -1470,8 +1761,21 @@ document.querySelectorAll('.bottom-nav button').forEach(b => {
       else showView('view-main');
     } else if (view === 'leaderboard') {
       showView('view-leaderboard');
+    } else if (view === 'coach') {
+      openCoachView();
     }
   });
+});
+document.querySelectorAll('.coach-toggle button').forEach(b => {
+  b.addEventListener('click', () => {
+    coachMode = b.dataset.cmode;
+    document.querySelectorAll('.coach-toggle button').forEach(x => x.classList.toggle('active', x === b));
+    renderCoachPlayers();
+  });
+});
+document.getElementById('lockCoach').addEventListener('click', () => {
+  localStorage.removeItem(COACH_UNLOCK_KEY);
+  showView('view-main');
 });
 document.querySelectorAll('.lb-toggle button').forEach(b => {
   b.addEventListener('click', () => {
