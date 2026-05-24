@@ -450,6 +450,140 @@
   }
   .btn-na:disabled { opacity: 0.4; cursor: not-allowed; }
 
+  /* === Cage Sequence — Deal a Round === */
+  .deal-btn {
+    background: linear-gradient(135deg, var(--gold), #d4a017);
+    color: var(--navy-1);
+    font-size: 18px;
+    box-shadow: 0 6px 20px rgba(255, 216, 74, 0.35), inset 0 -3px 0 rgba(0,0,0,0.15);
+    display: none;
+    margin-top: 8px;
+  }
+  .deal-btn:active { transform: translateY(2px); }
+  .deal-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .sequence-area { margin: 18px auto 0; }
+  .sequence-area.empty { display: none; }
+  .seq-header {
+    text-align: center;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 16px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .seq-card {
+    position: relative;
+    margin: 10px 0;
+    background: linear-gradient(160deg, rgba(13, 40, 71, 0.9), rgba(10, 22, 40, 0.95));
+    border: 2px solid rgba(0, 191, 255, 0.3);
+    border-radius: 8px;
+    padding: 14px 14px 12px 44px;
+    text-align: left;
+    transition: opacity 0.2s;
+  }
+  .seq-card.bronze  { border-color: var(--bronze); }
+  .seq-card.silver  { border-color: var(--silver); }
+  .seq-card.gold    { border-color: var(--gold); }
+  .seq-card.diamond { border-color: var(--diamond); box-shadow: 0 0 24px rgba(0,191,255,0.4); }
+  .seq-num {
+    position: absolute;
+    top: 12px; left: 12px;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--navy-1);
+    color: var(--cyan);
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(0,191,255,0.4);
+  }
+  .seq-pill {
+    display: inline-block;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 3px 9px;
+    border-radius: 2px;
+    background: var(--navy-1);
+    margin-bottom: 6px;
+  }
+  .seq-pill.bronze  { color: var(--bronze); border: 1px solid var(--bronze); }
+  .seq-pill.silver  { color: var(--silver); border: 1px solid var(--silver); }
+  .seq-pill.gold    { color: var(--gold);   border: 1px solid var(--gold); }
+  .seq-pill.diamond { color: var(--diamond);border: 1px solid var(--diamond); }
+  .seq-name {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 20px;
+    letter-spacing: 1.5px;
+    color: var(--white);
+    line-height: 1.05;
+    margin-bottom: 6px;
+  }
+  .seq-goal { font-size: 12.5px; color: var(--ink); margin-bottom: 8px; font-weight: 500; line-height: 1.4; }
+  .seq-reward {
+    display: inline-block;
+    padding: 3px 9px;
+    background: rgba(255, 216, 74, 0.1);
+    border: 1px solid rgba(255, 216, 74, 0.4);
+    border-radius: 2px;
+    color: var(--gold);
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+  .seq-actions { display: flex; gap: 6px; margin-top: 10px; }
+  .seq-actions button {
+    flex: 1;
+    padding: 9px;
+    border: 0;
+    border-radius: 4px;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    cursor: pointer;
+  }
+  .seq-done { background: linear-gradient(135deg, var(--green), #00a86b); color: var(--navy-1); }
+  .seq-miss { background: linear-gradient(135deg, #ff4757, #c0392b); color: #fff; }
+  .seq-na {
+    display: block;
+    width: 100%;
+    margin-top: 6px;
+    padding: 7px;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid rgba(126, 146, 179, 0.3);
+    border-radius: 4px;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    cursor: pointer;
+  }
+  .seq-actions button:disabled, .seq-na:disabled { opacity: 0.5; cursor: not-allowed; }
+  .seq-card.done    { opacity: 0.75; }
+  .seq-card.done .seq-name::after  { content: ' ✓'; color: var(--green); }
+  .seq-card.miss    { opacity: 0.6; }
+  .seq-card.miss .seq-name::after  { content: ' ✗'; color: var(--red); }
+  .seq-card.na      { opacity: 0.45; }
+  .seq-card.na .seq-name::after    { content: ' —'; color: var(--muted); }
+  .seq-redeal {
+    display: block;
+    width: 100%;
+    max-width: 320px;
+    margin: 16px auto 4px;
+    padding: 13px 20px;
+    border: 1px solid var(--gold);
+    background: rgba(255, 216, 74, 0.08);
+    color: var(--gold);
+    border-radius: 4px;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    letter-spacing: 3px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .seq-redeal:active { background: rgba(255, 216, 74, 0.15); }
+
   .pop-points {
     position: absolute;
     top: 50%; left: 50%;
@@ -1205,9 +1339,11 @@
     </div>
 
     <button class="spin-btn" id="spinBtn">▸ RELEASE THE MAKO ◂</button>
+    <button class="spin-btn deal-btn" id="dealBtn">▸ DEAL CAGE ROUND ◂</button>
     <button class="takeaway-btn" id="takeawayBtn">− TAKE AWAY</button>
 
     <div class="result empty" id="result">Pick a situation · release the Mako</div>
+    <div class="sequence-area empty" id="sequenceArea"></div>
 
     <details open>
       <summary>Rewards & Progress</summary>
@@ -1897,6 +2033,9 @@ function setCategory(cat) {
   currentList = CHALLENGES[cat];
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
   resetResult();
+  resetSequence();
+  const dealBtnEl = document.getElementById('dealBtn');
+  if (dealBtnEl) dealBtnEl.style.display = (cat === 'cage') ? 'block' : 'none';
 }
 
 function resetResult() {
@@ -1909,7 +2048,10 @@ function resetResult() {
 function spin() {
   if (spinning || !currentPlayerId) return;
   spinning = true;
+  resetSequence();
   document.getElementById('spinBtn').disabled = true;
+  const _db = document.getElementById('dealBtn');
+  if (_db) _db.disabled = true;
 
   const logo = document.getElementById('makosLogo');
   const splash = document.getElementById('splashBurst');
@@ -1934,8 +2076,205 @@ function spin() {
     showResult(currentList[winnerIdx]);
     spinning = false;
     document.getElementById('spinBtn').disabled = false;
+    if (_db) _db.disabled = false;
     if (navigator.vibrate) navigator.vibrate(currentList[winnerIdx].tier === 'diamond' ? [100, 50, 100, 50, 200] : 80);
   }, 3500);
+}
+
+// === Cage Sequence — Deal a 5-card Round ===
+function resetSequence() {
+  const sa = document.getElementById('sequenceArea');
+  if (sa) {
+    sa.innerHTML = '';
+    sa.classList.add('empty');
+  }
+}
+
+function pickUnique(list, n) {
+  const pool = [...list];
+  const out = [];
+  for (let i = 0; i < n && pool.length > 0; i++) {
+    const idx = Math.floor(Math.random() * pool.length);
+    out.push(pool.splice(idx, 1)[0]);
+  }
+  return out;
+}
+
+function buildCageRound() {
+  const cage = CHALLENGES.cage || [];
+  const bronze = cage.filter(c => c.tier === 'bronze');
+  const silver = cage.filter(c => c.tier === 'silver');
+  const gold   = cage.filter(c => c.tier === 'gold');
+  const diamond= cage.filter(c => c.tier === 'diamond');
+  // Mix: 2 bronze + 2 silver + 1 (gold | diamond, ~80/20)
+  const upperPool = (Math.random() < 0.2 && diamond.length > 0) ? diamond : gold;
+  let picks = [
+    ...pickUnique(bronze, 2),
+    ...pickUnique(silver, 2),
+    ...pickUnique(upperPool, 1)
+  ];
+  if (picks.length < 5) {
+    const used = new Set(picks.map(p => p.name));
+    const rest = cage.filter(c => !used.has(c.name));
+    picks = picks.concat(pickUnique(rest, 5 - picks.length));
+  }
+  return picks;
+}
+
+function dealCageRound() {
+  if (spinning || !currentPlayerId) return;
+  spinning = true;
+  resetResult();
+  resetSequence();
+  document.getElementById('spinBtn').disabled = true;
+  document.getElementById('dealBtn').disabled = true;
+
+  const logo = document.getElementById('makosLogo');
+  const splash = document.getElementById('splashBurst');
+  splash.classList.remove('active');
+  logo.classList.remove('spinning');
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      splash.classList.add('active');
+      logo.classList.add('spinning');
+    });
+  });
+
+  const cards = buildCageRound();
+  setTimeout(() => {
+    logo.classList.remove('spinning');
+    renderSequence(cards);
+    spinning = false;
+    document.getElementById('spinBtn').disabled = false;
+    document.getElementById('dealBtn').disabled = false;
+    if (navigator.vibrate) navigator.vibrate([60, 30, 60, 30, 60]);
+  }, 2200);
+}
+
+function renderSequence(cards) {
+  const sa = document.getElementById('sequenceArea');
+  sa.classList.remove('empty');
+  let html = '<div class="seq-header">🦈 CAGE ROUND · 5 DRILLS</div>';
+  cards.forEach((c, i) => {
+    const miss = missPenalty(c.tier);
+    html += `
+      <div class="seq-card ${c.tier}" data-idx="${i}">
+        <div class="seq-num">${i + 1}</div>
+        <div class="seq-pill ${c.tier}">${c.tier.toUpperCase()} · ${c.pts} PT${c.pts > 1 ? 'S' : ''}</div>
+        <div class="seq-name">${c.name.toUpperCase()}</div>
+        <div class="seq-goal">${c.goal}</div>
+        <div class="seq-reward">🏆 ${c.reward}</div>
+        <div class="seq-actions">
+          <button class="seq-done" data-act="done" data-idx="${i}">✓ DID IT +${c.pts}</button>
+          <button class="seq-miss" data-act="miss" data-idx="${i}">✗ DIDN'T −${miss}</button>
+        </div>
+        <button class="seq-na" data-act="na" data-idx="${i}">N/A — didn't come up</button>
+      </div>`;
+  });
+  sa.innerHTML = html;
+  sa.querySelectorAll('button[data-act]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.idx, 10);
+      markSequenceCard(idx, btn.dataset.act, cards[idx]);
+    });
+  });
+}
+
+async function markSequenceCard(idx, act, challenge) {
+  const cardEl = document.querySelector(`.seq-card[data-idx="${idx}"]`);
+  if (!cardEl) return;
+  if (cardEl.classList.contains('done') || cardEl.classList.contains('miss') || cardEl.classList.contains('na')) return;
+
+  if (act === 'na') {
+    cardEl.classList.add('na');
+    cardEl.querySelectorAll('button').forEach(b => b.disabled = true);
+    checkSequenceComplete();
+    return;
+  }
+
+  if (!currentPlayerId) return;
+  const player = ROSTER.find(p => p.id === currentPlayerId);
+  if (!player) return;
+
+  cardEl.querySelectorAll('button').forEach(b => b.disabled = true);
+
+  try {
+    const thisMonday = getMonday(new Date());
+    const me = allPlayersData.find(p => p.id === currentPlayerId);
+
+    if (act === 'done') {
+      const pts = challenge.pts;
+      const newWeekly = (me && me.week_start === thisMonday ? (me.weekly || 0) : 0) + pts;
+      const newSeason = (me ? me.season : 0) + pts;
+      const { error: upErr } = await supabase
+        .from('players')
+        .update({ weekly: newWeekly, season: newSeason, week_start: thisMonday })
+        .eq('id', currentPlayerId);
+      if (upErr) throw upErr;
+      const { error: logErr } = await supabase
+        .from('log')
+        .insert({
+          team_id: TEAM_ID,
+          player_id: currentPlayerId,
+          player_name: player.name,
+          name: challenge.name,
+          tier: challenge.tier,
+          pts: pts,
+          type: 'challenge'
+        });
+      if (logErr) throw logErr;
+      cardEl.classList.add('done');
+      floatPop(`+${pts}`);
+      if (navigator.vibrate) navigator.vibrate(30);
+    } else if (act === 'miss') {
+      const penalty = missPenalty(challenge.tier);
+      let newSeason = (me ? me.season : 0) - penalty;
+      if (newSeason < 0) newSeason = 0;
+      const newWeekly = (me && me.week_start === thisMonday ? (me.weekly || 0) : 0) - penalty;
+      const { error: upErr } = await supabase
+        .from('players')
+        .update({ weekly: newWeekly, season: newSeason, week_start: thisMonday })
+        .eq('id', currentPlayerId);
+      if (upErr) throw upErr;
+      const { error: logErr } = await supabase
+        .from('log')
+        .insert({
+          team_id: TEAM_ID,
+          player_id: currentPlayerId,
+          player_name: player.name,
+          name: 'Missed — ' + challenge.name,
+          tier: challenge.tier,
+          pts: -penalty,
+          type: 'deduction'
+        });
+      if (logErr) throw logErr;
+      cardEl.classList.add('miss');
+      floatPop(`-${penalty}`, true);
+      if (navigator.vibrate) navigator.vibrate([60, 30, 60]);
+    }
+    checkSequenceComplete();
+  } catch (e) {
+    console.error('Save failed:', e);
+    alert('Could not save — check connection.');
+    cardEl.querySelectorAll('button').forEach(b => b.disabled = false);
+  }
+}
+
+function checkSequenceComplete() {
+  const sa = document.getElementById('sequenceArea');
+  if (!sa) return;
+  const cards = sa.querySelectorAll('.seq-card');
+  if (cards.length === 0) return;
+  const allMarked = Array.from(cards).every(c =>
+    c.classList.contains('done') || c.classList.contains('miss') || c.classList.contains('na')
+  );
+  if (allMarked && !sa.querySelector('.seq-redeal')) {
+    const btn = document.createElement('button');
+    btn.className = 'seq-redeal';
+    btn.textContent = '▸ DEAL ANOTHER ROUND ◂';
+    btn.addEventListener('click', dealCageRound);
+    sa.appendChild(btn);
+  }
 }
 
 function missPenalty(tier) {
@@ -2168,6 +2507,7 @@ document.getElementById('tabs').addEventListener('click', e => {
   if (t && !spinning && !t.classList.contains('divider')) setCategory(t.dataset.cat);
 });
 document.getElementById('spinBtn').addEventListener('click', spin);
+document.getElementById('dealBtn').addEventListener('click', dealCageRound);
 document.getElementById('takeawayBtn').addEventListener('click', openTakeaway);
 document.getElementById('taCancel').addEventListener('click', closeTakeaway);
 document.getElementById('sheetBackdrop').addEventListener('click', closeTakeaway);
