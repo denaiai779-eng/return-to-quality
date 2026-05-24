@@ -2035,7 +2035,17 @@ function setCategory(cat) {
   resetResult();
   resetSequence();
   const dealBtnEl = document.getElementById('dealBtn');
-  if (dealBtnEl) dealBtnEl.style.display = (cat === 'cage') ? 'block' : 'none';
+  if (dealBtnEl) {
+    if (cat === 'cage') {
+      dealBtnEl.style.display = 'block';
+      dealBtnEl.textContent = '▸ DEAL CAGE ROUND ◂';
+    } else if (cat === 'anyab') {
+      dealBtnEl.style.display = 'block';
+      dealBtnEl.textContent = '▸ DEAL AB ROUND ◂';
+    } else {
+      dealBtnEl.style.display = 'none';
+    }
+  }
 }
 
 function resetResult() {
@@ -2101,13 +2111,16 @@ function pickUnique(list, n) {
 }
 
 function buildCageRound() {
-  const cage = CHALLENGES.cage || [];
-  const bronze = cage.filter(c => c.tier === 'bronze');
-  const silver = cage.filter(c => c.tier === 'silver');
-  const gold   = cage.filter(c => c.tier === 'gold');
-  const diamond= cage.filter(c => c.tier === 'diamond');
-  // Mix: 2 bronze + 2 silver + 1 (gold | diamond, ~80/20)
-  const upperPool = (Math.random() < 0.2 && diamond.length > 0) ? diamond : gold;
+  // Reads from the CURRENT category — works for any cat with the deal button (cage, anyab)
+  const list = CHALLENGES[currentCat] || [];
+  const bronze = list.filter(c => c.tier === 'bronze');
+  const silver = list.filter(c => c.tier === 'silver');
+  const gold   = list.filter(c => c.tier === 'gold');
+  const diamond= list.filter(c => c.tier === 'diamond');
+  // Mix: 2 bronze + 2 silver + 1 (gold | diamond, ~80/20).
+  // If gold is empty fall back to diamond (and vice versa).
+  let upperPool = (Math.random() < 0.2 && diamond.length > 0) ? diamond : gold;
+  if (upperPool.length === 0) upperPool = (gold.length > 0 ? gold : diamond);
   let picks = [
     ...pickUnique(bronze, 2),
     ...pickUnique(silver, 2),
@@ -2115,7 +2128,7 @@ function buildCageRound() {
   ];
   if (picks.length < 5) {
     const used = new Set(picks.map(p => p.name));
-    const rest = cage.filter(c => !used.has(c.name));
+    const rest = list.filter(c => !used.has(c.name));
     picks = picks.concat(pickUnique(rest, 5 - picks.length));
   }
   return picks;
@@ -2154,7 +2167,10 @@ function dealCageRound() {
 function renderSequence(cards) {
   const sa = document.getElementById('sequenceArea');
   sa.classList.remove('empty');
-  let html = '<div class="seq-header">🦈 CAGE ROUND · 5 DRILLS</div>';
+  const headerLabel = currentCat === 'cage'
+    ? '🦈 CAGE ROUND · 5 DRILLS'
+    : (currentCat === 'anyab' ? '🦈 AT-BAT ROUND · 5 SCENARIOS' : '🦈 ROUND · 5 CARDS');
+  let html = `<div class="seq-header">${headerLabel}</div>`;
   cards.forEach((c, i) => {
     const miss = missPenalty(c.tier);
     html += `
