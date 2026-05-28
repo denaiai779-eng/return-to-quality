@@ -1510,12 +1510,18 @@ const CHALLENGES = {
     { name: "See It Deep",        tier: "bronze",  pts: 1, goal: "See at least 3 pitches before swinging or putting it in play.", reward: "Quality AB" },
     { name: "First-Pitch Hunter", tier: "bronze",  pts: 1, goal: "Fastball in the zone first pitch → swing. No takes.", reward: "Aggressive Approach" },
     { name: "Reset Routine",      tier: "bronze",  pts: 1, goal: "Use your between-pitch reset (breath, step out, sign) every pitch of this AB.", reward: "Calm Mind" },
+    { name: "Lock In",            tier: "bronze",  pts: 1, goal: "Pre-AB focus locked: eyes on the pitcher's release, every pitch tracked. No distractions.", reward: "Game Face" },
     { name: "Barrel It Up",       tier: "silver",  pts: 2, goal: "Put one ball in play hard — line drive or hard grounder. No pop-ups.", reward: "Hard Contact" },
     { name: "Stay Back",          tier: "silver",  pts: 2, goal: "Hit a ball to center or the opposite field.", reward: "Oppo Discipline" },
     { name: "Patient Hunter",     tier: "silver",  pts: 2, goal: "Work the count to 2-1 or better before your swing decision.", reward: "Plate Discipline" },
     { name: "Single or Better",   tier: "silver",  pts: 2, goal: "Get a base hit — single, double, triple, or homer.", reward: "Base Knock" },
     { name: "Body Language",      tier: "silver",  pts: 2, goal: "Coming off a K or error → your body language this AB is a 10/10. Head up.", reward: "Bounce Back" },
+    { name: "Stay Inside It",     tier: "silver",  pts: 2, goal: "Pitched inside? Keep hands inside the ball — drive it hard to the pull side.", reward: "Inside Handler" },
+    { name: "Battle to 2 Strikes",tier: "silver",  pts: 2, goal: "Get to 2 strikes → battle. Foul off, hard contact, or walk. No swing-and-miss K.", reward: "Battler" },
     { name: "Double or Better",   tier: "gold",    pts: 3, goal: "Drive one into the gap or down the line — extra-base hit only.", reward: "Gap Power" },
+    { name: "Two-Strike Hero",    tier: "gold",    pts: 3, goal: "Down 0-2 or 1-2 → end the AB with a hit, hard contact, or a walk.", reward: "2K Survivor" },
+    { name: "Quality AB",         tier: "gold",    pts: 3, goal: "6+ pitches AND end the AB in hard contact, a hit, or a walk.", reward: "Pro AB" },
+    { name: "Read the Spin",      tier: "gold",    pts: 3, goal: "ID the pitch out of hand — drive the fastball, adjust on off-speed. No giveaway swing on a clear breaking ball.", reward: "Pitch Recognition" },
     { name: "Quality AB Streak",  tier: "diamond", pts: 5, goal: "3 quality at-bats in a row (hit, hard contact, walk, or 6+ pitches).", reward: "Locked In" },
     { name: "Go Yard",            tier: "diamond", pts: 5, goal: "Hit a home run. Called shot bonus if you tell Dad before the AB.", reward: "Bomb Squad" },
     { name: "Flush It",           tier: "diamond", pts: 5, goal: "Had a bad AB last time → respond with a quality AB right now.", reward: "Short Memory" }
@@ -2110,9 +2116,22 @@ function pickUnique(list, n) {
   return out;
 }
 
+// AT-BAT round mixes hitting situations across categories; CAGE round stays cage-only.
+// Earlier categories in each list take precedence on name conflicts.
+const ROUND_POOLS = {
+  cage:  ['cage'],
+  anyab: ['anyab', 'risp', 'twoouts', 'cage']
+};
+
 function buildCageRound() {
-  // Reads from the CURRENT category — works for any cat with the deal button (cage, anyab)
-  const list = CHALLENGES[currentCat] || [];
+  const cats = ROUND_POOLS[currentCat] || [currentCat];
+  const seen = new Set();
+  const list = [];
+  for (const cat of cats) {
+    for (const c of (CHALLENGES[cat] || [])) {
+      if (!seen.has(c.name)) { seen.add(c.name); list.push(c); }
+    }
+  }
   const bronze = list.filter(c => c.tier === 'bronze');
   const silver = list.filter(c => c.tier === 'silver');
   const gold   = list.filter(c => c.tier === 'gold');
