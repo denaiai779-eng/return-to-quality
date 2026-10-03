@@ -2796,7 +2796,13 @@ function renderCpOpts() {
   document.getElementById('cpOpts').innerHTML = CAGE_FOCUS.map(f =>
     `<button class="cp-opt ${cpSelected.includes(f.id) ? 'on' : ''}" data-fid="${f.id}">${cgEsc(f.name)}${f.series ? '<span class="ser">SERIES</span>' : ''}<small>${f.pillar}</small></button>`).join('');
   const est = document.getElementById('cpEst');
-  if (est) { const m = cpSelected.length ? estimateCageMinutes(cpSelected) : 0; est.textContent = m ? `Session: about ${m} min${m > 47 ? ' · over a 45-min booking, drop one' : ''}` : ''; est.classList.toggle('over', m > 47); }
+  if (est) {
+    const info = cpSelected.length ? cageRotationInfo(cpSelected) : { maxMinutes: 0, rotation: [] };
+    const m = info.maxMinutes;
+    const rot = info.rotation.length > 1 ? `Rotates: ${info.rotation.map(r => `${r.name} (${r.minutes} min)`).join(' → ')}` : (m ? `Session: about ${m} min` : '');
+    est.textContent = rot + (m > 47 ? ' · over a 45-min booking, drop one' : '');
+    est.classList.toggle('over', m > 47);
+  }
   document.querySelectorAll('#cpOpts .cp-opt').forEach(b => b.addEventListener('click', () => {
     const id = b.dataset.fid;
     if (cpSelected.includes(id)) cpSelected = cpSelected.filter(x => x !== id);
@@ -2878,6 +2884,7 @@ function renderCageView() {
   body.innerHTML = note + `
     <div class="cg-progress"><div id="cgBar"></div></div>
     <div class="cg-progress-label" id="cgProgLabel">0 / ${steps.length} done · session #${sessionNo + 1} · about ${session.minutes} min</div>
+    ${session.seriesCount > 1 ? `<div class="cg-note" style="border-left-color:var(--cyan);background:rgba(0,191,255,.08)"><b style="color:var(--cyan)">TODAY'S SERIES</b>${cgEsc(session.todaySeries.name)}. Your series rotate each session, so next time you'll get ${cgEsc(buildCageSession(focus, sessionNo + 1).todaySeries.name)}.</div>` : ''}
     ${steps.map((st, i) => {
       const d = st.drill;
       const list = d ? d.steps : st.stepsList;

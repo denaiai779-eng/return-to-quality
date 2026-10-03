@@ -345,33 +345,48 @@ const CAGE_FINISHER = {
 };
 
 // Builds a cage session from a player's assigned focus areas (1-3).
-// A series runs every step in order (small details, prep to tee).
-// A regular focus area adds drills that rotate each session.
+// Series run every step in order (small details, prep to tee).
+// If more than one series is assigned, ONE series runs per session and they rotate.
+// Regular focus areas add drills that rotate each session.
 function buildCageSession(focusIds, sessionNumber) {
   const focuses = focusIds.map(id => CAGE_FOCUS.find(f => f.id === id)).filter(Boolean);
   if (!focuses.length) return null;
   const n = sessionNumber || 0;
-  const blocks = [];
+  const series = focuses.filter(f => f.series);
   const regular = focuses.filter(f => !f.series);
   const pick = (f, k) => f.drills[(n + k) % f.drills.length];
-  const perRegular = regular.length === 1 && regular.length === focuses.length ? 3
-    : regular.length === 2 && regular.length === focuses.length ? null : 1;
-  focuses.forEach((f, fi) => {
-    if (f.series) {
-      f.drills.forEach((d, i) => blocks.push({ focus: f, drill: d, step: i + 1, of: f.drills.length }));
-    } else if (perRegular === null) {
-      // two regular areas: A, B, A
-      if (fi === 0) { blocks.push({ focus: f, drill: pick(f, 0) }); }
-      else { blocks.push({ focus: f, drill: pick(f, 0) }); blocks.push({ focus: focuses[0], drill: pick(focuses[0], 1) }); }
-    } else {
-      for (let k = 0; k < perRegular; k++) blocks.push({ focus: f, drill: pick(f, k) });
-    }
-  });
+  const blocks = [];
+  let todaySeries = null;
+  if (series.length) {
+    todaySeries = series[n % series.length];
+    todaySeries.drills.forEach((d, i) => blocks.push({ focus: todaySeries, drill: d, step: i + 1, of: todaySeries.drills.length }));
+    regular.forEach(f => blocks.push({ focus: f, drill: pick(f, 0) }));
+  } else if (regular.length === 1) {
+    for (let k = 0; k < 3; k++) blocks.push({ focus: regular[0], drill: pick(regular[0], k) });
+  } else if (regular.length === 2) {
+    blocks.push({ focus: regular[0], drill: pick(regular[0], 0) });
+    blocks.push({ focus: regular[1], drill: pick(regular[1], 0) });
+    blocks.push({ focus: regular[0], drill: pick(regular[0], 1) });
+  } else {
+    regular.forEach(f => blocks.push({ focus: f, drill: pick(f, 0) }));
+  }
   const minutes = CAGE_WARMUP.minutes + CAGE_FINISHER.minutes + blocks.reduce((t, b) => t + b.drill.minutes, 0);
-  return { warmup: CAGE_WARMUP, blocks, finisher: CAGE_FINISHER, minutes };
+  return { warmup: CAGE_WARMUP, blocks, finisher: CAGE_FINISHER, minutes, todaySeries, seriesCount: series.length };
+}
+
+// Longest session in the rotation, plus the rotation order, for the coach sheet.
+function cageRotationInfo(focusIds) {
+  const first = buildCageSession(focusIds, 0);
+  if (!first) return { maxMinutes: 0, rotation: [] };
+  const count = Math.max(1, first.seriesCount);
+  const rotation = [];
+  for (let i = 0; i < count; i++) {
+    const s = buildCageSession(focusIds, i);
+    rotation.push({ name: s.todaySeries ? s.todaySeries.name : 'Hitting drills', minutes: s.minutes });
+  }
+  return { maxMinutes: Math.max(...rotation.map(r => r.minutes)), rotation };
 }
 
 function estimateCageMinutes(focusIds) {
-  const s = buildCageSession(focusIds, 0);
-  return s ? s.minutes : 0;
+  return cageRotationInfo(focusIds).maxMinutes;
 }
