@@ -1356,6 +1356,52 @@
   .cp-clear { background:transparent; color:#ff8a9a; border:1px solid rgba(255,71,87,.4) !important; }
   .cp-cancel { background:rgba(255,255,255,.06); color:var(--muted); }
   .cp-hint { font-size:11px; color:var(--muted); letter-spacing:1px; text-align:center; margin-bottom:8px; }
+
+  /* ===== FEEDBACK + VIDEO ===== */
+  .fb-card { margin:14px 0; padding:16px; border-radius:12px; background:linear-gradient(160deg, rgba(13,40,71,.9), rgba(10,22,40,.9)); border:1px solid rgba(0,191,255,.25); }
+  .fb-card h3 { font-family:'Bebas Neue', Impact, sans-serif; font-weight:400; letter-spacing:2px; font-size:22px; color:var(--white); margin-bottom:4px; }
+  .fb-card .fb-sub { font-size:12px; color:var(--muted); margin-bottom:12px; }
+  .fb-label { font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:2px; color:var(--cyan); font-size:14px; margin:12px 0 6px; }
+  .fb-results { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; }
+  .fb-res { padding:12px 6px; border-radius:8px; border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.04); color:var(--ink); font-weight:800; font-size:13px; cursor:pointer; }
+  .fb-res span { display:block; font-size:20px; margin-bottom:2px; }
+  .fb-res.on[data-r="nailed"] { background:rgba(0,214,143,.18); border-color:var(--green); color:var(--green); }
+  .fb-res.on[data-r="getting"] { background:rgba(255,216,74,.15); border-color:var(--gold); color:var(--gold); }
+  .fb-res.on[data-r="struggled"] { background:rgba(255,71,87,.15); border-color:var(--red); color:#ff8a9a; }
+  .fb-toggle { display:flex; align-items:center; gap:10px; padding:12px; border-radius:8px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.12); cursor:pointer; font-weight:700; color:var(--ink); font-size:14px; }
+  .fb-toggle .box { width:22px; height:22px; border-radius:5px; border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; color:var(--navy-1); font-weight:900; }
+  .fb-toggle.on { border-color:var(--gold); background:rgba(255,216,74,.1); }
+  .fb-toggle.on .box { background:var(--gold); }
+  .fb-file { display:block; width:100%; padding:14px; border-radius:8px; border:1px dashed rgba(0,191,255,.5); background:rgba(0,191,255,.06); color:var(--cyan); text-align:center; font-weight:700; font-size:14px; cursor:pointer; }
+  .fb-file input { display:none; }
+  .fb-file small { display:block; color:var(--muted); font-weight:500; font-size:11px; margin-top:4px; }
+  .fb-status { font-size:12px; margin-top:8px; color:var(--muted); text-align:center; min-height:16px; }
+  .fb-status.err { color:#ff8a9a; }
+  .fb-send { display:block; width:100%; margin-top:14px; padding:15px; border:0; border-radius:10px; background:linear-gradient(135deg, var(--cyan), var(--cyan-deep)); color:var(--navy-1); font-family:'Bebas Neue', Impact, sans-serif; font-size:20px; letter-spacing:3px; cursor:pointer; }
+  .fb-send:disabled { opacity:.5; }
+  .fb-skip { display:block; margin:10px auto 0; background:none; border:0; color:var(--muted); font-size:12px; letter-spacing:1px; text-decoration:underline; cursor:pointer; }
+  .fb-list-item { display:flex; gap:10px; align-items:center; padding:10px 12px; margin-bottom:6px; border-radius:8px; background:rgba(13,40,71,.75); border:1px solid rgba(0,191,255,.15); cursor:pointer; }
+  .fb-list-item .fb-li-main { flex:1; min-width:0; }
+  .fb-list-item .fb-li-name { font-weight:800; color:var(--white); font-size:14px; }
+  .fb-list-item .fb-li-meta { font-size:11px; color:var(--muted); margin-top:2px; }
+  .fb-badge { font-size:10px; letter-spacing:1px; font-weight:800; padding:3px 7px; border-radius:4px; white-space:nowrap; }
+  .fb-badge.new { background:var(--red); color:#fff; }
+  .fb-badge.done { background:rgba(0,214,143,.15); color:var(--green); }
+  .fb-badge.res-nailed { background:rgba(0,214,143,.15); color:var(--green); }
+  .fb-badge.res-getting { background:rgba(255,216,74,.15); color:var(--gold); }
+  .fb-badge.res-struggled { background:rgba(255,71,87,.15); color:#ff8a9a; }
+  .fb-video { width:100%; max-height:62vh; border-radius:10px; background:#000; display:block; margin:10px 0; }
+  .fb-rec-row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .fb-rec-row button { flex:1; min-width:120px; padding:12px; border-radius:8px; border:0; font-family:'Bebas Neue', Impact, sans-serif; font-size:17px; letter-spacing:2px; cursor:pointer; }
+  .fb-rec { background:var(--red); color:#fff; }
+  .fb-rec.live { animation:fbpulse 1s infinite; }
+  @keyframes fbpulse { 50% { opacity:.55; } }
+  .fb-ghost { background:rgba(255,255,255,.07); color:var(--ink); }
+  .fb-speed { display:flex; gap:6px; margin:6px 0 10px; }
+  .fb-speed button { padding:6px 12px; border-radius:6px; border:1px solid rgba(0,191,255,.3); background:transparent; color:var(--muted); font-weight:800; font-size:12px; cursor:pointer; }
+  .fb-speed button.on { background:var(--cyan); color:var(--navy-1); border-color:var(--cyan); }
+  .fb-quote { margin:8px 0; padding:10px 12px; border-left:3px solid var(--cyan); background:rgba(0,191,255,.07); border-radius:6px; font-size:14px; color:var(--ink); }
+  #view-review, #view-myfeedback { padding-bottom:110px; }
 </style>
 </head>
 <body>
@@ -1546,6 +1592,14 @@
   </div>
   <div class="coach-section">
     <div class="coach-section-head">
+      <h3>Feedback &amp; Videos</h3>
+      <div class="cp-last" id="fbSummary"></div>
+    </div>
+    <div class="cp-hint" style="text-align:left">Tap one to watch and record a voice-over</div>
+    <div id="coachFeedback"></div>
+  </div>
+  <div class="coach-section">
+    <div class="coach-section-head">
       <h3>All Players</h3>
       <div class="coach-toggle">
         <button class="active" data-cmode="week">Weekly</button>
@@ -1580,6 +1634,24 @@
     <div class="sub">Every series and drill a player can be assigned</div>
   </div>
   <div class="cg-wrap" id="libBody"></div>
+</div>
+
+<!-- COACH: REVIEW A PLAYER'S FEEDBACK / VIDEO -->
+<div class="view" id="view-review">
+  <div class="lb-header">
+    <h2>REVIEW</h2>
+    <div class="sub" id="rvPlayer">—</div>
+  </div>
+  <div class="cg-wrap" id="rvBody"></div>
+</div>
+
+<!-- PLAYER: COACH FEEDBACK ON MY VIDEOS -->
+<div class="view" id="view-myfeedback">
+  <div class="lb-header">
+    <h2>COACH FEEDBACK</h2>
+    <div class="sub" id="mfPlayer">—</div>
+  </div>
+  <div class="cg-wrap" id="mfBody"></div>
 </div>
 
 <!-- COACH: ASSIGN CAGE PLAN SHEET -->
@@ -1878,6 +1950,12 @@ function startRealtime() {
     .on('postgres_changes', { event: '*', schema: 'public', table: 'players', filter: `team_id=eq.${TEAM_ID}` }, () => fetchPlayers())
     .subscribe();
   supabase
+    .channel('feedback-changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'cage_feedback', filter: `team_id=eq.${TEAM_ID}` }, () => {
+      if (document.getElementById('view-coach').classList.contains('active')) refreshCoachFeedback();
+    })
+    .subscribe();
+  supabase
     .channel('cage-plan-changes')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'cage_plans', filter: `team_id=eq.${TEAM_ID}` }, async () => {
       await fetchCagePlans(); updateCagePlanButton();
@@ -2101,7 +2179,7 @@ function promptCoachPin() {
 async function openCoachView() {
   if (!isCoachUnlocked() && !promptCoachPin()) return;
   showView('view-coach');
-  await Promise.all([fetchTeamFeed(), fetchCagePlans(), fetchCageStats()]);
+  await Promise.all([fetchTeamFeed(), fetchCagePlans(), fetchCageStats(), refreshCoachFeedback()]);
   renderCoachCagePlans();
   renderCoachStats();
   renderCoachPlayers();
@@ -2910,7 +2988,10 @@ function renderCageView() {
       </div>`;
     }).join('')}
     <button class="cg-finish" id="cgFinish" disabled>FINISH ALL STEPS TO COMPLETE</button>
+    <div style="display:flex;gap:8px;margin-top:14px"><button class="lib-btn" id="cgMyFb" style="margin:0;flex:1">💬 COACH FEEDBACK</button><button class="lib-btn" id="cgSendVid" style="margin:0;flex:1">📹 SEND A VIDEO</button></div>
     <div style="text-align:center"><button class="cg-back" id="cgBack">◂ BACK</button></div>`;
+  document.getElementById('cgMyFb').onclick = openMyFeedback;
+  document.getElementById('cgSendVid').onclick = () => { stopAllCgTimers(); renderFeedbackForm(document.getElementById('cgBody'), focus, false); window.scrollTo(0, 0); };
   body.querySelectorAll('[data-timer]').forEach(b => b.addEventListener('click', () => toggleCgTimer(b.dataset.timer, b)));
   body.querySelectorAll('[data-done]').forEach(b => b.addEventListener('click', () => markCgDone(b.dataset.done, b)));
   document.getElementById('cgFinish').addEventListener('click', completeCageSession);
@@ -2967,8 +3048,8 @@ async function completeCageSession() {
     if (logErr) throw logErr;
     stopAllCgTimers();
     cageStats[currentPlayerId] = { count: (cageStats[currentPlayerId]?.count || 0) + 1, last: new Date().toISOString() };
-    document.getElementById('cgBody').innerHTML = `<div class="cg-empty"><b>SESSION COMPLETE</b>+3 points banked. Great work in the cage.<br>Your next session rotates to new drills.<br><span style="color:var(--cyan)">#ReturnToQuality</span><br><button class="cg-back" id="cgBack">◂ BACK TO MAKO</button></div>`;
-    document.getElementById('cgBack').onclick = () => showView('view-main');
+    renderFeedbackForm(document.getElementById('cgBody'), focus, true);
+    window.scrollTo(0, 0);
     fetchPlayers();
   } catch (e) {
     console.warn(e);
@@ -2976,6 +3057,281 @@ async function completeCageSession() {
   }
 }
 document.getElementById('cagePlanBtn').addEventListener('click', openCageView);
+
+// ===== FEEDBACK + VIDEO =====
+const FB_BUCKET = 'cage-videos';
+const FB_MAX_MB = 50, FB_MAX_SEC = 60;
+const FB_RESULTS = { nailed: { icon: '✅', label: 'Nailed it' }, getting: { icon: '🟡', label: 'Getting there' }, struggled: { icon: '🔴', label: 'Struggled' } };
+let fbRows = [];
+let fbState = null; // player form state
+let rvState = null; // coach review state
+
+async function fetchFeedback(playerId) {
+  let q = supabase.from('cage_feedback').select('*').eq('team_id', TEAM_ID).order('created_at', { ascending: false }).limit(200);
+  if (playerId) q = q.eq('player_id', playerId);
+  const { data, error } = await q;
+  if (error) { console.warn('feedback', error); return []; }
+  return data || [];
+}
+async function signedUrl(path) {
+  if (!path) return null;
+  const { data, error } = await supabase.storage.from(FB_BUCKET).createSignedUrl(path, 3600);
+  if (error) { console.warn('sign', error); return null; }
+  return data.signedUrl;
+}
+function fbWhen(ts) {
+  const d = new Date(ts);
+  return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+}
+function videoDuration(file) {
+  return new Promise(res => {
+    const v = document.createElement('video');
+    v.preload = 'metadata';
+    v.onloadedmetadata = () => { URL.revokeObjectURL(v.src); res(v.duration); };
+    v.onerror = () => res(null);
+    v.src = URL.createObjectURL(file);
+  });
+}
+
+// --- Player: feedback form (after a session, or any time) ---
+function renderFeedbackForm(targetEl, focus, afterSession) {
+  fbState = { result: null, mastered: false, file: null, focus: focus || [] };
+  targetEl.innerHTML = `<div class="fb-card">
+      <h3>${afterSession ? 'SESSION COMPLETE · +3 PTS' : 'SEND COACH A VIDEO'}</h3>
+      <div class="fb-sub">${afterSession ? 'Tell Coach how it went. Players or parents can fill this out.' : 'Players or parents can send a clip and a note to Coach.'}</div>
+      <div class="fb-label">HOW DID IT GO?</div>
+      <div class="fb-results">${Object.entries(FB_RESULTS).map(([k, r]) => `<button class="fb-res" data-r="${k}"><span>${r.icon}</span>${r.label}</button>`).join('')}</div>
+      <div class="fb-label">MASTERED IT?</div>
+      <div class="fb-toggle" id="fbMastered"><div class="box"></div>I mastered this session</div>
+      <div class="fb-label">NOTE FOR COACH (OPTIONAL)</div>
+      <textarea class="cp-note-in" id="fbNote" maxlength="400" placeholder="What felt good? What was hard?"></textarea>
+      <div class="fb-label">VIDEO (OPTIONAL)</div>
+      <label class="fb-file" id="fbFileLabel">📹 Add a video for Coach to review<small>Up to ${FB_MAX_SEC} seconds. Shoot in 1080p, not 4K.</small><input type="file" id="fbFile" accept="video/*"></label>
+      <div class="fb-status" id="fbStatus"></div>
+      <button class="fb-send" id="fbSend">SEND TO COACH</button>
+      <button class="fb-skip" id="fbSkip">${afterSession ? 'Skip for now' : 'Cancel'}</button>
+    </div>`;
+  targetEl.querySelectorAll('.fb-res').forEach(b => b.addEventListener('click', () => {
+    fbState.result = b.dataset.r;
+    targetEl.querySelectorAll('.fb-res').forEach(x => x.classList.toggle('on', x === b));
+  }));
+  document.getElementById('fbMastered').addEventListener('click', e => {
+    fbState.mastered = !fbState.mastered;
+    e.currentTarget.classList.toggle('on', fbState.mastered);
+    e.currentTarget.querySelector('.box').textContent = fbState.mastered ? '✓' : '';
+  });
+  document.getElementById('fbFile').addEventListener('change', async e => {
+    const f = e.target.files[0];
+    const st = document.getElementById('fbStatus'); st.classList.remove('err');
+    if (!f) { fbState.file = null; return; }
+    if (f.size > FB_MAX_MB * 1024 * 1024) { fbState.file = null; e.target.value = ''; st.classList.add('err'); st.textContent = `That video is ${(f.size / 1048576).toFixed(0)} MB. Max is ${FB_MAX_MB} MB. Trim it or shoot in 1080p.`; return; }
+    const dur = await videoDuration(f);
+    if (dur && dur > FB_MAX_SEC + 1) { fbState.file = null; e.target.value = ''; st.classList.add('err'); st.textContent = `That video is ${Math.round(dur)} seconds. Max is ${FB_MAX_SEC}. Trim it first.`; return; }
+    fbState.file = f;
+    document.getElementById('fbFileLabel').firstChild.textContent = '✓ Video ready: ' + f.name.slice(0, 28) + ' ';
+    st.textContent = `${(f.size / 1048576).toFixed(1)} MB${dur ? ' · ' + Math.round(dur) + ' sec' : ''}`;
+  });
+  document.getElementById('fbSkip').addEventListener('click', () => {
+    if (afterSession) targetEl.innerHTML = `<div class="cg-empty"><b>NICE WORK</b>Your next session rotates to new drills.<br><span style="color:var(--cyan)">#ReturnToQuality</span><br><button class="cg-back" id="cgBack2">◂ BACK TO MAKO</button></div>`;
+    const back = document.getElementById('cgBack2');
+    if (back) back.onclick = () => showView('view-main'); else renderCageView();
+  });
+  document.getElementById('fbSend').addEventListener('click', () => submitFeedback(targetEl));
+}
+async function submitFeedback(targetEl) {
+  const st = document.getElementById('fbStatus'); st.classList.remove('err');
+  if (!fbState.result && !fbState.file && !document.getElementById('fbNote').value.trim()) { st.classList.add('err'); st.textContent = 'Pick how it went, add a note, or add a video.'; return; }
+  const btn = document.getElementById('fbSend'); btn.disabled = true;
+  const player = ROSTER.find(p => p.id === currentPlayerId);
+  let videoPath = null;
+  try {
+    if (fbState.file) {
+      btn.textContent = 'UPLOADING VIDEO…';
+      st.textContent = 'Keep this screen open until it finishes.';
+      const ext = (fbState.file.name.split('.').pop() || 'mp4').toLowerCase().replace(/[^a-z0-9]/g, '');
+      videoPath = `${TEAM_ID}/${currentPlayerId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error: upErr } = await supabase.storage.from(FB_BUCKET).upload(videoPath, fbState.file, { contentType: fbState.file.type || 'video/mp4', upsert: false });
+      if (upErr) throw upErr;
+    }
+    btn.textContent = 'SENDING…';
+    const { error } = await supabase.from('cage_feedback').insert({
+      team_id: TEAM_ID, player_id: currentPlayerId, player_name: player ? player.name : '',
+      focus: fbState.focus, result: fbState.result, mastered: fbState.mastered,
+      note: document.getElementById('fbNote').value.trim() || null, video_path: videoPath
+    });
+    if (error) throw error;
+    targetEl.innerHTML = `<div class="cg-empty"><b>SENT TO COACH</b>${videoPath ? 'Coach will watch your video and send feedback. You will see it under Coach Feedback.' : 'Thanks. Coach will see how it went.'}<br><span style="color:var(--cyan)">#ReturnToQuality</span><br><button class="cg-back" id="cgBack3">◂ BACK TO MAKO</button></div>`;
+    document.getElementById('cgBack3').onclick = () => showView('view-main');
+  } catch (e) {
+    console.warn(e);
+    btn.disabled = false; btn.textContent = 'SEND TO COACH';
+    st.classList.add('err'); st.textContent = 'Upload failed. Check your connection and try again.';
+  }
+}
+
+// --- Player: coach feedback list + voice-over playback ---
+async function openMyFeedback() {
+  showView('view-myfeedback'); window.scrollTo(0, 0);
+  const p = ROSTER.find(r => r.id === currentPlayerId);
+  document.getElementById('mfPlayer').textContent = p ? `#${p.num} ${p.name}` : '';
+  const body = document.getElementById('mfBody');
+  body.innerHTML = '<div class="cg-empty">Loading…</div>';
+  const rows = await fetchFeedback(currentPlayerId);
+  if (!rows.length) { body.innerHTML = '<div class="cg-empty"><b>NOTHING YET</b>Send Coach a video after a cage session and his feedback shows up here.<br><button class="cg-back" id="mfBack">◂ BACK</button></div>'; document.getElementById('mfBack').onclick = () => openCageView(); return; }
+  body.innerHTML = rows.map(r => `<div class="fb-list-item" data-id="${r.id}">
+      <div class="fb-li-main"><div class="fb-li-name">${fbWhen(r.created_at)} ${r.video_path ? '📹' : ''}</div>
+      <div class="fb-li-meta">${r.result ? FB_RESULTS[r.result].label : 'No rating'}${r.mastered ? ' · Mastered' : ''}</div></div>
+      ${r.coach_reviewed_at ? '<span class="fb-badge done">COACH REPLIED</span>' : '<span class="fb-badge" style="background:rgba(255,255,255,.08);color:var(--muted)">WAITING</span>'}
+    </div>`).join('') + '<div style="text-align:center"><button class="cg-back" id="mfBack">◂ BACK TO CAGE PLAN</button></div><div id="mfDetail"></div>';
+  document.getElementById('mfBack').onclick = () => openCageView();
+  body.querySelectorAll('.fb-list-item').forEach(el => el.addEventListener('click', () => showMyFeedbackDetail(rows.find(r => String(r.id) === el.dataset.id))));
+}
+async function showMyFeedbackDetail(r) {
+  const el = document.getElementById('mfDetail');
+  el.innerHTML = '<div class="cg-empty">Loading video…</div>';
+  const [vurl, aurl] = await Promise.all([signedUrl(r.video_path), signedUrl(r.coach_audio_path)]);
+  const rate = parseFloat(((r.coach_audio_type || '').match(/rate=([\d.]+)/) || [])[1] || '1');
+  el.innerHTML = `<div class="fb-card">
+      <h3>${fbWhen(r.created_at)}</h3>
+      ${r.note ? `<div class="fb-label">YOUR NOTE</div><div class="fb-quote">${cgEsc(r.note)}</div>` : ''}
+      ${r.coach_note ? `<div class="fb-label">FROM COACH</div><div class="fb-quote" style="border-left-color:var(--gold)">${cgEsc(r.coach_note)}</div>` : ''}
+      ${vurl ? `<video class="fb-video" id="mfVideo" src="${vurl}" playsinline controls preload="metadata"></video>` : ''}
+      ${vurl && aurl ? `<button class="fb-send" id="mfPlayVO">▶ PLAY WITH COACH'S VOICE-OVER</button><div class="fb-status">Plays your video with Coach talking over it${rate !== 1 ? ' (slow motion)' : ''}.</div><audio id="mfAudio" src="${aurl}" preload="auto"></audio>` : ''}
+      ${!r.coach_reviewed_at ? '<div class="fb-status">Coach hasn\'t reviewed this one yet.</div>' : ''}
+    </div>`;
+  if (vurl && aurl) wireVoiceover(document.getElementById('mfVideo'), document.getElementById('mfAudio'), document.getElementById('mfPlayVO'), rate);
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+// Keeps the coach's recorded audio in sync with the (muted) video. Audio time t matches video time t * rate.
+function wireVoiceover(video, audio, btn, rate) {
+  let on = false;
+  const sync = () => { if (on && Math.abs(audio.currentTime - video.currentTime / rate) > 0.35) audio.currentTime = video.currentTime / rate; };
+  btn.addEventListener('click', () => {
+    on = true; video.muted = true; video.playbackRate = rate; video.currentTime = 0; audio.currentTime = 0;
+    video.play(); audio.play().catch(() => {});
+  });
+  video.addEventListener('play', () => { if (on) { sync(); audio.play().catch(() => {}); } });
+  video.addEventListener('pause', () => { if (on) audio.pause(); });
+  video.addEventListener('seeked', sync);
+  video.addEventListener('ended', () => { if (on) audio.pause(); });
+  video.addEventListener('ratechange', () => { if (on && video.playbackRate !== rate) video.playbackRate = rate; });
+}
+
+// --- Coach: feedback list + review with voice-over recording ---
+async function refreshCoachFeedback() {
+  fbRows = await fetchFeedback();
+  renderCoachFeedback();
+}
+function renderCoachFeedback() {
+  const el = document.getElementById('coachFeedback');
+  if (!el) return;
+  const pending = fbRows.filter(r => r.video_path && !r.coach_reviewed_at).length;
+  document.getElementById('fbSummary').textContent = pending ? `${pending} video${pending === 1 ? '' : 's'} to review` : 'all caught up';
+  if (!fbRows.length) { el.innerHTML = '<div class="cp-hint" style="text-align:left">Nothing yet. Feedback shows up here after players finish sessions.</div>'; return; }
+  const sorted = [...fbRows].sort((a, b) => (!!a.coach_reviewed_at - !!b.coach_reviewed_at) || (new Date(b.created_at) - new Date(a.created_at)));
+  el.innerHTML = sorted.slice(0, 40).map(r => `<div class="fb-list-item" data-id="${r.id}">
+      <div class="fb-li-main"><div class="fb-li-name">${cgEsc(r.player_name)} ${r.video_path ? '📹' : ''}</div>
+      <div class="fb-li-meta">${fbWhen(r.created_at)}${r.mastered ? ' · says mastered' : ''}${r.note ? ' · note' : ''}</div></div>
+      ${r.result ? `<span class="fb-badge res-${r.result}">${FB_RESULTS[r.result].label.toUpperCase()}</span>` : ''}
+      ${r.coach_reviewed_at ? '<span class="fb-badge done">REPLIED</span>' : (r.video_path ? '<span class="fb-badge new">REVIEW</span>' : '')}
+    </div>`).join('');
+  el.querySelectorAll('.fb-list-item').forEach(row => row.addEventListener('click', () => openReview(fbRows.find(r => String(r.id) === row.dataset.id))));
+}
+async function openReview(r) {
+  if (!r) return;
+  showView('view-review'); window.scrollTo(0, 0);
+  document.getElementById('rvPlayer').textContent = `${r.player_name} · ${fbWhen(r.created_at)}`;
+  const body = document.getElementById('rvBody');
+  body.innerHTML = '<div class="cg-empty">Loading…</div>';
+  const vurl = await signedUrl(r.video_path);
+  rvState = { row: r, rate: 1, recorder: null, chunks: [], blob: null, mime: null, stream: null };
+  const focusTxt = (r.focus || []).map(focusName).join(' · ');
+  body.innerHTML = `<div class="fb-card">
+      <h3>${r.result ? FB_RESULTS[r.result].icon + ' ' + FB_RESULTS[r.result].label : 'No rating'}${r.mastered ? ' · Says mastered' : ''}</h3>
+      <div class="fb-sub">${cgEsc(focusTxt || 'No plan listed')}</div>
+      ${r.note ? `<div class="fb-label">PLAYER / PARENT NOTE</div><div class="fb-quote">${cgEsc(r.note)}</div>` : ''}
+      ${vurl ? `<video class="fb-video" id="rvVideo" src="${vurl}" playsinline controls preload="auto"></video>
+        <div class="fb-label">VOICE-OVER</div>
+        <div class="fb-speed" id="rvSpeed"><button data-rate="1" class="on">Normal speed</button><button data-rate="0.5">Slow motion</button></div>
+        <div class="fb-rec-row"><button class="fb-rec" id="rvRec">🎙 RECORD VOICE-OVER</button><button class="fb-ghost" id="rvPreview" disabled>▶ PREVIEW</button></div>
+        <div class="fb-status" id="rvStatus">Tap record: the video plays from the start while you talk. It stops at the end of the video, or tap stop.</div>
+        <audio id="rvAudio" preload="auto"></audio>` : '<div class="fb-status">No video on this one.</div>'}
+      <div class="fb-label">TYPED NOTE (OPTIONAL)</div>
+      <textarea class="cp-note-in" id="rvNote" maxlength="400" placeholder="Short note the player will see">${cgEsc(r.coach_note || '')}</textarea>
+      <button class="fb-send" id="rvSend">SEND TO PLAYER</button>
+      <div class="fb-status" id="rvSendStatus">${r.coach_reviewed_at ? 'Already replied ' + fbWhen(r.coach_reviewed_at) + '. Sending again replaces it.' : ''}</div>
+    </div>
+    <div style="text-align:center"><button class="cg-back" id="rvBack">◂ BACK TO COACH</button></div>`;
+  document.getElementById('rvBack').onclick = () => { stopRvStream(); showView('view-coach'); };
+  document.getElementById('rvSend').onclick = sendReview;
+  if (!vurl) return;
+  document.querySelectorAll('#rvSpeed button').forEach(b => b.addEventListener('click', () => {
+    if (rvState.recorder) return;
+    rvState.rate = parseFloat(b.dataset.rate);
+    document.querySelectorAll('#rvSpeed button').forEach(x => x.classList.toggle('on', x === b));
+  }));
+  document.getElementById('rvRec').onclick = toggleRecording;
+  document.getElementById('rvPreview').onclick = () => {
+    const v = document.getElementById('rvVideo'), a = document.getElementById('rvAudio');
+    v.muted = true; v.playbackRate = rvState.rate; v.currentTime = 0; a.currentTime = 0; v.play(); a.play().catch(() => {});
+    v.onpause = () => a.pause(); v.onended = () => a.pause();
+  };
+}
+function stopRvStream() { if (rvState && rvState.stream) { rvState.stream.getTracks().forEach(t => t.stop()); rvState.stream = null; } }
+async function toggleRecording() {
+  const btn = document.getElementById('rvRec'), st = document.getElementById('rvStatus'), v = document.getElementById('rvVideo');
+  if (rvState.recorder) { rvState.recorder.stop(); return; }
+  try {
+    rvState.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (e) { st.textContent = 'Microphone blocked. Allow mic access for this site in your browser settings.'; return; }
+  const types = ['audio/mp4', 'audio/webm;codecs=opus', 'audio/webm'];
+  rvState.mime = types.find(t => window.MediaRecorder && MediaRecorder.isTypeSupported(t)) || '';
+  const rec = new MediaRecorder(rvState.stream, rvState.mime ? { mimeType: rvState.mime } : undefined);
+  rvState.recorder = rec; rvState.chunks = [];
+  rec.ondataavailable = e => { if (e.data.size) rvState.chunks.push(e.data); };
+  rec.onstop = () => {
+    v.pause(); v.onended = null;
+    rvState.blob = new Blob(rvState.chunks, { type: rec.mimeType || rvState.mime || 'audio/webm' });
+    rvState.mime = rvState.blob.type;
+    document.getElementById('rvAudio').src = URL.createObjectURL(rvState.blob);
+    rvState.recorder = null; stopRvStream();
+    btn.classList.remove('live'); btn.textContent = '🎙 RE-RECORD';
+    document.getElementById('rvPreview').disabled = false;
+    st.textContent = 'Got it. Tap Preview to check it, then Send to Player.';
+  };
+  v.muted = true; v.playbackRate = rvState.rate; v.currentTime = 0;
+  v.onended = () => { if (rvState.recorder) rvState.recorder.stop(); };
+  rec.start();
+  await v.play().catch(() => {});
+  btn.classList.add('live'); btn.textContent = '■ STOP';
+  st.textContent = 'Recording… talk through what you see.';
+}
+async function sendReview() {
+  const r = rvState.row, st = document.getElementById('rvSendStatus'), btn = document.getElementById('rvSend');
+  const note = document.getElementById('rvNote').value.trim();
+  if (!rvState.blob && !note) { st.textContent = 'Record a voice-over or type a note first.'; return; }
+  btn.disabled = true; btn.textContent = 'SENDING…';
+  try {
+    const patch = { coach_note: note || null, coach_reviewed_at: new Date().toISOString() };
+    if (rvState.blob) {
+      const ext = rvState.mime.includes('mp4') ? 'm4a' : 'webm';
+      const path = `${TEAM_ID}/${r.player_id}/review-${r.id}-${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from(FB_BUCKET).upload(path, rvState.blob, { contentType: rvState.mime.split(';')[0], upsert: false });
+      if (upErr) throw upErr;
+      patch.coach_audio_path = path;
+      patch.coach_audio_type = rvState.mime.split(';')[0] + ';rate=' + rvState.rate;
+    }
+    const { error } = await supabase.from('cage_feedback').update(patch).eq('id', r.id);
+    if (error) throw error;
+    Object.assign(r, patch);
+    btn.textContent = '✓ SENT';
+    st.textContent = 'The player will see it under Coach Feedback.';
+    setTimeout(() => { showView('view-coach'); refreshCoachFeedback(); }, 900);
+  } catch (e) {
+    console.warn(e); btn.disabled = false; btn.textContent = 'SEND TO PLAYER'; st.textContent = 'Send failed. Check your connection and try again.';
+  }
+}
+
 
 // --- Drill library (coach) ---
 function renderLibrary() {
