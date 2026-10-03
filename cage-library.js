@@ -14,50 +14,121 @@ const CAGE_WARMUP = {
 
 const CAGE_FOCUS = [
   {
-    id: 'ground-force', name: 'Ground Force', pillar: 'POWER',
-    why: 'Power comes from the ground, not the shoulders. Push into the ground, stay stable, and rotate so the barrel works north-south through the zone and stays there a long time, instead of swinging around the zone in a circle.',
+    id: 'ground-force', name: 'Farm Board Series', pillar: 'POWER', series: true,
+    why: 'Ground force, one detail at a time. Feel the ground push back into the back leg, land and brace on the front leg, then take it to the tee. The barrel works north-south through the zone, not around it.',
     drills: [
-      { id: 'gf-farm-back', name: 'Farm Board: Back Foot', minutes: 10, feeder: 'none', equip: 'Farm Board, tee',
-        steps: ['Set the Farm Board under your back foot the way Coach showed you.', 'Load into the board and feel the ground push back up into your back leg.', 'Swing off the tee from that load. Hold your finish for 2 seconds.'],
-        reps: '3 rounds of 8 swings', cue: 'Push the ground away, let the hips turn the barrel.',
-        check: 'You stay stable on the board and the barrel stays in the zone through contact.',
-        mistake: 'Spinning off the board with the shoulders instead of pushing with the legs.',
-        video: null, source: "Joey Cunha's Farm Board drills" },
-      { id: 'gf-farm-front', name: 'Farm Board: Front Foot', minutes: 10, feeder: 'none', equip: 'Farm Board, tee',
-        steps: ['Set the Farm Board under your front foot the way Coach showed you.', 'Stride and land on the board, then brace the front leg.', 'Rotate against the braced front leg and swing. Hold your finish.'],
-        reps: '3 rounds of 8 swings', cue: 'Land, brace, turn. Barrel stays north-south.',
-        check: 'Front leg firms up and you finish balanced facing the pitcher.',
-        mistake: 'Front knee collapsing forward or the upper half pulling off early.',
-        video: null, source: "Joey Cunha's Farm Board drills" },
-      { id: 'gf-mb-scoop', name: 'Med Ball Scoop Toss', minutes: 10, feeder: 'none', equip: 'Med ball (4-6 lb), cage net or wall',
-        steps: ['Stand in your batting stance side-on to the net, med ball at your back hip.', 'Load into your back leg, then push off the ground and turn your hips first.', 'Let your arms come last and scoop the ball hard into the net. Same feel as your swing.', 'After each set, take 5 tee swings with that same feel.'],
-        reps: '3 sets of 6 throws, then 5 tee swings', cue: 'Ground, hips, then hands.',
-        check: 'The throw is loud off the hips, not muscled with the arms, and you finish stable.',
-        mistake: 'Throwing with the shoulders and arms. Legs and hips do the work.',
+      { id: 'fb-back-hold', name: 'Back Foot Pressure Hold', minutes: 2, feeder: 'none', equip: 'Farm Board',
+        detail: 'Pressure into the inside of the back foot.',
+        steps: ['Set the Farm Board under your back foot the way Coach showed you.', 'Get in your stance and sink into your load.', 'Hold for 5 seconds. Feel the pressure on the inside of your back foot, not the outside.'],
+        reps: '5 holds of 5 seconds', cue: 'Sit into the back hip, push into the board.',
+        check: 'You can hold the load without rocking to the outside of your foot.',
+        mistake: 'Swaying the hips back past the back foot.', video: null, source: "Joey Cunha's Farm Board drills" },
+      { id: 'fb-back-swing', name: 'Back Foot Board Swings', minutes: 4, feeder: 'none', equip: 'Farm Board, tee',
+        detail: 'Push the ground away to start the swing.',
+        steps: ['Back foot on the Farm Board, tee middle-middle.', 'Load into the board, then push the ground away to start the swing.', 'Hold your finish for 2 seconds.'],
+        reps: '2 rounds of 6 swings', cue: 'Push the ground away, let the hips turn the barrel.',
+        check: 'The swing starts from the legs and the barrel stays in the zone through contact.',
+        mistake: 'Spinning off the board with the shoulders.', video: null, source: "Joey Cunha's Farm Board drills" },
+      { id: 'fb-front-hold', name: 'Front Foot Landing Hold', minutes: 2, feeder: 'none', equip: 'Farm Board',
+        detail: 'Land soft and brace the front leg.',
+        steps: ['Set the Farm Board under your front foot the way Coach showed you.', 'Stride and land on the board. Freeze at landing.', 'Firm up the front leg and hold 3 seconds. Head stays still.'],
+        reps: '5 landings, 3-second hold', cue: 'Land quiet, brace hard.',
+        check: 'Front knee stays over the foot and you do not drift forward.',
+        mistake: 'Front knee caving toward the pitcher.', video: null, source: "Joey Cunha's Farm Board drills" },
+      { id: 'fb-front-swing', name: 'Front Foot Board Swings', minutes: 4, feeder: 'none', equip: 'Farm Board, tee',
+        detail: 'Rotate against a braced front leg.',
+        steps: ['Front foot on the Farm Board, tee middle-middle.', 'Land, brace the front leg, and turn against it.', 'Finish balanced, facing the pitcher.'],
+        reps: '2 rounds of 6 swings', cue: 'Land, brace, turn. Barrel stays north-south.',
+        check: 'The front leg firms up at contact and you hold your finish.',
+        mistake: 'Upper half pulling off early.', video: null, source: "Joey Cunha's Farm Board drills" },
+      { id: 'fb-tee', name: 'Off the Board: Tee', minutes: 4, feeder: 'none', equip: 'Tee',
+        detail: 'Same ground feel, no board.',
+        steps: ['Step off the board. Tee middle-middle.', 'Recreate the back-leg push and the front-leg brace.', 'Line drives only. Barrel works through the zone, not around it.'],
+        reps: '2 rounds of 8 swings', cue: 'Ground, hips, then hands.',
+        check: '6 of 8 are hard line drives up the middle.',
+        mistake: 'Going back to an arms-only swing once the board is gone.' }
+    ]
+  },
+  {
+    id: 'mb-series', name: 'Med Ball Stability Series', pillar: 'POWER', series: true,
+    why: 'A progression from movement prep to the tee. Each step isolates one small detail of stability and rotation, so the swing is driven by the ground and the hips, not the shoulders.',
+    drills: [
+      { id: 'mb-prep', name: 'Movement Prep', minutes: 3, feeder: 'none', equip: 'Med ball (4-6 lb)',
+        detail: 'Open up the hips and the upper back.',
+        steps: ['5 walking lunges each leg with a twist toward the front knee, ball held at the chest.', '5 hip openers each leg (knee up, open out to the side).', 'Half-kneeling, ball at the chest: 5 slow turns each way. Hips stay square, only the chest turns.'],
+        reps: '1 round', cue: 'Loose hips, turning chest.',
+        check: 'You can turn your chest without your hips moving in the half-kneeling turns.',
+        mistake: 'Rushing it. Prep is slow and controlled.' },
+      { id: 'mb-kneel', name: 'Half-Kneeling Scoop Toss', minutes: 3, feeder: 'none', equip: 'Med ball, cage net or wall',
+        detail: 'Rotate from the core with the legs taken out.',
+        steps: ['Half-kneel side-on to the net, back knee down, front knee up.', 'Stay tall. Turn the chest back, then rotate through and scoop the ball into the net.', 'No leaning. The core turns, the arms just follow.'],
+        reps: '2 sets of 5 each side', cue: 'Stay tall, turn the middle.',
+        check: 'You stay upright the whole throw and the ball comes off hard.',
+        mistake: 'Leaning or throwing with the arms.' },
+      { id: 'mb-loadhold', name: 'Load and Hold', minutes: 2, feeder: 'none', equip: 'Med ball',
+        detail: 'Load the back hip and stay stable there.',
+        steps: ['Get in your batting stance with the ball at your back hip.', 'Load into the back leg and hold for 3 seconds.', 'Feel the inside of the back foot. Head stays over the middle.'],
+        reps: '5 holds of 3 seconds', cue: 'Load the hip, stay centered.',
+        check: 'You can hold the load without swaying.',
+        mistake: 'Weight rolling to the outside of the back foot.' },
+      { id: 'mb-brace', name: 'Front Leg Brace Toss', minutes: 3, feeder: 'none', equip: 'Med ball, cage net or wall',
+        detail: 'Brace the front side, then rotate.',
+        steps: ['Start already in your landing position, ball at the back hip.', 'Firm up the front leg, then rotate and scoop the ball into the net.', 'Stop the front side so the hips can whip through.'],
+        reps: '2 sets of 5', cue: 'Firm front side, hips whip through.',
+        check: 'The front leg straightens a little at release and you finish balanced.',
+        mistake: 'Front knee drifting forward at release.' },
+      { id: 'mb-scoop', name: 'Full Scoop Toss', minutes: 3, feeder: 'none', equip: 'Med ball, cage net or wall',
+        detail: 'Put it all together in order.',
+        steps: ['Full stance, ball at the back hip.', 'Load, stride, brace, rotate, release. Same order every rep.', 'Throw on a line into the net, not around in a circle.'],
+        reps: '2 sets of 5', cue: 'Ground, hips, then hands.',
+        check: 'Loud throw, straight into the net, stable finish.',
+        mistake: 'Shoulders starting the throw.',
         video: { url: 'https://www.youtube.com/watch?v=Qq83wji4t2I', label: 'Rotational scoop toss (Simone Sports Performance)' } },
-      { id: 'gf-mb-hitters', name: "Hitter's Med Ball Toss", minutes: 10, feeder: 'none', equip: 'Med ball (4-6 lb), cage net or wall',
-        steps: ['Get in your stance and stride like you are hitting.', 'Stay stable on the stride, then rotate and throw the ball on the same path your barrel takes through the zone.', 'Hold a strong, balanced finish. Then 5 tee swings with the same feel.'],
-        reps: '3 sets of 6 throws, then 5 tee swings', cue: 'Stride, stay stable, rotate through it.',
-        check: 'The ball goes straight into the net on a line, not hooking around.',
-        mistake: 'Swinging the ball around in a circle instead of driving it through.',
-        video: { url: 'https://www.youtube.com/watch?v=1ns15SvkuH0', label: "Hitter's scoop toss (Annex Sports Performance)" } },
-      { id: 'gf-tank-stretch', name: 'Tidal Tank Stretch Swing', minutes: 10, feeder: 'none', equip: 'Tidal Tank',
-        steps: ['Hold the Tidal Tank across your chest in your batting stance.', 'Load and stretch into your back side, then rotate and let the water slam to the front.', 'Keep your feet in the ground and your head still the whole time. Then 5 tee swings.'],
-        reps: '3 sets of 6, then 5 tee swings', cue: 'Stay in the ground, let the water move, not your head.',
-        check: 'The water hits one clean slam at the end, and your feet never slide.',
+      { id: 'mb-tee', name: 'Transfer to the Tee', minutes: 4, feeder: 'none', equip: 'Tee, bat',
+        detail: 'Take the same order into the swing.',
+        steps: ['Put the ball down and pick up the bat. Tee middle-middle.', 'Swing with the exact feel of the last toss: load, brace, rotate.', 'Barrel works north-south through the zone.'],
+        reps: '2 rounds of 6 swings', cue: 'Same order, now with the bat.',
+        check: 'The swing feels like the throw, and the ball comes off on a line.',
+        mistake: 'Losing the lower half the moment the bat is back in your hands.',
+        video: { url: 'https://www.youtube.com/watch?v=1ns15SvkuH0', label: "Hitter's scoop toss (Annex Sports Performance)" } }
+    ]
+  },
+  {
+    id: 'tank-series', name: 'Tidal Tank Series', pillar: 'POWER', series: true,
+    why: 'The water moves if you move. Build a stable base, control the load, rotate clean, then take that control to the tee.',
+    drills: [
+      { id: 'tt-brace', name: 'Stance Brace', minutes: 2, feeder: 'none', equip: 'Tidal Tank',
+        detail: 'Stable base, still water.',
+        steps: ['Hold the Tidal Tank across your chest in your stance.', 'Brace your core and let the water settle.', 'Hold for 10 seconds without the water moving.'],
+        reps: '3 holds of 10 seconds', cue: 'Quiet body, quiet water.',
+        check: 'The water goes still and stays still.',
+        mistake: 'Shifting your feet to fight the water.' },
+      { id: 'tt-load', name: 'Load and Hold', minutes: 3, feeder: 'none', equip: 'Tidal Tank',
+        detail: 'Get to the load without losing balance.',
+        steps: ['From your stance, slowly load into your back leg.', 'Hold the load while the water settles. Do not let it rock you.', 'Come back to center and repeat.'],
+        reps: '2 sets of 5 slow reps', cue: 'Stable base, quiet water.',
+        check: 'You hold the load with no wobble.',
+        mistake: 'Rushing the reps.',
+        video: { url: 'https://www.youtube.com/watch?v=hxJkDH_uswA', label: 'Tidal Tank balance and stability (Northern Baseball Training)' } },
+      { id: 'tt-rotate', name: 'Slow Rotation to Finish', minutes: 3, feeder: 'none', equip: 'Tidal Tank',
+        detail: 'Rotate under control and stop it at the finish.',
+        steps: ['From the load, rotate slowly to your finish.', 'Stop and hold the finish until the water is still.', 'Feet stay in the ground the whole time.'],
+        reps: '2 sets of 5 each way', cue: 'Turn it, stop it, own it.',
+        check: 'The water settles fast at the finish because you are stable.',
+        mistake: 'Letting the water pull you off balance at the finish.' },
+      { id: 'tt-stretch', name: 'Stretch Swing', minutes: 3, feeder: 'none', equip: 'Tidal Tank',
+        detail: 'Stretch, then fire, with one clean slam.',
+        steps: ['Load and stretch into your back side.', 'Rotate hard and let the water slam to the front once.', 'Head still, feet in the ground.'],
+        reps: '2 sets of 5', cue: 'Stay in the ground, let the water move, not your head.',
+        check: 'One clean slam at the end, feet never slide.',
         mistake: 'Losing your base or swaying with the water.',
         video: { url: 'https://www.youtube.com/watch?v=0YcdBiFpG3E', label: 'Tidal Tank stretch drill (BB Sports Training)' } },
-      { id: 'gf-tank-balance', name: 'Tidal Tank Balance & Stability', minutes: 10, feeder: 'none', equip: 'Tidal Tank',
-        steps: ['Hold the Tidal Tank and get into your load position.', 'Hold the load while the water settles. Do not let it rock you.', 'Rotate slowly to your finish and hold it until the water is still. Then 5 tee swings.'],
-        reps: '3 sets of 5 slow reps, then 5 tee swings', cue: 'Stable base, quiet water.',
-        check: 'You can hold the load and the finish without wobbling.',
-        mistake: 'Rushing the reps. Slow and controlled is the point.',
-        video: { url: 'https://www.youtube.com/watch?v=hxJkDH_uswA', label: 'Tidal Tank balance and stability (Northern Baseball Training)' } },
-      { id: 'gf-pause', name: 'Pause at Landing', minutes: 10, feeder: 'none', equip: 'Tee',
-        steps: ['Set the tee middle of the plate, belt high.', 'Stride and land, then FREEZE for one second with your weight on the inside of your back foot.', 'From the freeze, push the ground away and swing. Barrel works through the zone, not around it.'],
-        reps: '3 rounds of 8 swings', cue: 'Land, freeze, push the ground away.',
-        check: 'You can hold the freeze without falling forward, and the ball comes off as a line drive.',
-        mistake: 'Drifting onto the front foot before the swing starts.' }
+      { id: 'tt-tee', name: 'Transfer to the Tee', minutes: 4, feeder: 'none', equip: 'Tee, bat',
+        detail: 'Same stable rotation, now with the bat.',
+        steps: ['Tee middle-middle.', 'Swing with the same stable base and clean rotation you just felt.', 'Hold every finish for 2 seconds.'],
+        reps: '2 rounds of 6 swings', cue: 'Stable base, clean turn.',
+        check: 'You hold every finish without stepping out.',
+        mistake: 'Over-swinging and losing the base.' }
     ]
   },
   {
@@ -219,24 +290,34 @@ const CAGE_FINISHER = {
   cue: 'Every rep is a game rep. #ReturnToQuality'
 };
 
-// Builds a 45-minute session from a player's assigned focus areas (1-3).
-// Rotates drills each session so the same focus area doesn't repeat the same drill.
+// Builds a cage session from a player's assigned focus areas (1-3).
+// A series runs every step in order (small details, prep to tee).
+// A regular focus area adds drills that rotate each session.
 function buildCageSession(focusIds, sessionNumber) {
   const focuses = focusIds.map(id => CAGE_FOCUS.find(f => f.id === id)).filter(Boolean);
   if (!focuses.length) return null;
   const n = sessionNumber || 0;
   const blocks = [];
+  const regular = focuses.filter(f => !f.series);
   const pick = (f, k) => f.drills[(n + k) % f.drills.length];
-  if (focuses.length === 1) {
-    blocks.push({ focus: focuses[0], drill: pick(focuses[0], 0) });
-    blocks.push({ focus: focuses[0], drill: pick(focuses[0], 1) });
-    blocks.push({ focus: focuses[0], drill: pick(focuses[0], 2) });
-  } else if (focuses.length === 2) {
-    blocks.push({ focus: focuses[0], drill: pick(focuses[0], 0) });
-    blocks.push({ focus: focuses[1], drill: pick(focuses[1], 0) });
-    blocks.push({ focus: focuses[0], drill: pick(focuses[0], 1) });
-  } else {
-    focuses.slice(0, 3).forEach(f => blocks.push({ focus: f, drill: pick(f, 0) }));
-  }
-  return { warmup: CAGE_WARMUP, blocks, finisher: CAGE_FINISHER };
+  const perRegular = regular.length === 1 && regular.length === focuses.length ? 3
+    : regular.length === 2 && regular.length === focuses.length ? null : 1;
+  focuses.forEach((f, fi) => {
+    if (f.series) {
+      f.drills.forEach((d, i) => blocks.push({ focus: f, drill: d, step: i + 1, of: f.drills.length }));
+    } else if (perRegular === null) {
+      // two regular areas: A, B, A
+      if (fi === 0) { blocks.push({ focus: f, drill: pick(f, 0) }); }
+      else { blocks.push({ focus: f, drill: pick(f, 0) }); blocks.push({ focus: focuses[0], drill: pick(focuses[0], 1) }); }
+    } else {
+      for (let k = 0; k < perRegular; k++) blocks.push({ focus: f, drill: pick(f, k) });
+    }
+  });
+  const minutes = CAGE_WARMUP.minutes + CAGE_FINISHER.minutes + blocks.reduce((t, b) => t + b.drill.minutes, 0);
+  return { warmup: CAGE_WARMUP, blocks, finisher: CAGE_FINISHER, minutes };
+}
+
+function estimateCageMinutes(focusIds) {
+  const s = buildCageSession(focusIds, 0);
+  return s ? s.minutes : 0;
 }

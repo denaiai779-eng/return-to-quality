@@ -1313,6 +1313,25 @@
   .cg-video { display:flex; align-items:center; gap:8px; margin:10px 0 4px; padding:10px 12px; border-radius:8px; background:rgba(255,71,87,.12); border:1px solid rgba(255,71,87,.45); color:#fff; text-decoration:none; font-weight:700; font-size:13px; }
   .cg-video b { font-family:'Bebas Neue', Impact, sans-serif; font-weight:400; letter-spacing:2px; font-size:16px; color:#ff6b78; }
   .cg-video.pending { background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.15); color:var(--muted); font-weight:500; }
+  .cg-detail { margin:6px 0 2px; font-size:13px; color:var(--gold); font-weight:700; }
+  .cg-detail span { font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:2px; font-weight:400; margin-right:6px; }
+  .cp-opt .ser { display:inline-block; font-size:8px; letter-spacing:1px; padding:1px 5px; border-radius:3px; background:var(--gold); color:var(--navy-1); margin-left:4px; vertical-align:middle; }
+  .cp-est { text-align:center; font-size:12px; letter-spacing:1px; margin:-4px 0 10px; color:var(--cyan); font-weight:700; }
+  .cp-est.over { color:#ff8a9a; }
+  .lib-btn { display:block; width:calc(100% - 28px); max-width:572px; margin:14px auto 0; padding:12px; border-radius:10px; border:1px solid rgba(0,191,255,.5);
+    background:rgba(0,191,255,.1); color:var(--cyan); font-family:'Bebas Neue', Impact, sans-serif; font-size:18px; letter-spacing:3px; cursor:pointer; }
+  #view-library { padding-bottom:110px; }
+  .lib-focus { margin:14px 0; padding:14px; border-radius:12px; background:linear-gradient(160deg, rgba(13,40,71,.85), rgba(10,22,40,.85)); border:1px solid rgba(0,191,255,.18); }
+  .lib-focus h3 { font-family:'Bebas Neue', Impact, sans-serif; font-size:24px; letter-spacing:1.5px; color:var(--white); font-weight:400; }
+  .lib-focus .lib-tags { margin:4px 0 6px; display:flex; gap:6px; flex-wrap:wrap; }
+  .lib-focus .lib-tags span { font-size:10px; letter-spacing:1.5px; font-weight:700; padding:2px 7px; border-radius:3px; background:rgba(0,191,255,.12); color:var(--cyan); }
+  .lib-focus .lib-tags span.ser { background:var(--gold); color:var(--navy-1); }
+  .lib-focus > p { font-size:13px; color:var(--muted); line-height:1.5; margin-bottom:6px; }
+  .lib-focus details { border-top:1px solid rgba(255,255,255,.08); padding:10px 0 4px; }
+  .lib-focus summary { cursor:pointer; list-style:none; display:flex; justify-content:space-between; gap:10px; font-weight:700; color:var(--white); font-size:15px; }
+  .lib-focus summary::-webkit-details-marker { display:none; }
+  .lib-focus summary small { color:var(--muted); font-weight:500; font-size:11px; white-space:nowrap; }
+  .lib-focus ol { margin:8px 0 8px 20px; font-size:14px; line-height:1.5; color:var(--ink); }
   /* coach: cage plan rows + assign sheet */
   .cp-plan-row { cursor:pointer; flex-wrap:wrap; }
   .cp-plan-row .cp-focus { width:100%; display:flex; flex-wrap:wrap; gap:4px; padding-left:40px; margin-top:4px; }
@@ -1518,6 +1537,7 @@
       <div class="cp-last" id="cpSummary"></div>
     </div>
     <div class="cp-hint" style="text-align:left">Tap a player to set his focus areas</div>
+    <button class="lib-btn" id="openLibrary" style="width:100%;margin:6px 0 10px">📚 DRILL LIBRARY</button>
     <div id="coachCagePlans"></div>
   </div>
   <div class="coach-section">
@@ -1549,6 +1569,15 @@
   <div class="cg-wrap" id="cgBody"></div>
 </div>
 
+<!-- DRILL LIBRARY VIEW -->
+<div class="view" id="view-library">
+  <div class="lb-header">
+    <h2>DRILL LIBRARY</h2>
+    <div class="sub">Every series and drill a player can be assigned</div>
+  </div>
+  <div class="cg-wrap" id="libBody"></div>
+</div>
+
 <!-- COACH: ASSIGN CAGE PLAN SHEET -->
 <div class="takeaway-sheet cp-sheet" id="cpSheet">
   <div class="sheet-backdrop" id="cpBackdrop"></div>
@@ -1558,6 +1587,7 @@
     <div class="sheet-sub" id="cpSheetPlayer">—</div>
     <div class="cp-hint">Pick 1 to 3 focus areas</div>
     <div class="cp-opts" id="cpOpts"></div>
+    <div class="cp-est" id="cpEst"></div>
     <textarea class="cp-note-in" id="cpNote" maxlength="240" placeholder="Note for the player (optional): what to feel, what to fix"></textarea>
     <div class="cp-sheet-actions">
       <button class="cp-cancel" id="cpCancel">CANCEL</button>
@@ -2764,7 +2794,9 @@ function renderCoachCagePlans() {
 }
 function renderCpOpts() {
   document.getElementById('cpOpts').innerHTML = CAGE_FOCUS.map(f =>
-    `<button class="cp-opt ${cpSelected.includes(f.id) ? 'on' : ''}" data-fid="${f.id}">${cgEsc(f.name)}<small>${f.pillar}</small></button>`).join('');
+    `<button class="cp-opt ${cpSelected.includes(f.id) ? 'on' : ''}" data-fid="${f.id}">${cgEsc(f.name)}${f.series ? '<span class="ser">SERIES</span>' : ''}<small>${f.pillar}</small></button>`).join('');
+  const est = document.getElementById('cpEst');
+  if (est) { const m = cpSelected.length ? estimateCageMinutes(cpSelected) : 0; est.textContent = m ? `Session: about ${m} min${m > 47 ? ' · over a 45-min booking, drop one' : ''}` : ''; est.classList.toggle('over', m > 47); }
   document.querySelectorAll('#cpOpts .cp-opt').forEach(b => b.addEventListener('click', () => {
     const id = b.dataset.fid;
     if (cpSelected.includes(id)) cpSelected = cpSelected.filter(x => x !== id);
@@ -2838,14 +2870,14 @@ function renderCageView() {
   const session = buildCageSession(focus, sessionNo);
   const steps = [
     { key: 'warmup', title: session.warmup.name, focus: 'Get ready', minutes: session.warmup.minutes, stepsList: session.warmup.steps, cue: session.warmup.cue },
-    ...session.blocks.map((b, i) => ({ key: 'b' + i, title: b.drill.name, focus: b.focus.name, minutes: b.drill.minutes, drill: b.drill })),
+    ...session.blocks.map((b, i) => ({ key: 'b' + i, title: b.drill.name, focus: b.step ? `${b.focus.name} · ${b.step}/${b.of}` : b.focus.name, minutes: b.drill.minutes, drill: b.drill })),
     { key: 'finisher', title: session.finisher.name, focus: 'Compete', minutes: session.finisher.minutes, stepsList: session.finisher.steps, cue: session.finisher.cue }
   ];
   cgState = { steps, done: new Set(), timers: {} };
   const note = plan.note ? `<div class="cg-note"><b>FROM COACH</b>${cgEsc(plan.note)}</div>` : '';
   body.innerHTML = note + `
     <div class="cg-progress"><div id="cgBar"></div></div>
-    <div class="cg-progress-label" id="cgProgLabel">0 / ${steps.length} done · session #${sessionNo + 1}</div>
+    <div class="cg-progress-label" id="cgProgLabel">0 / ${steps.length} done · session #${sessionNo + 1} · about ${session.minutes} min</div>
     ${steps.map((st, i) => {
       const d = st.drill;
       const list = d ? d.steps : st.stepsList;
@@ -2853,6 +2885,7 @@ function renderCageView() {
         <div class="cg-block-top"><span class="cg-step-no">STEP ${i + 1} OF ${steps.length}</span><span class="cg-focus">${cgEsc(st.focus)}</span></div>
         <div class="cg-title">${cgEsc(st.title)}</div>
         <div class="cg-meta"><span>${st.minutes} min</span>${d ? `<span class="${d.feeder === 'tosser' ? 'tosser' : ''}">${d.feeder === 'tosser' ? 'Needs a tosser' : 'Solo'}</span><span>${cgEsc(d.equip)}</span>` : ''}</div>
+        ${d && d.detail ? `<div class="cg-detail"><span>THE DETAIL</span>${cgEsc(d.detail)}</div>` : ''}
         <ol>${list.map(x => `<li>${cgEsc(x)}</li>`).join('')}</ol>
         ${d ? `<div class="cg-row"><b>Reps:</b> ${cgEsc(d.reps)}</div>` : ''}
         <div class="cg-cue"><small>COACH CUE</small>${cgEsc(d ? d.cue : st.cue)}</div>
@@ -2933,6 +2966,33 @@ async function completeCageSession() {
   }
 }
 document.getElementById('cagePlanBtn').addEventListener('click', openCageView);
+
+// --- Drill library (coach) ---
+function renderLibrary() {
+  const drill = d => `<details>
+      <summary>${cgEsc(d.name)} <small>${d.minutes} min · ${d.feeder === 'tosser' ? 'Needs a tosser' : 'Solo'}</small></summary>
+      ${d.detail ? `<div class="cg-detail"><span>THE DETAIL</span>${cgEsc(d.detail)}</div>` : ''}
+      <div class="cg-row"><b>Equipment:</b> ${cgEsc(d.equip)}</div>
+      <ol>${d.steps.map(x => `<li>${cgEsc(x)}</li>`).join('')}</ol>
+      <div class="cg-row"><b>Reps:</b> ${cgEsc(d.reps)}</div>
+      <div class="cg-cue"><small>COACH CUE</small>${cgEsc(d.cue)}</div>
+      <div class="cg-row"><b>You got it when:</b> ${cgEsc(d.check)}</div>
+      <div class="cg-row"><b>Watch for:</b> ${cgEsc(d.mistake)}</div>
+      ${d.video ? `<a class="cg-video" href="${cgEsc(d.video.url)}" target="_blank" rel="noopener"><b>▶ WATCH HOW</b>${cgEsc(d.video.label)}</a>` : (d.source ? `<div class="cg-video pending">▶ Video needed (${cgEsc(d.source)})</div>` : '')}
+    </details>`;
+  document.getElementById('libBody').innerHTML = CAGE_FOCUS.map(f => {
+    const mins = f.drills.reduce((t, d) => t + d.minutes, 0);
+    return `<div class="lib-focus">
+      <h3>${cgEsc(f.name)}</h3>
+      <div class="lib-tags"><span>${f.pillar}</span>${f.series ? `<span class="ser">SERIES · ${f.drills.length} STEPS · ${mins} MIN</span>` : `<span>${f.drills.length} DRILLS · ROTATES</span>`}</div>
+      <p>${cgEsc(f.why)}</p>
+      ${f.drills.map(drill).join('')}
+    </div>`;
+  }).join('') + '<div style="text-align:center"><button class="cg-back" id="libBack">◂ BACK TO COACH</button></div>';
+  document.getElementById('libBack').onclick = () => showView('view-coach');
+}
+document.getElementById('openLibrary').addEventListener('click', () => { renderLibrary(); showView('view-library'); window.scrollTo(0, 0); });
+
 
 // === Boot ===
 // Show UI instantly, fetch data in the background — this is the perceived-speed win

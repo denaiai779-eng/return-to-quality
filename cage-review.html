@@ -36,7 +36,7 @@
 <header>
   <div class="eyebrow">Return to Quality · Cage Plans · Draft</div>
   <h1>Makos Cage Drill Library</h1>
-  <p>8 focus areas · 24 drills · built for a 45-minute cage session</p>
+  <p>3 detail series · 7 hitting focus areas · built for a 45-minute cage session</p>
 </header>
 <main>
   <div class="card ask"><b>Coach review:</b> cut anything you don't coach, fix any cue so it sounds like you, and tell me what's missing. Nothing goes to players until you sign off.</div>
@@ -59,7 +59,7 @@
   const feederLabel = f => f === 'tosser' ? 'Needs a tosser' : 'Solo';
   const drillHtml = d => `
     <details>
-      <summary>${esc(d.name)} <span class="meta">${d.minutes} min · ${feederLabel(d.feeder)}</span></summary>
+      <summary>${esc(d.name)}${d.detail ? ' <span style="font-weight:500;color:#b45309">· ' + esc(d.detail) + '</span>' : ''} <span class="meta">${d.minutes} min · ${feederLabel(d.feeder)}</span></summary>
       <div class="row"><b>Equipment:</b> ${esc(d.equip)}</div>
       <ol>${d.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
       <div class="row"><b>Reps:</b> ${esc(d.reps)}</div>
@@ -73,7 +73,7 @@
     extra(CAGE_WARMUP) +
     CAGE_FOCUS.map(f => `
       <div class="card">
-        <h2>${esc(f.name)}<span class="pillar">${f.pillar}</span></h2>
+        <h2>${esc(f.name)}<span class="pillar">${f.pillar}</span>${f.series ? '<span class="pillar" style="background:#f5b400;color:#0a1628">SERIES</span>' : ''}</h2>
         <p class="why">${esc(f.why)}</p>
         ${f.drills.map(drillHtml).join('')}
       </div>`).join('') +
