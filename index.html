@@ -3595,15 +3595,15 @@ function renderLogin(step, email, msg) {
   const card = document.getElementById('lgCard');
   document.body.classList.add('locked');
   if (step === 'code') {
-    card.innerHTML = `<h2>ENTER YOUR CODE</h2><p>We emailed a 6-digit code to<br><b style="color:var(--white)">${cgEsc(email)}</b>. It can take a minute. Check spam too.</p>
-      <input class="lg-in code" id="lgCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••">
+    card.innerHTML = `<h2>ENTER YOUR CODE</h2><p>We emailed a sign-in code to<br><b style="color:var(--white)">${cgEsc(email)}</b>. It can take a minute. Check spam too.</p>
+      <input class="lg-in code" id="lgCode" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="••••••">
       <button class="fb-send" id="lgGo">SIGN IN</button>
       <div class="fb-status" id="lgSt">${msg || ''}</div>
       <button class="fb-skip" id="lgBack">Use a different email</button>`;
     document.getElementById('lgBack').onclick = () => renderLogin('email');
     document.getElementById('lgGo').onclick = async () => {
-      const token = document.getElementById('lgCode').value.trim(), st = document.getElementById('lgSt');
-      if (token.length < 6) { st.classList.add('err'); st.textContent = 'Enter all 6 digits.'; return; }
+      const token = document.getElementById('lgCode').value.replace(/\D/g, ''), st = document.getElementById('lgSt');
+      if (token.length < 6) { st.classList.add('err'); st.textContent = 'Enter the full code from the email.'; return; }
       st.classList.remove('err'); st.textContent = 'Checking…';
       const { error } = await supabase.auth.verifyOtp({ email, token, type: 'email' });
       if (error) { st.classList.add('err'); st.textContent = 'That code did not work. Check it, or go back and send a new one.'; return; }
