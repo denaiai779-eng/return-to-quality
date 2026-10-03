@@ -142,6 +142,40 @@ const CAGE_FOCUS = [
     ]
   },
   {
+    id: 'stable-lower', name: 'Stable Lower Half Series', pillar: 'POWER', series: true,
+    why: 'Balanced lower half, strong middle. The lower half stays stable and connected to the ground so the middle and upper body can work short, quick and efficient. Tidal Tank first, then Farm Boards, then live.',
+    intro: { url: 'https://www.instagram.com/reel/DYPUOCsgxWr/', label: 'Stable lower half (@okswings)', text: 'A stable base gives you a solid foundation to hit from: strong legs, more ground force, better energy transfer. Stay connected to the ground.' },
+    drills: [
+      { id: 'sl-tube', name: 'Tidal Tank Tube: Stable Base Turns', minutes: 4, feeder: 'none', equip: 'Tidal Tank (tube)',
+        detail: 'Lower half stays still while the middle turns.',
+        steps: ['Hold the Tidal Tank tube across your body by the handles, in a wide athletic stance.', 'Turn the tank side to side with your middle. Your legs and feet stay still and strong.', 'Stay connected to the ground. The water moves, your base does not.'],
+        reps: '2 sets of 8 turns', cue: 'Stable lower half. Stay connected to the ground.',
+        check: 'Knees and feet do not move while the tank turns.',
+        mistake: 'Legs and hips swaying with the water.',
+        video: { url: 'https://www.instagram.com/reel/DYPUOCsgxWr/', label: 'Stable lower half: Tidal Tank, boards, live (@okswings)' } },
+      { id: 'sl-sphere', name: 'Tidal Tank Sphere: Load and Rotate', minutes: 4, feeder: 'none', equip: 'Tidal Tank (sphere)',
+        detail: 'Balanced lower, strong middle.',
+        steps: ['Hold the Tidal Tank sphere at your back side in your batting stance.', 'Load, then rotate the sphere across your body to your finish. The middle does the work.', 'Hold the finish with the sphere low and in front until the water settles. Lower half stays balanced the whole time.'],
+        reps: '2 sets of 6', cue: 'Balanced lower, strong middle.',
+        check: 'You finish balanced and the water settles quickly.',
+        mistake: 'Losing your base at the finish or muscling it with the arms.',
+        video: { url: 'https://www.instagram.com/reel/DYhgJITg9KD/', label: 'Balanced lower and strong middle (@okswings)' } },
+      { id: 'sl-boards', name: 'Farm Boards: Front Toss', minutes: 6, feeder: 'tosser', equip: 'Farm Boards, L-screen, balls',
+        detail: 'Same stable base, now on the boards hitting live.',
+        steps: ['Set the Farm Boards under your feet the way Coach showed you.', 'Partner front tosses from behind the L-screen.', 'Lower half stays stable and connected to the boards so the hands and barrel can work short and quick. Hold your finish.'],
+        reps: '3 rounds of 6', cue: 'Lower half stable, swing short and quick.',
+        check: 'You stay balanced on the boards through the finish and hit line drives.',
+        mistake: 'Sliding or spinning off the boards.',
+        video: { url: 'https://www.instagram.com/reel/DYPUOCsgxWr/', label: 'Boards into live swings (@okswings)' } },
+      { id: 'sl-live', name: 'Off the Boards: Front Toss', minutes: 5, feeder: 'tosser', equip: 'L-screen, balls',
+        detail: 'Keep the stable lower half with no boards.',
+        steps: ['Boards out. Same front toss.', 'Recreate the same stable lower half and strong middle.', 'Short, quick, efficient swings. Line drives.'],
+        reps: '3 rounds of 6', cue: 'Stay connected to the ground.',
+        check: 'Your swing looks the same as it did on the boards.',
+        mistake: 'Going back to a loose lower half once the boards are gone.' }
+    ]
+  },
+  {
     id: 'inside-ball', name: 'Stay Inside the Ball Series', pillar: 'PRECISION', series: true,
     why: 'Work from behind and swing from the inside so the barrel stays in the zone longer. The bottom hand and the knob never push to the ball. Start with Inside Lane dry reps and the SHORT BAT (middle and deep-inside contact points only), then progress to your GAME BAT: a tee set up on the net hit UP THE MIDDLE, and a tee deep on the inner half driven the OTHER WAY.',
     drills: [
