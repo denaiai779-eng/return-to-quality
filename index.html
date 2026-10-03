@@ -1592,11 +1592,19 @@
   </div>
   <div class="coach-section">
     <div class="coach-section-head">
-      <h3>Feedback &amp; Videos</h3>
+      <h3>Videos to Review</h3>
       <div class="cp-last" id="fbSummary"></div>
     </div>
     <div class="cp-hint" style="text-align:left">Tap one to watch and record a voice-over</div>
     <div id="coachFeedback"></div>
+  </div>
+  <div class="coach-section">
+    <div class="coach-section-head">
+      <h3>Session Reports</h3>
+      <div class="cp-last" id="srSummary"></div>
+    </div>
+    <div class="cp-hint" style="text-align:left">Mastered or struggled, straight from players and parents</div>
+    <div id="coachReports"></div>
   </div>
   <div class="coach-section">
     <div class="coach-section-head">
@@ -2991,7 +2999,7 @@ function renderCageView() {
     <div style="display:flex;gap:8px;margin-top:14px"><button class="lib-btn" id="cgMyFb" style="margin:0;flex:1">💬 COACH FEEDBACK</button><button class="lib-btn" id="cgSendVid" style="margin:0;flex:1">📹 SEND A VIDEO</button></div>
     <div style="text-align:center"><button class="cg-back" id="cgBack">◂ BACK</button></div>`;
   document.getElementById('cgMyFb').onclick = openMyFeedback;
-  document.getElementById('cgSendVid').onclick = () => { stopAllCgTimers(); renderFeedbackForm(document.getElementById('cgBody'), focus, false); window.scrollTo(0, 0); };
+  document.getElementById('cgSendVid').onclick = () => { stopAllCgTimers(); renderVideoForm(document.getElementById('cgBody'), focus); window.scrollTo(0, 0); };
   body.querySelectorAll('[data-timer]').forEach(b => b.addEventListener('click', () => toggleCgTimer(b.dataset.timer, b)));
   body.querySelectorAll('[data-done]').forEach(b => b.addEventListener('click', () => markCgDone(b.dataset.done, b)));
   document.getElementById('cgFinish').addEventListener('click', completeCageSession);
@@ -3048,7 +3056,7 @@ async function completeCageSession() {
     if (logErr) throw logErr;
     stopAllCgTimers();
     cageStats[currentPlayerId] = { count: (cageStats[currentPlayerId]?.count || 0) + 1, last: new Date().toISOString() };
-    renderFeedbackForm(document.getElementById('cgBody'), focus, true);
+    renderReportForm(document.getElementById('cgBody'), focus);
     window.scrollTo(0, 0);
     fetchPlayers();
   } catch (e) {
@@ -3093,23 +3101,21 @@ function videoDuration(file) {
   });
 }
 
-// --- Player: feedback form (after a session, or any time) ---
-function renderFeedbackForm(targetEl, focus, afterSession) {
-  fbState = { result: null, mastered: false, file: null, focus: focus || [] };
+// --- Player: SESSION REPORT (after a session) ---
+function renderReportForm(targetEl, focus) {
+  fbState = { result: null, mastered: false, focus: focus || [] };
   targetEl.innerHTML = `<div class="fb-card">
-      <h3>${afterSession ? 'SESSION COMPLETE · +3 PTS' : 'SEND COACH A VIDEO'}</h3>
-      <div class="fb-sub">${afterSession ? 'Tell Coach how it went. Players or parents can fill this out.' : 'Players or parents can send a clip (up to 2 minutes) and a note to Coach.'}</div>
+      <h3>SESSION COMPLETE · +3 PTS</h3>
+      <div class="fb-sub">Session report for Coach. Players or parents can fill this out.</div>
       <div class="fb-label">HOW DID IT GO?</div>
       <div class="fb-results">${Object.entries(FB_RESULTS).map(([k, r]) => `<button class="fb-res" data-r="${k}"><span>${r.icon}</span>${r.label}</button>`).join('')}</div>
       <div class="fb-label">MASTERED IT?</div>
       <div class="fb-toggle" id="fbMastered"><div class="box"></div>I mastered this session</div>
       <div class="fb-label">NOTE FOR COACH (OPTIONAL)</div>
       <textarea class="cp-note-in" id="fbNote" maxlength="400" placeholder="What felt good? What was hard?"></textarea>
-      <div class="fb-label">VIDEO (OPTIONAL)</div>
-      <label class="fb-file" id="fbFileLabel">📹 Add a video for Coach to review<small>Up to 2 minutes. Big videos get shrunk automatically.</small><input type="file" id="fbFile" accept="video/*"></label>
       <div class="fb-status" id="fbStatus"></div>
-      <button class="fb-send" id="fbSend">SEND TO COACH</button>
-      <button class="fb-skip" id="fbSkip">${afterSession ? 'Skip for now' : 'Cancel'}</button>
+      <button class="fb-send" id="fbSend">SAVE SESSION REPORT</button>
+      <button class="fb-skip" id="fbSkip">Skip for now</button>
     </div>`;
   targetEl.querySelectorAll('.fb-res').forEach(b => b.addEventListener('click', () => {
     fbState.result = b.dataset.r;
@@ -3120,25 +3126,57 @@ function renderFeedbackForm(targetEl, focus, afterSession) {
     e.currentTarget.classList.toggle('on', fbState.mastered);
     e.currentTarget.querySelector('.box').textContent = fbState.mastered ? '✓' : '';
   });
+  document.getElementById('fbSkip').addEventListener('click', () => reportDone(targetEl, focus, false));
+  document.getElementById('fbSend').addEventListener('click', async () => {
+    const st = document.getElementById('fbStatus'); st.classList.remove('err');
+    if (!fbState.result) { st.classList.add('err'); st.textContent = 'Pick how it went.'; return; }
+    const btn = document.getElementById('fbSend'); btn.disabled = true; btn.textContent = 'SAVING…';
+    const player = ROSTER.find(p => p.id === currentPlayerId);
+    const { error } = await supabase.from('cage_feedback').insert({
+      team_id: TEAM_ID, player_id: currentPlayerId, player_name: player ? player.name : '',
+      focus: fbState.focus, result: fbState.result, mastered: fbState.mastered,
+      note: document.getElementById('fbNote').value.trim() || null
+    });
+    if (error) { console.warn(error); btn.disabled = false; btn.textContent = 'SAVE SESSION REPORT'; st.classList.add('err'); st.textContent = 'Save failed. Check your connection and try again.'; return; }
+    reportDone(targetEl, focus, true);
+  });
+}
+function reportDone(targetEl, focus, saved) {
+  targetEl.innerHTML = `<div class="cg-empty"><b>${saved ? 'REPORT SAVED' : 'NICE WORK'}</b>${saved ? 'Coach will see how it went.' : ''} Your next session rotates to new drills.<br><span style="color:var(--cyan)">#ReturnToQuality</span>
+      <button class="lib-btn" id="rdVideo" style="margin:16px auto 0">📹 SEND COACH A VIDEO TOO</button>
+      <br><button class="cg-back" id="rdBack">◂ BACK TO MAKO</button></div>`;
+  document.getElementById('rdBack').onclick = () => showView('view-main');
+  document.getElementById('rdVideo').onclick = () => renderVideoForm(targetEl, focus);
+}
+
+// --- Player: SEND COACH A VIDEO (any time) ---
+function renderVideoForm(targetEl, focus) {
+  fbState = { file: null, focus: focus || [] };
+  targetEl.innerHTML = `<div class="fb-card">
+      <h3>SEND COACH A VIDEO</h3>
+      <div class="fb-sub">Players or parents can send a clip (up to 2 minutes) for Coach to review and talk over.</div>
+      <div class="fb-label">VIDEO</div>
+      <label class="fb-file" id="fbFileLabel">📹 Pick or record a video<small>Up to 2 minutes. Big videos get shrunk automatically.</small><input type="file" id="fbFile" accept="video/*"></label>
+      <div class="fb-label">WHAT SHOULD COACH LOOK AT? (OPTIONAL)</div>
+      <textarea class="cp-note-in" id="fbNote" maxlength="400" placeholder="Example: Inside Lane dry reps, does my barrel stay behind?"></textarea>
+      <div class="fb-status" id="fbStatus"></div>
+      <button class="fb-send" id="fbSend">SEND TO COACH</button>
+      <button class="fb-skip" id="fbSkip">Cancel</button>
+    </div>`;
   document.getElementById('fbFile').addEventListener('change', async e => {
     const f = e.target.files[0];
     const st = document.getElementById('fbStatus'); st.classList.remove('err');
     if (!f) { fbState.file = null; return; }
     const dur = await videoDuration(f);
-    if (dur && dur > FB_MAX_SEC + 1) { fbState.file = null; e.target.value = ''; st.classList.add('err'); st.textContent = `That video is ${Math.round(dur)} seconds. Max is ${FB_MAX_SEC}. Trim it first.`; return; }
-    fbState.file = f; fbState.duration = dur;
+    if (dur && dur > FB_MAX_SEC + 1) { fbState.file = null; e.target.value = ''; st.classList.add('err'); st.textContent = `That video is ${Math.round(dur)} seconds. Max is 2 minutes. Trim it first.`; return; }
+    fbState.file = f;
     document.getElementById('fbFileLabel').firstChild.textContent = '✓ Video ready: ' + f.name.slice(0, 28) + ' ';
     const big = f.size > FB_SHRINK_OVER_MB * 1048576;
     st.textContent = `${(f.size / 1048576).toFixed(1)} MB${dur ? ' · ' + Math.round(dur) + ' sec' : ''}${big ? ' · will be shrunk before upload' : ''}`;
   });
-  document.getElementById('fbSkip').addEventListener('click', () => {
-    if (afterSession) targetEl.innerHTML = `<div class="cg-empty"><b>NICE WORK</b>Your next session rotates to new drills.<br><span style="color:var(--cyan)">#ReturnToQuality</span><br><button class="cg-back" id="cgBack2">◂ BACK TO MAKO</button></div>`;
-    const back = document.getElementById('cgBack2');
-    if (back) back.onclick = () => showView('view-main'); else renderCageView();
-  });
-  document.getElementById('fbSend').addEventListener('click', () => submitFeedback(targetEl));
+  document.getElementById('fbSkip').addEventListener('click', () => renderCageView());
+  document.getElementById('fbSend').addEventListener('click', () => submitVideo(targetEl));
 }
-
 // Shrinks a large phone video on the device (about 480p) so it fits the 50 MB upload limit.
 // Plays the video once at normal speed into a canvas and records it, with its audio. Takes about as long as the clip.
 function shrinkVideo(file, onProgress) {
@@ -3175,9 +3213,9 @@ function shrinkVideo(file, onProgress) {
     v.play().catch(err => { cleanup(); reject(err); });
   });
 }
-async function submitFeedback(targetEl) {
+async function submitVideo(targetEl) {
   const st = document.getElementById('fbStatus'); st.classList.remove('err');
-  if (!fbState.result && !fbState.file && !document.getElementById('fbNote').value.trim()) { st.classList.add('err'); st.textContent = 'Pick how it went, add a note, or add a video.'; return; }
+  if (!fbState.file) { st.classList.add('err'); st.textContent = 'Pick a video first.'; return; }
   const btn = document.getElementById('fbSend'); btn.disabled = true;
   const player = ROSTER.find(p => p.id === currentPlayerId);
   let videoPath = null;
@@ -3202,11 +3240,11 @@ async function submitFeedback(targetEl) {
     btn.textContent = 'SENDING…';
     const { error } = await supabase.from('cage_feedback').insert({
       team_id: TEAM_ID, player_id: currentPlayerId, player_name: player ? player.name : '',
-      focus: fbState.focus, result: fbState.result, mastered: fbState.mastered,
+      focus: fbState.focus,
       note: document.getElementById('fbNote').value.trim() || null, video_path: videoPath
     });
     if (error) throw error;
-    targetEl.innerHTML = `<div class="cg-empty"><b>SENT TO COACH</b>${videoPath ? 'Coach will watch your video and send feedback. You will see it under Coach Feedback.' : 'Thanks. Coach will see how it went.'}<br><span style="color:var(--cyan)">#ReturnToQuality</span><br><button class="cg-back" id="cgBack3">◂ BACK TO MAKO</button></div>`;
+    targetEl.innerHTML = `<div class="cg-empty"><b>SENT TO COACH</b>Coach will watch your video and send feedback. You will see it under Coach Feedback.<br><span style="color:var(--cyan)">#ReturnToQuality</span><br><button class="cg-back" id="cgBack3">◂ BACK TO MAKO</button></div>`;
     document.getElementById('cgBack3').onclick = () => showView('view-main');
   } catch (e) {
     console.warn(e);
@@ -3225,11 +3263,11 @@ async function openMyFeedback() {
   document.getElementById('mfPlayer').textContent = p ? `#${p.num} ${p.name}` : '';
   const body = document.getElementById('mfBody');
   body.innerHTML = '<div class="cg-empty">Loading…</div>';
-  const rows = await fetchFeedback(currentPlayerId);
+  const rows = (await fetchFeedback(currentPlayerId)).filter(r => r.video_path);
   if (!rows.length) { body.innerHTML = '<div class="cg-empty"><b>NOTHING YET</b>Send Coach a video after a cage session and his feedback shows up here.<br><button class="cg-back" id="mfBack">◂ BACK</button></div>'; document.getElementById('mfBack').onclick = () => openCageView(); return; }
   body.innerHTML = rows.map(r => `<div class="fb-list-item" data-id="${r.id}">
-      <div class="fb-li-main"><div class="fb-li-name">${fbWhen(r.created_at)} ${r.video_path ? '📹' : ''}</div>
-      <div class="fb-li-meta">${r.result ? FB_RESULTS[r.result].label : 'No rating'}${r.mastered ? ' · Mastered' : ''}</div></div>
+      <div class="fb-li-main"><div class="fb-li-name">📹 ${fbWhen(r.created_at)}</div>
+      <div class="fb-li-meta">${r.note ? cgEsc(r.note.slice(0, 50)) : 'Video for Coach'}</div></div>
       ${r.coach_reviewed_at ? '<span class="fb-badge done">COACH REPLIED</span>' : '<span class="fb-badge" style="background:rgba(255,255,255,.08);color:var(--muted)">WAITING</span>'}
     </div>`).join('') + '<div style="text-align:center"><button class="cg-back" id="mfBack">◂ BACK TO CAGE PLAN</button></div><div id="mfDetail"></div>';
   document.getElementById('mfBack').onclick = () => openCageView();
@@ -3274,17 +3312,29 @@ async function refreshCoachFeedback() {
 function renderCoachFeedback() {
   const el = document.getElementById('coachFeedback');
   if (!el) return;
-  const pending = fbRows.filter(r => r.video_path && !r.coach_reviewed_at).length;
-  document.getElementById('fbSummary').textContent = pending ? `${pending} video${pending === 1 ? '' : 's'} to review` : 'all caught up';
-  if (!fbRows.length) { el.innerHTML = '<div class="cp-hint" style="text-align:left">Nothing yet. Feedback shows up here after players finish sessions.</div>'; return; }
-  const sorted = [...fbRows].sort((a, b) => (!!a.coach_reviewed_at - !!b.coach_reviewed_at) || (new Date(b.created_at) - new Date(a.created_at)));
-  el.innerHTML = sorted.slice(0, 40).map(r => `<div class="fb-list-item" data-id="${r.id}">
-      <div class="fb-li-main"><div class="fb-li-name">${cgEsc(r.player_name)} ${r.video_path ? '📹' : ''}</div>
-      <div class="fb-li-meta">${fbWhen(r.created_at)}${r.mastered ? ' · says mastered' : ''}${r.note ? ' · note' : ''}</div></div>
-      ${r.result ? `<span class="fb-badge res-${r.result}">${FB_RESULTS[r.result].label.toUpperCase()}</span>` : ''}
-      ${r.coach_reviewed_at ? '<span class="fb-badge done">REPLIED</span>' : (r.video_path ? '<span class="fb-badge new">REVIEW</span>' : '')}
+  const vids = fbRows.filter(r => r.video_path);
+  const pending = vids.filter(r => !r.coach_reviewed_at).length;
+  document.getElementById('fbSummary').textContent = pending ? `${pending} to review` : (vids.length ? 'all caught up' : '');
+  el.innerHTML = !vids.length ? '<div class="cp-hint" style="text-align:left">No videos yet.</div>' :
+    [...vids].sort((a, b) => (!!a.coach_reviewed_at - !!b.coach_reviewed_at) || (new Date(b.created_at) - new Date(a.created_at))).slice(0, 40).map(r => `<div class="fb-list-item" data-id="${r.id}">
+      <div class="fb-li-main"><div class="fb-li-name">📹 ${cgEsc(r.player_name)}</div>
+      <div class="fb-li-meta">${fbWhen(r.created_at)}${r.note ? ' · ' + cgEsc(r.note.slice(0, 40)) : ''}</div></div>
+      ${r.coach_reviewed_at ? '<span class="fb-badge done">REPLIED</span>' : '<span class="fb-badge new">REVIEW</span>'}
     </div>`).join('');
   el.querySelectorAll('.fb-list-item').forEach(row => row.addEventListener('click', () => openReview(fbRows.find(r => String(r.id) === row.dataset.id))));
+  // Session reports
+  const rep = document.getElementById('coachReports');
+  const reports = fbRows.filter(r => !r.video_path && r.result);
+  const mastered = reports.filter(r => r.mastered).length, struggled = reports.filter(r => r.result === 'struggled').length;
+  document.getElementById('srSummary').textContent = reports.length ? `${mastered} mastered · ${struggled} struggled` : '';
+  rep.innerHTML = !reports.length ? '<div class="cp-hint" style="text-align:left">No session reports yet.</div>' :
+    reports.slice(0, 40).map(r => `<div class="fb-list-item" style="cursor:default;flex-wrap:wrap">
+      <div class="fb-li-main"><div class="fb-li-name">${cgEsc(r.player_name)}</div>
+      <div class="fb-li-meta">${fbWhen(r.created_at)}${(r.focus || []).length ? ' · ' + cgEsc((r.focus || []).map(focusName).join(', ')) : ''}</div>
+      ${r.note ? `<div class="fb-quote" style="margin:6px 0 0;font-size:12px">${cgEsc(r.note)}</div>` : ''}</div>
+      ${r.mastered ? '<span class="fb-badge" style="background:var(--gold);color:var(--navy-1)">MASTERED</span>' : ''}
+      <span class="fb-badge res-${r.result}">${FB_RESULTS[r.result].label.toUpperCase()}</span>
+    </div>`).join('');
 }
 async function openReview(r) {
   if (!r) return;
@@ -3296,9 +3346,9 @@ async function openReview(r) {
   rvState = { row: r, rate: 1, recorder: null, chunks: [], blob: null, mime: null, stream: null };
   const focusTxt = (r.focus || []).map(focusName).join(' · ');
   body.innerHTML = `<div class="fb-card">
-      <h3>${r.result ? FB_RESULTS[r.result].icon + ' ' + FB_RESULTS[r.result].label : 'No rating'}${r.mastered ? ' · Says mastered' : ''}</h3>
-      <div class="fb-sub">${cgEsc(focusTxt || 'No plan listed')}</div>
-      ${r.note ? `<div class="fb-label">PLAYER / PARENT NOTE</div><div class="fb-quote">${cgEsc(r.note)}</div>` : ''}
+      <h3>📹 VIDEO FROM ${cgEsc((r.player_name || '').toUpperCase())}</h3>
+      <div class="fb-sub">${cgEsc(focusTxt ? 'Plan: ' + focusTxt : 'No plan listed')}</div>
+      ${r.note ? `<div class="fb-label">WHAT TO LOOK AT</div><div class="fb-quote">${cgEsc(r.note)}</div>` : ''}
       ${vurl ? `<video class="fb-video" id="rvVideo" src="${vurl}" playsinline controls preload="auto"></video>
         <div class="fb-label">VOICE-OVER</div>
         <div class="fb-speed" id="rvSpeed"><button data-rate="1" class="on">Normal speed</button><button data-rate="0.5">Slow motion</button></div>
