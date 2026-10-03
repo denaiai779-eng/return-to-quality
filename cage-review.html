@@ -64,6 +64,7 @@
       <ol>${d.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
       <div class="row"><b>Reps:</b> ${esc(d.reps)}</div>
       <div class="cue"><small>COACH CUE</small>${esc(d.cue)}</div>
+      ${d.video ? `<div class="row"><b>Video:</b> <a href="${d.video.url}" target="_blank" rel="noopener">▶ ${esc(d.video.label)}</a></div>` : (d.source ? `<div class="row" style="color:#b45309"><b style="color:#b45309">Video needed:</b> send me the link from ${esc(d.source)}</div>` : '')}
       <div class="row"><b>You got it when:</b> ${esc(d.check)}</div>
       <div class="row"><b>Watch for:</b> ${esc(d.mistake)}</div>
     </details>`;

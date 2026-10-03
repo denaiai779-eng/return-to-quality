@@ -1310,6 +1310,9 @@
   .cg-empty { text-align:center; padding:40px 10px; color:var(--muted); font-size:14px; line-height:1.6; }
   .cg-empty b { color:var(--white); font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:2px; font-size:22px; font-weight:400; display:block; }
   .cg-back { background:transparent; border:1px solid #2a3759; color:var(--muted); border-radius:6px; padding:6px 12px; font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:2px; cursor:pointer; margin-top:10px; }
+  .cg-video { display:flex; align-items:center; gap:8px; margin:10px 0 4px; padding:10px 12px; border-radius:8px; background:rgba(255,71,87,.12); border:1px solid rgba(255,71,87,.45); color:#fff; text-decoration:none; font-weight:700; font-size:13px; }
+  .cg-video b { font-family:'Bebas Neue', Impact, sans-serif; font-weight:400; letter-spacing:2px; font-size:16px; color:#ff6b78; }
+  .cg-video.pending { background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.15); color:var(--muted); font-weight:500; }
   /* coach: cage plan rows + assign sheet */
   .cp-plan-row { cursor:pointer; flex-wrap:wrap; }
   .cp-plan-row .cp-focus { width:100%; display:flex; flex-wrap:wrap; gap:4px; padding-left:40px; margin-top:4px; }
@@ -2853,6 +2856,8 @@ function renderCageView() {
         <ol>${list.map(x => `<li>${cgEsc(x)}</li>`).join('')}</ol>
         ${d ? `<div class="cg-row"><b>Reps:</b> ${cgEsc(d.reps)}</div>` : ''}
         <div class="cg-cue"><small>COACH CUE</small>${cgEsc(d ? d.cue : st.cue)}</div>
+        ${d && d.video ? `<a class="cg-video" href="${cgEsc(d.video.url)}" target="_blank" rel="noopener"><b>▶ WATCH HOW</b>${cgEsc(d.video.label)}</a>` : ''}
+        ${d && !d.video && d.source ? `<div class="cg-video pending">▶ Video coming soon. Ask Coach to show you this one.</div>` : ''}
         ${d ? `<div class="cg-row"><b>You got it when:</b> ${cgEsc(d.check)}</div><div class="cg-row"><b>Watch for:</b> ${cgEsc(d.mistake)}</div>` : ''}
         <div class="cg-actions">
           <div class="cg-timer" id="cgt-${st.key}">${String(st.minutes).padStart(2, '0')}:00</div>
