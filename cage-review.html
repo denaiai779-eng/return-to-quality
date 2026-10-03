@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Makos Cage Drill Library</title>
+<style>
+  :root { --navy:#0a1628; --navy2:#0d2847; --cyan:#00bfff; --ink:#0a1628; --muted:#4a5f78; --line:#dce6f0; --bg:#eef3f8; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; line-height:1.5; }
+  header { background:linear-gradient(135deg,var(--navy),var(--navy2)); color:#fff; padding:28px 16px 22px; text-align:center; }
+  header .eyebrow { color:var(--cyan); font-size:12px; letter-spacing:2.5px; text-transform:uppercase; font-weight:700; }
+  header h1 { font-family:Impact,"Arial Black",sans-serif; font-weight:400; font-size:32px; margin:6px 0 4px; letter-spacing:.5px; }
+  header p { margin:0; color:#bcd0e3; font-size:14px; }
+  main { max-width:820px; margin:0 auto; padding:18px 16px 40px; }
+  .card { background:#fff; border-radius:10px; padding:18px; margin:0 0 16px; box-shadow:0 1px 3px rgba(10,22,40,.08); }
+  .flow { display:flex; flex-wrap:wrap; gap:8px; }
+  .flow span { background:#e6f6fd; border-left:3px solid var(--cyan); padding:6px 10px; border-radius:4px; font-size:14px; }
+  h2 { font-family:Impact,"Arial Black",sans-serif; font-weight:400; font-size:26px; margin:0; letter-spacing:.3px; }
+  .pillar { display:inline-block; font-size:11px; letter-spacing:1.5px; font-weight:700; color:#fff; background:var(--navy); padding:3px 8px; border-radius:3px; margin-left:8px; vertical-align:middle; }
+  .why { color:var(--muted); margin:8px 0 4px; }
+  details { border-top:1px solid var(--line); padding:12px 0 2px; }
+  summary { cursor:pointer; font-weight:700; font-size:16px; list-style:none; display:flex; justify-content:space-between; gap:10px; }
+  summary::-webkit-details-marker { display:none; }
+  summary .meta { font-weight:500; color:var(--muted); font-size:13px; white-space:nowrap; }
+  ol { margin:10px 0; padding-left:22px; }
+  .row { margin:6px 0; font-size:15px; }
+  .row b { color:#0077cc; }
+  .cue { background:var(--navy); color:#fff; border-radius:6px; padding:10px 12px; margin:10px 0 4px; font-weight:700; }
+  .cue small { display:block; color:var(--cyan); font-size:11px; letter-spacing:1.5px; font-weight:700; }
+  .ask { background:#fff8e1; border-left:4px solid #f5b400; padding:12px 14px; border-radius:6px; font-size:15px; }
+  footer { text-align:center; color:var(--muted); font-size:13px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Return to Quality · Cage Plans · Draft</div>
+  <h1>Makos Cage Drill Library</h1>
+  <p>8 focus areas · 24 drills · built for a 45-minute cage session</p>
+</header>
+<main>
+  <div class="card ask"><b>Coach review:</b> cut anything you don't coach, fix any cue so it sounds like you, and tell me what's missing. Nothing goes to players until you sign off.</div>
+
+  <div class="card">
+    <h2 style="font-size:22px">How a 45-minute session runs</h2>
+    <p class="why">You assign each player 1 to 3 focus areas. His phone builds the session and rotates drills so it's not the same thing every time.</p>
+    <div class="flow" id="flow"></div>
+  </div>
+
+  <div id="lib"></div>
+  <footer>#ReturnToQuality</footer>
+</main>
+<script src="cage-library.js"></script>
+<script>
+  const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  document.getElementById('flow').innerHTML = [
+    `Warm-up · ${CAGE_WARMUP.minutes} min`, 'Drill 1 · ~12 min', 'Drill 2 · ~12 min', 'Drill 3 · ~10 min', `Quality AB round · ${CAGE_FINISHER.minutes} min`
+  ].map(t => `<span>${t}</span>`).join('');
+  const feederLabel = f => f === 'tosser' ? 'Needs a tosser' : 'Solo';
+  const drillHtml = d => `
+    <details>
+      <summary>${esc(d.name)} <span class="meta">${d.minutes} min · ${feederLabel(d.feeder)}</span></summary>
+      <div class="row"><b>Equipment:</b> ${esc(d.equip)}</div>
+      <ol>${d.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
+      <div class="row"><b>Reps:</b> ${esc(d.reps)}</div>
+      <div class="cue"><small>COACH CUE</small>${esc(d.cue)}</div>
+      <div class="row"><b>You got it when:</b> ${esc(d.check)}</div>
+      <div class="row"><b>Watch for:</b> ${esc(d.mistake)}</div>
+    </details>`;
+  const extra = (b) => `<div class="card"><h2>${esc(b.name)} <span class="pillar">${b.minutes} MIN</span></h2><ol>${b.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol><div class="cue"><small>COACH CUE</small>${esc(b.cue)}</div></div>`;
+  document.getElementById('lib').innerHTML =
+    extra(CAGE_WARMUP) +
+    CAGE_FOCUS.map(f => `
+      <div class="card">
+        <h2>${esc(f.name)}<span class="pillar">${f.pillar}</span></h2>
+        <p class="why">${esc(f.why)}</p>
+        ${f.drills.map(drillHtml).join('')}
+      </div>`).join('') +
+    extra(CAGE_FINISHER);
+</script>
+</body>
+</html>

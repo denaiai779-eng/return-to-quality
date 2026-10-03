@@ -1264,6 +1264,72 @@
 
   footer { text-align: center; color: var(--muted); font-size: 10px; margin-top: 22px; padding-top: 14px; border-top: 1px solid rgba(0, 191, 255, 0.15); letter-spacing: 3px; text-transform: uppercase; font-weight: 700; }
   footer .cyan { color: var(--cyan); }
+
+  /* ===== CAGE PLANS ===== */
+  .cage-plan-btn { display:block; width:calc(100% - 28px); max-width:572px; margin:12px auto 0; padding:14px; border:0; border-radius:10px;
+    background:linear-gradient(135deg, var(--cyan), var(--cyan-deep)); color:var(--navy-1); font-family:'Bebas Neue', Impact, sans-serif;
+    font-size:22px; letter-spacing:3px; cursor:pointer; box-shadow:0 0 18px rgba(0,191,255,.35); }
+  .cage-plan-btn small { display:block; font-family:Montserrat, Arial, sans-serif; font-size:10px; letter-spacing:1.5px; font-weight:700; opacity:.75; }
+  #view-cage { padding-bottom:110px; }
+  .cg-wrap { max-width:600px; margin:0 auto; padding:0 14px; }
+  .cg-chips { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:10px; }
+  .cg-chip { font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:1.5px; font-size:13px; padding:4px 10px; border-radius:20px;
+    border:1px solid rgba(0,191,255,.45); color:var(--cyan); background:rgba(0,191,255,.08); }
+  .cg-note { margin:14px 0 0; padding:12px 14px; border-left:3px solid var(--gold); background:rgba(255,216,74,.08); border-radius:6px; font-size:13px; color:var(--ink); }
+  .cg-note b { color:var(--gold); font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:2px; font-weight:400; display:block; font-size:13px; }
+  .cg-progress { height:8px; background:rgba(255,255,255,.08); border-radius:8px; margin:16px 0 4px; overflow:hidden; }
+  .cg-progress > div { height:100%; width:0; background:linear-gradient(90deg, var(--cyan-deep), var(--cyan)); transition:width .3s; }
+  .cg-progress-label { font-size:11px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; text-align:right; }
+  .cg-block { margin:14px 0; padding:14px; border-radius:12px; background:linear-gradient(160deg, rgba(13,40,71,.85), rgba(10,22,40,.85));
+    border:1px solid rgba(0,191,255,.18); }
+  .cg-block.done { border-color:var(--green); opacity:.72; }
+  .cg-block-top { display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
+  .cg-step-no { font-family:'Bebas Neue', Impact, sans-serif; color:var(--muted); letter-spacing:2px; font-size:12px; }
+  .cg-title { font-family:'Bebas Neue', Impact, sans-serif; font-size:24px; letter-spacing:1.5px; color:var(--white); line-height:1.1; }
+  .cg-focus { font-size:11px; letter-spacing:1.5px; color:var(--cyan); text-transform:uppercase; font-weight:700; }
+  .cg-meta { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; }
+  .cg-meta span { font-size:11px; padding:3px 8px; border-radius:4px; background:rgba(255,255,255,.07); color:var(--ink); }
+  .cg-meta span.tosser { background:rgba(255,216,74,.15); color:var(--gold); }
+  .cg-block ol { margin:8px 0 8px 20px; font-size:14px; line-height:1.5; color:var(--ink); }
+  .cg-block li { margin:4px 0; }
+  .cg-row { font-size:13px; margin:6px 0; color:var(--ink); }
+  .cg-row b { color:var(--cyan); }
+  .cg-cue { margin:10px 0; padding:10px 12px; border-radius:8px; background:var(--navy-1); border:1px solid rgba(0,191,255,.35);
+    font-weight:800; color:var(--white); font-size:15px; }
+  .cg-cue small { display:block; font-size:10px; letter-spacing:2px; color:var(--cyan); font-weight:700; }
+  .cg-actions { display:flex; gap:8px; margin-top:10px; align-items:center; }
+  .cg-timer { flex:1; font-family:'Bebas Neue', Impact, sans-serif; font-size:30px; letter-spacing:2px; color:var(--white); }
+  .cg-timer.up { color:var(--gold); }
+  .cg-btn { border:0; border-radius:8px; padding:10px 14px; font-family:'Bebas Neue', Impact, sans-serif; font-size:16px; letter-spacing:2px; cursor:pointer; }
+  .cg-btn.start { background:rgba(0,191,255,.15); color:var(--cyan); border:1px solid rgba(0,191,255,.5); }
+  .cg-btn.done { background:var(--green); color:var(--navy-1); }
+  .cg-btn:disabled { opacity:.5; }
+  .cg-finish { display:block; width:100%; margin:18px 0 6px; padding:16px; border:0; border-radius:10px; background:linear-gradient(135deg, var(--gold), #f5b400);
+    color:var(--navy-1); font-family:'Bebas Neue', Impact, sans-serif; font-size:22px; letter-spacing:3px; cursor:pointer; }
+  .cg-finish:disabled { background:rgba(255,255,255,.08); color:var(--muted); cursor:default; }
+  .cg-empty { text-align:center; padding:40px 10px; color:var(--muted); font-size:14px; line-height:1.6; }
+  .cg-empty b { color:var(--white); font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:2px; font-size:22px; font-weight:400; display:block; }
+  .cg-back { background:transparent; border:1px solid #2a3759; color:var(--muted); border-radius:6px; padding:6px 12px; font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:2px; cursor:pointer; margin-top:10px; }
+  /* coach: cage plan rows + assign sheet */
+  .cp-plan-row { cursor:pointer; flex-wrap:wrap; }
+  .cp-plan-row .cp-focus { width:100%; display:flex; flex-wrap:wrap; gap:4px; padding-left:40px; margin-top:4px; }
+  .cp-plan-row .cp-focus span { font-size:10px; letter-spacing:1px; padding:2px 7px; border-radius:10px; background:rgba(0,191,255,.12); color:var(--cyan); font-weight:700; text-transform:uppercase; }
+  .cp-plan-row .cp-focus span.none { background:rgba(255,71,87,.12); color:#ff8a9a; }
+  .cp-plan-row .cp-last { font-size:10px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
+  .cp-sheet .sheet-content { border-top-color:rgba(0,191,255,.6); }
+  .cp-sheet .sheet-title { color:var(--cyan); }
+  .cp-opts { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:6px 0 12px; }
+  .cp-opt { text-align:left; padding:10px; border-radius:8px; border:1px solid rgba(0,191,255,.25); background:rgba(13,40,71,.6); color:var(--ink); cursor:pointer; font-size:13px; font-weight:700; }
+  .cp-opt small { display:block; font-size:9px; letter-spacing:1.5px; color:var(--muted); font-weight:700; margin-top:2px; }
+  .cp-opt.on { background:linear-gradient(135deg, var(--cyan), var(--cyan-deep)); color:var(--navy-1); border-color:var(--cyan); }
+  .cp-opt.on small { color:var(--navy-2); }
+  .cp-note-in { width:100%; min-height:64px; padding:10px; border-radius:8px; border:1px solid rgba(0,191,255,.25); background:rgba(10,22,40,.8); color:var(--white); font-size:14px; font-family:inherit; }
+  .cp-sheet-actions { display:flex; gap:8px; margin-top:12px; }
+  .cp-sheet-actions button { flex:1; padding:12px; border-radius:8px; border:0; font-family:'Bebas Neue', Impact, sans-serif; font-size:17px; letter-spacing:2px; cursor:pointer; }
+  .cp-save { background:linear-gradient(135deg, var(--cyan), var(--cyan-deep)); color:var(--navy-1); }
+  .cp-clear { background:transparent; color:#ff8a9a; border:1px solid rgba(255,71,87,.4) !important; }
+  .cp-cancel { background:rgba(255,255,255,.06); color:var(--muted); }
+  .cp-hint { font-size:11px; color:var(--muted); letter-spacing:1px; text-align:center; margin-bottom:8px; }
 </style>
 </head>
 <body>
@@ -1305,6 +1371,8 @@
       <div><span class="val" id="totalVal">0</span><span class="pts">PTS</span></div>
     </div>
   </div>
+
+  <button class="cage-plan-btn" id="cagePlanBtn">⚾ MY CAGE PLAN<small id="cagePlanSub">Your 45-minute session from Coach</small></button>
 
   <main>
     <div class="tabs-wrap">
@@ -1443,6 +1511,14 @@
   </div>
   <div class="coach-section">
     <div class="coach-section-head">
+      <h3>Cage Plans</h3>
+      <div class="cp-last" id="cpSummary"></div>
+    </div>
+    <div class="cp-hint" style="text-align:left">Tap a player to set his focus areas</div>
+    <div id="coachCagePlans"></div>
+  </div>
+  <div class="coach-section">
+    <div class="coach-section-head">
       <h3>All Players</h3>
       <div class="coach-toggle">
         <button class="active" data-cmode="week">Weekly</button>
@@ -1457,6 +1533,34 @@
   </div>
   <div style="text-align: center; padding: 20px; color: var(--muted); font-size: 10px; letter-spacing: 2px;">
     <button id="lockCoach" style="background: transparent; color: var(--muted); border: 1px solid #2a3759; padding: 8px 16px; border-radius: 4px; font-family: 'Bebas Neue', Impact, sans-serif; letter-spacing: 2px; cursor: pointer;">🔒 LOCK COACH MODE</button>
+  </div>
+</div>
+
+<!-- CAGE PLAN VIEW -->
+<div class="view" id="view-cage">
+  <div class="lb-header">
+    <h2>MY CAGE PLAN</h2>
+    <div class="sub" id="cgPlayer">—</div>
+    <div class="cg-chips" id="cgChips"></div>
+  </div>
+  <div class="cg-wrap" id="cgBody"></div>
+</div>
+
+<!-- COACH: ASSIGN CAGE PLAN SHEET -->
+<div class="takeaway-sheet cp-sheet" id="cpSheet">
+  <div class="sheet-backdrop" id="cpBackdrop"></div>
+  <div class="sheet-content">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">CAGE PLAN</div>
+    <div class="sheet-sub" id="cpSheetPlayer">—</div>
+    <div class="cp-hint">Pick 1 to 3 focus areas</div>
+    <div class="cp-opts" id="cpOpts"></div>
+    <textarea class="cp-note-in" id="cpNote" maxlength="240" placeholder="Note for the player (optional): what to feel, what to fix"></textarea>
+    <div class="cp-sheet-actions">
+      <button class="cp-cancel" id="cpCancel">CANCEL</button>
+      <button class="cp-clear" id="cpClear">CLEAR</button>
+      <button class="cp-save" id="cpSave">SAVE</button>
+    </div>
   </div>
 </div>
 
@@ -1482,6 +1586,7 @@
   </div>
 </nav>
 
+<script src="cage-library.js"></script>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
@@ -1736,6 +1841,13 @@ function startRealtime() {
     .on('postgres_changes', { event: '*', schema: 'public', table: 'players', filter: `team_id=eq.${TEAM_ID}` }, () => fetchPlayers())
     .subscribe();
   supabase
+    .channel('cage-plan-changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'cage_plans', filter: `team_id=eq.${TEAM_ID}` }, async () => {
+      await fetchCagePlans(); updateCagePlanButton();
+      if (document.getElementById('view-coach').classList.contains('active')) renderCoachCagePlans();
+    })
+    .subscribe();
+  supabase
     .channel('log-changes')
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'log' }, (payload) => {
       if (currentPlayerId && payload.new.player_id === currentPlayerId) fetchLog();
@@ -1779,6 +1891,7 @@ function setPlayer(pid) {
   document.querySelector('#view-main h1').innerHTML = `${p.name.split(' ')[0].toUpperCase()}'S <span class="accent">CHALLENGE</span>`;
   fetchLog();
   renderMyScores();
+  updateCagePlanButton();
   showView('view-main');
 }
 
@@ -1953,7 +2066,8 @@ function promptCoachPin() {
 async function openCoachView() {
   if (!isCoachUnlocked() && !promptCoachPin()) return;
   showView('view-coach');
-  await fetchTeamFeed();
+  await Promise.all([fetchTeamFeed(), fetchCagePlans(), fetchCageStats()]);
+  renderCoachCagePlans();
   renderCoachStats();
   renderCoachPlayers();
   renderCoachFeed();
@@ -2595,6 +2709,226 @@ document.querySelectorAll('.lb-toggle button').forEach(b => {
   });
 });
 
+
+// ===== CAGE PLANS =====
+let cagePlans = {};        // player_id -> { focus: [], note, updated_at }
+let cageStats = {};        // player_id -> { count, last }
+let cpEditing = null;      // player id being edited in the coach sheet
+let cpSelected = [];
+let cgState = null;        // { session, done:Set, timers:{} }
+const cgEsc = v => String(v == null ? '' : v).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const focusName = id => (CAGE_FOCUS.find(f => f.id === id) || {}).name || id;
+
+async function fetchCagePlans() {
+  const { data, error } = await supabase.from('cage_plans').select('*').eq('team_id', TEAM_ID);
+  if (error) { console.warn('cage_plans', error); return; }
+  cagePlans = {};
+  for (const r of data || []) cagePlans[r.player_id] = r;
+}
+async function fetchCageStats() {
+  const { data, error } = await supabase.from('log').select('player_id, ts').eq('team_id', TEAM_ID).eq('type', 'cage').order('ts', { ascending: false }).limit(1000);
+  if (error) { console.warn('cage stats', error); return; }
+  cageStats = {};
+  for (const r of data || []) {
+    const s = cageStats[r.player_id] || (cageStats[r.player_id] = { count: 0, last: r.ts });
+    s.count++;
+  }
+}
+function daysAgo(ts) {
+  const d = Math.floor((Date.now() - new Date(ts).getTime()) / 86400000);
+  return d <= 0 ? 'today' : d === 1 ? 'yesterday' : d + ' days ago';
+}
+
+// --- Coach side ---
+function renderCoachCagePlans() {
+  const el = document.getElementById('coachCagePlans');
+  if (!el) return;
+  const assigned = ROSTER.filter(p => (cagePlans[p.id]?.focus || []).length).length;
+  document.getElementById('cpSummary').textContent = `${assigned} / ${ROSTER.length} assigned`;
+  el.innerHTML = ROSTER.map(p => {
+    const focus = cagePlans[p.id]?.focus || [];
+    const st = cageStats[p.id];
+    const last = st ? `${st.count} session${st.count === 1 ? '' : 's'} · last ${daysAgo(st.last)}` : 'no sessions yet';
+    const chips = focus.length ? focus.map(f => `<span>${cgEsc(focusName(f))}</span>`).join('') : '<span class="none">No plan yet</span>';
+    return `<div class="coach-player cp-plan-row" data-pid="${p.id}">
+      <div class="cp-num">#${p.num}</div>
+      <div class="cp-name">${cgEsc(p.name)} <span style="color:var(--muted);font-weight:400;font-size:11px">${p.div}</span></div>
+      <div class="cp-last">${last}</div>
+      <div class="cp-focus">${chips}</div>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.cp-plan-row').forEach(row => row.addEventListener('click', () => openCagePlanSheet(row.dataset.pid)));
+}
+function renderCpOpts() {
+  document.getElementById('cpOpts').innerHTML = CAGE_FOCUS.map(f =>
+    `<button class="cp-opt ${cpSelected.includes(f.id) ? 'on' : ''}" data-fid="${f.id}">${cgEsc(f.name)}<small>${f.pillar}</small></button>`).join('');
+  document.querySelectorAll('#cpOpts .cp-opt').forEach(b => b.addEventListener('click', () => {
+    const id = b.dataset.fid;
+    if (cpSelected.includes(id)) cpSelected = cpSelected.filter(x => x !== id);
+    else if (cpSelected.length < 3) cpSelected.push(id);
+    else { alertCp('Max 3 focus areas'); return; }
+    renderCpOpts();
+  }));
+}
+function alertCp(msg) {
+  const h = document.querySelector('#cpSheet .cp-hint');
+  h.textContent = msg; h.style.color = '#ff8a9a';
+  setTimeout(() => { h.textContent = 'Pick 1 to 3 focus areas'; h.style.color = ''; }, 1600);
+}
+function openCagePlanSheet(pid) {
+  const p = ROSTER.find(r => r.id === pid);
+  if (!p) return;
+  cpEditing = pid;
+  cpSelected = [...(cagePlans[pid]?.focus || [])];
+  document.getElementById('cpSheetPlayer').textContent = `#${p.num} ${p.name} · ${p.div}`;
+  document.getElementById('cpNote').value = cagePlans[pid]?.note || '';
+  renderCpOpts();
+  document.getElementById('cpSheet').classList.add('open');
+}
+function closeCagePlanSheet() { document.getElementById('cpSheet').classList.remove('open'); cpEditing = null; }
+async function saveCagePlan(clear) {
+  if (!cpEditing) return;
+  if (!clear && !cpSelected.length) { alertCp('Pick at least 1 focus area'); return; }
+  const row = { player_id: cpEditing, team_id: TEAM_ID, focus: clear ? [] : cpSelected,
+    note: clear ? null : (document.getElementById('cpNote').value.trim() || null), assigned_by: 'coach', updated_at: new Date().toISOString() };
+  const btn = document.getElementById('cpSave'); btn.disabled = true; btn.textContent = 'SAVING…';
+  const { error } = await supabase.from('cage_plans').upsert(row, { onConflict: 'player_id' });
+  btn.disabled = false; btn.textContent = 'SAVE';
+  if (error) { alertCp('Save failed. Check connection.'); console.warn(error); return; }
+  cagePlans[row.player_id] = row;
+  closeCagePlanSheet();
+  renderCoachCagePlans();
+}
+document.getElementById('cpSave').addEventListener('click', () => saveCagePlan(false));
+document.getElementById('cpClear').addEventListener('click', () => saveCagePlan(true));
+document.getElementById('cpCancel').addEventListener('click', closeCagePlanSheet);
+document.getElementById('cpBackdrop').addEventListener('click', closeCagePlanSheet);
+
+// --- Player side ---
+function updateCagePlanButton() {
+  const sub = document.getElementById('cagePlanSub');
+  if (!sub || !currentPlayerId) return;
+  const focus = cagePlans[currentPlayerId]?.focus || [];
+  sub.textContent = focus.length ? focus.map(focusName).join(' · ') : 'Coach hasn\'t set your plan yet';
+}
+async function openCageView() {
+  if (!currentPlayerId) return;
+  showView('view-cage');
+  window.scrollTo(0, 0);
+  const p = ROSTER.find(r => r.id === currentPlayerId);
+  document.getElementById('cgPlayer').textContent = p ? `#${p.num} ${p.name}` : '';
+  document.getElementById('cgBody').innerHTML = '<div class="cg-empty">Loading your plan…</div>';
+  await Promise.all([fetchCagePlans(), fetchCageStats()]);
+  renderCageView();
+}
+function renderCageView() {
+  const plan = cagePlans[currentPlayerId];
+  const focus = plan?.focus || [];
+  document.getElementById('cgChips').innerHTML = focus.map(f => `<span class="cg-chip">${cgEsc(focusName(f))}</span>`).join('');
+  const body = document.getElementById('cgBody');
+  if (!focus.length) {
+    body.innerHTML = `<div class="cg-empty"><b>NO PLAN YET</b>Coach hasn't set your cage plan. Ask Coach Devan or Coach Nick what to work on.<br><button class="cg-back" id="cgBack">◂ BACK</button></div>`;
+    document.getElementById('cgBack').onclick = () => showView('view-main');
+    return;
+  }
+  const sessionNo = cageStats[currentPlayerId]?.count || 0;
+  const session = buildCageSession(focus, sessionNo);
+  const steps = [
+    { key: 'warmup', title: session.warmup.name, focus: 'Get ready', minutes: session.warmup.minutes, stepsList: session.warmup.steps, cue: session.warmup.cue },
+    ...session.blocks.map((b, i) => ({ key: 'b' + i, title: b.drill.name, focus: b.focus.name, minutes: b.drill.minutes, drill: b.drill })),
+    { key: 'finisher', title: session.finisher.name, focus: 'Compete', minutes: session.finisher.minutes, stepsList: session.finisher.steps, cue: session.finisher.cue }
+  ];
+  cgState = { steps, done: new Set(), timers: {} };
+  const note = plan.note ? `<div class="cg-note"><b>FROM COACH</b>${cgEsc(plan.note)}</div>` : '';
+  body.innerHTML = note + `
+    <div class="cg-progress"><div id="cgBar"></div></div>
+    <div class="cg-progress-label" id="cgProgLabel">0 / ${steps.length} done · session #${sessionNo + 1}</div>
+    ${steps.map((st, i) => {
+      const d = st.drill;
+      const list = d ? d.steps : st.stepsList;
+      return `<div class="cg-block" id="cgb-${st.key}">
+        <div class="cg-block-top"><span class="cg-step-no">STEP ${i + 1} OF ${steps.length}</span><span class="cg-focus">${cgEsc(st.focus)}</span></div>
+        <div class="cg-title">${cgEsc(st.title)}</div>
+        <div class="cg-meta"><span>${st.minutes} min</span>${d ? `<span class="${d.feeder === 'tosser' ? 'tosser' : ''}">${d.feeder === 'tosser' ? 'Needs a tosser' : 'Solo'}</span><span>${cgEsc(d.equip)}</span>` : ''}</div>
+        <ol>${list.map(x => `<li>${cgEsc(x)}</li>`).join('')}</ol>
+        ${d ? `<div class="cg-row"><b>Reps:</b> ${cgEsc(d.reps)}</div>` : ''}
+        <div class="cg-cue"><small>COACH CUE</small>${cgEsc(d ? d.cue : st.cue)}</div>
+        ${d ? `<div class="cg-row"><b>You got it when:</b> ${cgEsc(d.check)}</div><div class="cg-row"><b>Watch for:</b> ${cgEsc(d.mistake)}</div>` : ''}
+        <div class="cg-actions">
+          <div class="cg-timer" id="cgt-${st.key}">${String(st.minutes).padStart(2, '0')}:00</div>
+          <button class="cg-btn start" data-timer="${st.key}">START</button>
+          <button class="cg-btn done" data-done="${st.key}">✓ DONE</button>
+        </div>
+      </div>`;
+    }).join('')}
+    <button class="cg-finish" id="cgFinish" disabled>FINISH ALL STEPS TO COMPLETE</button>
+    <div style="text-align:center"><button class="cg-back" id="cgBack">◂ BACK</button></div>`;
+  body.querySelectorAll('[data-timer]').forEach(b => b.addEventListener('click', () => toggleCgTimer(b.dataset.timer, b)));
+  body.querySelectorAll('[data-done]').forEach(b => b.addEventListener('click', () => markCgDone(b.dataset.done, b)));
+  document.getElementById('cgFinish').addEventListener('click', completeCageSession);
+  document.getElementById('cgBack').onclick = () => { stopAllCgTimers(); showView('view-main'); };
+}
+function toggleCgTimer(key, btn) {
+  const t = cgState.timers[key];
+  if (t && t.handle) { clearInterval(t.handle); t.handle = null; btn.textContent = 'RESUME'; return; }
+  const st = cgState.steps.find(x => x.key === key);
+  const timer = t || (cgState.timers[key] = { left: st.minutes * 60, handle: null });
+  btn.textContent = 'PAUSE';
+  timer.handle = setInterval(() => {
+    timer.left--;
+    const el = document.getElementById('cgt-' + key);
+    if (!el) { clearInterval(timer.handle); return; }
+    const a = Math.abs(timer.left);
+    el.textContent = (timer.left < 0 ? '+' : '') + String(Math.floor(a / 60)).padStart(2, '0') + ':' + String(a % 60).padStart(2, '0');
+    el.classList.toggle('up', timer.left <= 0);
+    if (timer.left === 0 && navigator.vibrate) navigator.vibrate([200, 100, 200]);
+  }, 1000);
+}
+function stopAllCgTimers() { if (!cgState) return; Object.values(cgState.timers).forEach(t => t.handle && clearInterval(t.handle)); }
+function markCgDone(key, btn) {
+  const t = cgState.timers[key]; if (t && t.handle) { clearInterval(t.handle); t.handle = null; }
+  cgState.done.add(key);
+  document.getElementById('cgb-' + key).classList.add('done');
+  btn.disabled = true; btn.textContent = '✓ DONE';
+  const startBtn = document.querySelector(`[data-timer="${key}"]`); if (startBtn) startBtn.disabled = true;
+  const n = cgState.done.size, total = cgState.steps.length;
+  document.getElementById('cgBar').style.width = (n / total * 100) + '%';
+  document.getElementById('cgProgLabel').textContent = `${n} / ${total} done · session #${(cageStats[currentPlayerId]?.count || 0) + 1}`;
+  const fin = document.getElementById('cgFinish');
+  if (n === total) { fin.disabled = false; fin.textContent = '✓ COMPLETE SESSION · +3 PTS'; }
+  const next = cgState.steps.find(x => !cgState.done.has(x.key));
+  if (next) document.getElementById('cgb-' + next.key).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+async function completeCageSession() {
+  const fin = document.getElementById('cgFinish');
+  fin.disabled = true; fin.textContent = 'SAVING…';
+  const player = ROSTER.find(p => p.id === currentPlayerId);
+  const focus = cagePlans[currentPlayerId]?.focus || [];
+  const pts = 3;
+  try {
+    const thisMonday = getMonday(new Date());
+    const me = allPlayersData.find(p => p.id === currentPlayerId);
+    const newWeekly = (me && me.week_start === thisMonday ? (me.weekly || 0) : 0) + pts;
+    const newSeason = (me ? me.season : 0) + pts;
+    const { error: upErr } = await supabase.from('players').update({ weekly: newWeekly, season: newSeason, week_start: thisMonday }).eq('id', currentPlayerId);
+    if (upErr) throw upErr;
+    const { error: logErr } = await supabase.from('log').insert({
+      team_id: TEAM_ID, player_id: currentPlayerId, player_name: player.name,
+      name: 'Cage Session — ' + focus.map(focusName).join(', '), tier: 'gold', pts, type: 'cage'
+    });
+    if (logErr) throw logErr;
+    stopAllCgTimers();
+    cageStats[currentPlayerId] = { count: (cageStats[currentPlayerId]?.count || 0) + 1, last: new Date().toISOString() };
+    document.getElementById('cgBody').innerHTML = `<div class="cg-empty"><b>SESSION COMPLETE</b>+3 points banked. Great work in the cage.<br>Your next session rotates to new drills.<br><span style="color:var(--cyan)">#ReturnToQuality</span><br><button class="cg-back" id="cgBack">◂ BACK TO MAKO</button></div>`;
+    document.getElementById('cgBack').onclick = () => showView('view-main');
+    fetchPlayers();
+  } catch (e) {
+    console.warn(e);
+    fin.disabled = false; fin.textContent = 'SAVE FAILED · TAP TO RETRY';
+  }
+}
+document.getElementById('cagePlanBtn').addEventListener('click', openCageView);
+
 // === Boot ===
 // Show UI instantly, fetch data in the background — this is the perceived-speed win
 (async () => {
@@ -2615,6 +2949,7 @@ document.querySelectorAll('.lb-toggle button').forEach(b => {
   // 3. Backend work in the background — UI is already interactive
   await fetchPlayers();
   if (currentPlayerId) fetchLog();
+  fetchCagePlans().then(updateCagePlanButton);
   startRealtime();
 })();
 </script>
