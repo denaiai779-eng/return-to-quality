@@ -1402,6 +1402,29 @@
   .fb-speed button.on { background:var(--cyan); color:var(--navy-1); border-color:var(--cyan); }
   .fb-quote { margin:8px 0; padding:10px 12px; border-left:3px solid var(--cyan); background:rgba(0,191,255,.07); border-radius:6px; font-size:14px; color:var(--ink); }
   #view-review, #view-myfeedback { padding-bottom:110px; }
+
+  .cg-bench { margin:10px 0 4px; padding:10px 12px; border-radius:8px; background:rgba(255,216,74,.07); border:1px solid rgba(255,216,74,.35); }
+  .cg-bench small { display:block; font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:2px; color:var(--gold); font-size:12px; }
+  .cg-bench .bl { font-size:13px; color:var(--ink); font-weight:700; margin:2px 0 8px; }
+  .cg-bench .bp { font-size:12px; color:var(--muted); margin-bottom:6px; }
+  .cg-step { display:flex; align-items:center; gap:10px; }
+  .cg-step button { width:40px; height:40px; border-radius:8px; border:1px solid rgba(255,216,74,.5); background:transparent; color:var(--gold); font-size:22px; font-weight:800; cursor:pointer; }
+  .cg-step .val { font-family:'Bebas Neue', Impact, sans-serif; font-size:30px; color:var(--white); min-width:70px; text-align:center; }
+  .cg-step .val span { font-size:16px; color:var(--muted); }
+  .cg-yn { display:flex; gap:8px; }
+  .cg-yn button { flex:1; padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,.2); background:transparent; color:var(--ink); font-weight:800; cursor:pointer; }
+  .cg-yn button.on.y { background:rgba(0,214,143,.18); border-color:var(--green); color:var(--green); }
+  .cg-yn button.on.n { background:rgba(255,71,87,.15); border-color:var(--red); color:#ff8a9a; }
+  .cg-bres { font-size:12px; font-weight:800; letter-spacing:1px; margin-top:6px; min-height:16px; }
+  .cg-bres.hit { color:var(--green); } .cg-bres.miss { color:#ff8a9a; }
+  .sum-big { text-align:center; margin:6px 0 12px; }
+  .sum-big .n { font-family:'Bebas Neue', Impact, sans-serif; font-size:54px; color:var(--white); line-height:1; }
+  .sum-big .t { font-size:12px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
+  .sum-row { display:flex; justify-content:space-between; gap:10px; font-size:13px; padding:7px 0; border-bottom:1px solid rgba(255,255,255,.06); color:var(--ink); }
+  .sum-row b { white-space:nowrap; } .sum-row b.hit { color:var(--green); } .sum-row b.miss { color:#ff8a9a; }
+  .sum-master { margin:12px 0; padding:12px; border-radius:10px; background:linear-gradient(135deg, var(--gold), #f5b400); color:var(--navy-1); font-weight:800; text-align:center; }
+  .sum-master b { display:block; font-family:'Bebas Neue', Impact, sans-serif; font-weight:400; letter-spacing:2px; font-size:22px; }
+  .cp-star { width:100%; padding-left:40px; margin-top:4px; font-size:11px; font-weight:800; color:var(--gold); letter-spacing:.5px; }
 </style>
 </head>
 <body>
@@ -2876,9 +2899,21 @@ function renderCoachCagePlans() {
       <div class="cp-name">${cgEsc(p.name)} <span style="color:var(--muted);font-weight:400;font-size:11px">${p.div}</span></div>
       <div class="cp-last">${last}</div>
       <div class="cp-focus">${chips}</div>
+      ${masteryBadges(p.id, focus)}
     </div>`;
   }).join('');
   el.querySelectorAll('.cp-plan-row').forEach(row => row.addEventListener('click', () => openCagePlanSheet(row.dataset.pid)));
+}
+
+function masteryBadges(playerId, focus) {
+  const out = [];
+  for (const fid of focus) {
+    const f = CAGE_FOCUS.find(x => x.id === fid); if (!f || !f.series) continue;
+    const rows = fbRows.filter(r => r.player_id === playerId && r.series === fid).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    let n = 0; for (const r of rows) { if (r.mastered) n++; else break; }
+    if (n >= SERIES_MASTERY_STREAK) out.push(`⭐ ${cgEsc(f.name)} mastered ${n}x in a row. Ready to move on.`);
+  }
+  return out.length ? `<div class="cp-star">${out.join('<br>')}</div>` : '';
 }
 function renderCpOpts() {
   document.getElementById('cpOpts').innerHTML = CAGE_FOCUS.map(f =>
@@ -2964,10 +2999,10 @@ function renderCageView() {
   const session = buildCageSession(focus, sessionNo);
   const steps = [
     { key: 'warmup', title: session.warmup.name, focus: 'Get ready', minutes: session.warmup.minutes, stepsList: session.warmup.steps, cue: session.warmup.cue },
-    ...session.blocks.map((b, i) => ({ key: 'b' + i, title: b.drill.name, focus: b.step ? `${b.focus.name} · ${b.step}/${b.of}` : b.focus.name, minutes: b.drill.minutes, drill: b.drill })),
-    { key: 'finisher', title: session.finisher.name, focus: 'Compete', minutes: session.finisher.minutes, stepsList: session.finisher.steps, cue: session.finisher.cue }
+    ...session.blocks.map((b, i) => ({ key: 'b' + i, title: b.drill.name, focus: b.step ? `${b.focus.name} · ${b.step}/${b.of}` : b.focus.name, minutes: b.drill.minutes, drill: b.drill, bench: getBenchmark(b.drill) })),
+    { key: 'finisher', title: session.finisher.name, focus: 'Compete', minutes: session.finisher.minutes, stepsList: session.finisher.steps, cue: session.finisher.cue, bench: getBenchmark(session.finisher) }
   ];
-  cgState = { steps, done: new Set(), timers: {} };
+  cgState = { steps, done: new Set(), timers: {}, bench: {}, session };
   const note = plan.note ? `<div class="cg-note"><b>FROM COACH</b>${cgEsc(plan.note)}</div>` : '';
   body.innerHTML = note + `
     <div class="cg-progress"><div id="cgBar"></div></div>
@@ -2988,6 +3023,10 @@ function renderCageView() {
         ${d && d.video ? `<a class="cg-video" href="${cgEsc(d.video.url)}" target="_blank" rel="noopener"><b>▶ WATCH HOW</b>${cgEsc(d.video.label)}</a>` : ''}
         ${d && !d.video && d.source ? `<div class="cg-video pending">▶ Video coming soon. Ask Coach to show you this one.</div>` : ''}
         ${d ? `<div class="cg-row"><b>You got it when:</b> ${cgEsc(d.check)}</div><div class="cg-row"><b>Watch for:</b> ${cgEsc(d.mistake)}</div>` : ''}
+        ${st.bench ? `<div class="cg-bench" id="cgbench-${st.key}"><small>BENCHMARK</small><div class="bl">${cgEsc(st.bench.label)}</div><div class="bp">${cgEsc(st.bench.prompt)}</div>
+          ${st.bench.kind === 'yesno' ? `<div class="cg-yn"><button class="y" data-yn="${st.key}" data-v="1">✓ Yes</button><button class="n" data-yn="${st.key}" data-v="0">Not yet</button></div>`
+            : `<div class="cg-step"><button data-dec="${st.key}">−</button><div class="val" id="cgv-${st.key}">– <span>of ${st.bench.of}</span></div><button data-inc="${st.key}">+</button></div>`}
+          <div class="cg-bres" id="cgr-${st.key}"></div></div>` : ''}
         <div class="cg-actions">
           <div class="cg-timer" id="cgt-${st.key}">${String(st.minutes).padStart(2, '0')}:00</div>
           <button class="cg-btn start" data-timer="${st.key}">START</button>
@@ -3000,10 +3039,30 @@ function renderCageView() {
     <div style="text-align:center"><button class="cg-back" id="cgBack">◂ BACK</button></div>`;
   document.getElementById('cgMyFb').onclick = openMyFeedback;
   document.getElementById('cgSendVid').onclick = () => { stopAllCgTimers(); renderVideoForm(document.getElementById('cgBody'), focus); window.scrollTo(0, 0); };
+  body.querySelectorAll('[data-inc],[data-dec]').forEach(b => b.addEventListener('click', () => {
+    const key = b.dataset.inc || b.dataset.dec, st = cgState.steps.find(x => x.key === key);
+    if (cgState.done.has(key)) return;
+    let v = cgState.bench[key]; v = v == null ? (b.dataset.inc ? st.bench.target : st.bench.target - 1) : v + (b.dataset.inc ? 1 : -1);
+    cgState.bench[key] = Math.max(0, Math.min(st.bench.of, v)); showBench(key);
+  }));
+  body.querySelectorAll('[data-yn]').forEach(b => b.addEventListener('click', () => {
+    const key = b.dataset.yn; if (cgState.done.has(key)) return;
+    cgState.bench[key] = b.dataset.v === '1';
+    document.querySelectorAll(`[data-yn="${key}"]`).forEach(x => x.classList.toggle('on', x === b)); showBench(key);
+  }));
   body.querySelectorAll('[data-timer]').forEach(b => b.addEventListener('click', () => toggleCgTimer(b.dataset.timer, b)));
   body.querySelectorAll('[data-done]').forEach(b => b.addEventListener('click', () => markCgDone(b.dataset.done, b)));
   document.getElementById('cgFinish').addEventListener('click', completeCageSession);
   document.getElementById('cgBack').onclick = () => { stopAllCgTimers(); showView('view-main'); };
+}
+
+function showBench(key) {
+  const st = cgState.steps.find(x => x.key === key), v = cgState.bench[key];
+  const valEl = document.getElementById('cgv-' + key);
+  if (valEl) valEl.innerHTML = `${v == null ? '–' : v} <span>of ${st.bench.of}</span>`;
+  const hit = benchHit(st.bench, v), r = document.getElementById('cgr-' + key);
+  r.className = 'cg-bres ' + (hit == null ? '' : hit ? 'hit' : 'miss');
+  r.textContent = hit == null ? '' : hit ? '✓ BENCHMARK HIT' : `NOT YET · need ${st.bench.kind === 'yesno' ? 'a yes' : st.bench.target + ' of ' + st.bench.of}`;
 }
 function toggleCgTimer(key, btn) {
   const t = cgState.timers[key];
@@ -3023,6 +3082,11 @@ function toggleCgTimer(key, btn) {
 }
 function stopAllCgTimers() { if (!cgState) return; Object.values(cgState.timers).forEach(t => t.handle && clearInterval(t.handle)); }
 function markCgDone(key, btn) {
+  const stp = cgState.steps.find(x => x.key === key);
+  if (stp.bench && cgState.bench[key] == null) {
+    const r = document.getElementById('cgr-' + key); r.className = 'cg-bres miss'; r.textContent = 'Enter your benchmark first';
+    document.getElementById('cgbench-' + key).scrollIntoView({ behavior: 'smooth', block: 'center' }); return;
+  }
   const t = cgState.timers[key]; if (t && t.handle) { clearInterval(t.handle); t.handle = null; }
   cgState.done.add(key);
   document.getElementById('cgb-' + key).classList.add('done');
@@ -3054,9 +3118,20 @@ async function completeCageSession() {
       name: 'Cage Session — ' + focus.map(focusName).join(', '), tier: 'gold', pts, type: 'cage'
     });
     if (logErr) throw logErr;
+    const benched = cgState.steps.filter(x => x.bench);
+    const results = benched.map(x => ({ id: x.drill ? x.drill.id : x.key, name: x.title, value: cgState.bench[x.key], target: x.bench.kind === 'yesno' ? 'yes' : x.bench.target, of: x.bench.of || null, hit: benchHit(x.bench, cgState.bench[x.key]) }));
+    const hit = results.filter(r => r.hit).length, total = results.length;
+    const result = sessionResult(hit, total), mastered = total > 0 && hit === total;
+    const seriesId = cgState.session.todaySeries ? cgState.session.todaySeries.id : null;
+    const { data: rep, error: repErr } = await supabase.from('cage_feedback').insert({
+      team_id: TEAM_ID, player_id: currentPlayerId, player_name: player.name, focus, result, mastered,
+      benchmarks: results, series: seriesId, hit, total
+    }).select().single();
+    if (repErr) console.warn('report', repErr);
     stopAllCgTimers();
     cageStats[currentPlayerId] = { count: (cageStats[currentPlayerId]?.count || 0) + 1, last: new Date().toISOString() };
-    renderReportForm(document.getElementById('cgBody'), focus);
+    const streak = seriesId ? await seriesStreak(currentPlayerId, seriesId) : 0;
+    renderSessionSummary(document.getElementById('cgBody'), { focus, results, hit, total, result, mastered, seriesName: cgState.session.todaySeries ? cgState.session.todaySeries.name : null, streak, reportId: rep ? rep.id : null });
     window.scrollTo(0, 0);
     fetchPlayers();
   } catch (e) {
@@ -3101,45 +3176,33 @@ function videoDuration(file) {
   });
 }
 
-// --- Player: SESSION REPORT (after a session) ---
-function renderReportForm(targetEl, focus) {
-  fbState = { result: null, mastered: false, focus: focus || [] };
+// --- Player: SESSION REPORT (scored from benchmarks) ---
+async function seriesStreak(playerId, seriesId) {
+  const { data } = await supabase.from('cage_feedback').select('series, mastered, created_at').eq('player_id', playerId).eq('series', seriesId).order('created_at', { ascending: false }).limit(10);
+  let n = 0; for (const r of data || []) { if (r.mastered) n++; else break; } return n;
+}
+function renderSessionSummary(targetEl, d) {
+  const R = FB_RESULTS[d.result];
   targetEl.innerHTML = `<div class="fb-card">
       <h3>SESSION COMPLETE · +3 PTS</h3>
-      <div class="fb-sub">Session report for Coach. Players or parents can fill this out.</div>
-      <div class="fb-label">HOW DID IT GO?</div>
-      <div class="fb-results">${Object.entries(FB_RESULTS).map(([k, r]) => `<button class="fb-res" data-r="${k}"><span>${r.icon}</span>${r.label}</button>`).join('')}</div>
-      <div class="fb-label">MASTERED IT?</div>
-      <div class="fb-toggle" id="fbMastered"><div class="box"></div>I mastered this session</div>
+      <div class="sum-big"><div class="n">${d.hit} / ${d.total}</div><div class="t">benchmarks hit</div></div>
+      <div style="text-align:center;margin-bottom:10px"><span class="fb-badge res-${d.result}" style="font-size:13px;padding:6px 12px">${R.icon} ${d.mastered ? 'MASTERED' : R.label.toUpperCase()}</span></div>
+      ${d.results.map(r => `<div class="sum-row"><span>${cgEsc(r.name)}</span><b class="${r.hit ? 'hit' : 'miss'}">${r.target === 'yes' ? (r.value ? 'Yes' : 'Not yet') : r.value + ' of ' + r.of}${r.hit ? ' ✓' : ''}</b></div>`).join('')}
+      ${d.streak >= SERIES_MASTERY_STREAK ? `<div class="sum-master"><b>SERIES MASTERED</b>${cgEsc(d.seriesName)}: mastered ${d.streak} sessions in a row. Tell Coach you are ready for the next one.</div>`
+        : d.mastered && d.seriesName ? `<div class="fb-quote" style="border-left-color:var(--gold)">Master ${cgEsc(d.seriesName)} ${SERIES_MASTERY_STREAK - d.streak} more time${SERIES_MASTERY_STREAK - d.streak === 1 ? '' : 's'} in a row to master the series.</div>` : ''}
       <div class="fb-label">NOTE FOR COACH (OPTIONAL)</div>
       <textarea class="cp-note-in" id="fbNote" maxlength="400" placeholder="What felt good? What was hard?"></textarea>
-      <div class="fb-status" id="fbStatus"></div>
-      <button class="fb-send" id="fbSend">SAVE SESSION REPORT</button>
-      <button class="fb-skip" id="fbSkip">Skip for now</button>
+      <div class="fb-status" id="fbStatus">Your results were sent to Coach.</div>
+      <button class="fb-send" id="fbSend">SAVE NOTE</button>
     </div>`;
-  targetEl.querySelectorAll('.fb-res').forEach(b => b.addEventListener('click', () => {
-    fbState.result = b.dataset.r;
-    targetEl.querySelectorAll('.fb-res').forEach(x => x.classList.toggle('on', x === b));
-  }));
-  document.getElementById('fbMastered').addEventListener('click', e => {
-    fbState.mastered = !fbState.mastered;
-    e.currentTarget.classList.toggle('on', fbState.mastered);
-    e.currentTarget.querySelector('.box').textContent = fbState.mastered ? '✓' : '';
-  });
-  document.getElementById('fbSkip').addEventListener('click', () => reportDone(targetEl, focus, false));
-  document.getElementById('fbSend').addEventListener('click', async () => {
-    const st = document.getElementById('fbStatus'); st.classList.remove('err');
-    if (!fbState.result) { st.classList.add('err'); st.textContent = 'Pick how it went.'; return; }
-    const btn = document.getElementById('fbSend'); btn.disabled = true; btn.textContent = 'SAVING…';
-    const player = ROSTER.find(p => p.id === currentPlayerId);
-    const { error } = await supabase.from('cage_feedback').insert({
-      team_id: TEAM_ID, player_id: currentPlayerId, player_name: player ? player.name : '',
-      focus: fbState.focus, result: fbState.result, mastered: fbState.mastered,
-      note: document.getElementById('fbNote').value.trim() || null
-    });
-    if (error) { console.warn(error); btn.disabled = false; btn.textContent = 'SAVE SESSION REPORT'; st.classList.add('err'); st.textContent = 'Save failed. Check your connection and try again.'; return; }
-    reportDone(targetEl, focus, true);
-  });
+  document.getElementById('fbSend').onclick = async () => {
+    const note = document.getElementById('fbNote').value.trim(), st = document.getElementById('fbStatus');
+    if (note && d.reportId) {
+      const { error } = await supabase.from('cage_feedback').update({ note }).eq('id', d.reportId);
+      if (error) { st.classList.add('err'); st.textContent = 'Could not save the note. Try again.'; return; }
+    }
+    reportDone(targetEl, d.focus, true);
+  };
 }
 function reportDone(targetEl, focus, saved) {
   targetEl.innerHTML = `<div class="cg-empty"><b>${saved ? 'REPORT SAVED' : 'NICE WORK'}</b>${saved ? 'Coach will see how it went.' : ''} Your next session rotates to new drills.<br><span style="color:var(--cyan)">#ReturnToQuality</span>
@@ -3330,7 +3393,7 @@ function renderCoachFeedback() {
   rep.innerHTML = !reports.length ? '<div class="cp-hint" style="text-align:left">No session reports yet.</div>' :
     reports.slice(0, 40).map(r => `<div class="fb-list-item" style="cursor:default;flex-wrap:wrap">
       <div class="fb-li-main"><div class="fb-li-name">${cgEsc(r.player_name)}</div>
-      <div class="fb-li-meta">${fbWhen(r.created_at)}${(r.focus || []).length ? ' · ' + cgEsc((r.focus || []).map(focusName).join(', ')) : ''}</div>
+      <div class="fb-li-meta">${fbWhen(r.created_at)}${r.total ? ` · <b style="color:var(--white)">${r.hit}/${r.total} benchmarks</b>` : ''}${r.series ? ' · ' + cgEsc(focusName(r.series)) : ((r.focus || []).length ? ' · ' + cgEsc((r.focus || []).map(focusName).join(', ')) : '')}</div>
       ${r.note ? `<div class="fb-quote" style="margin:6px 0 0;font-size:12px">${cgEsc(r.note)}</div>` : ''}</div>
       ${r.mastered ? '<span class="fb-badge" style="background:var(--gold);color:var(--navy-1)">MASTERED</span>' : ''}
       <span class="fb-badge res-${r.result}">${FB_RESULTS[r.result].label.toUpperCase()}</span>

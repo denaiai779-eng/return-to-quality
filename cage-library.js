@@ -335,7 +335,7 @@ const CAGE_FOCUS = [
       { id: 'af-round', name: 'Pull-Middle-Oppo Round', minutes: 10, feeder: 'tosser', equip: 'L-screen, balls',
         steps: ['Front toss. Hit 3 to the pull side, then 3 up the middle, then 3 oppo.', 'Partner adjusts the toss location to help: in, middle, away.', 'Miss your field and that set starts over.'],
         reps: '3 rounds', cue: 'Choose the field, own the field.',
-        check: 'You finish all three sets in a round.',
+        check: 'You finish all three sets in a round.', bench: { kind: 'yesno', prompt: 'Did you finish all three sets in one round?' },
         mistake: 'Changing your swing instead of your contact point.' },
       { id: 'af-backside', name: 'Backside Drive', minutes: 10, feeder: 'tosser', equip: 'L-screen, balls',
         steps: ['Front toss middle to away.', 'Drive everything to center or the opposite gap.', 'Count how many of 10 go center or oppo.'],
@@ -356,12 +356,12 @@ const CAGE_FOCUS = [
       { id: 'ts-front', name: 'Two-Strike Front Toss', minutes: 12, feeder: 'tosser', equip: 'L-screen, balls',
         steps: ['Partner front tosses all over the zone, mixing speeds.', 'You are always at two strikes: anything close, you swing.', 'Foul it off or put it in play. A swing and miss ends the round.'],
         reps: '3 rounds of 10', cue: 'Protect the plate, compete every pitch.',
-        check: 'A full round of 10 with zero misses.',
+        check: 'A full round of 10 with zero misses.', bench: { kind: 'count', target: 10, of: 10, prompt: 'Best round: balls fouled off or in play' },
         mistake: 'Taking a close one. With two strikes, close is a strike.' },
       { id: 'ts-foul', name: 'Foul-Off Game', minutes: 10, feeder: 'tosser', equip: 'L-screen, balls',
         steps: ['Partner tosses a tough pitch on the edge (corners, high, low).', 'Your job: stay alive. Foul it back or hit it hard.', 'Count your longest streak without a miss.'],
         reps: 'Play for 8 minutes, beat your streak', cue: 'Stay alive.',
-        check: 'Beat your best streak from last session.',
+        check: 'Beat your best streak from last session.', bench: { kind: 'yesno', prompt: 'Did you beat your best streak?' },
         mistake: 'Giving up on the pitch. Battle every one.' }
     ]
   },
@@ -457,7 +457,9 @@ const CAGE_FINISHER = {
     'Each pitch is a game at-bat. Partner calls the count and situation (runner on 2nd, 2 strikes, etc.).',
     'Count your quality at-bats: hard contact, right decision, or move the runner.'
   ],
-  cue: 'Every rep is a game rep. #ReturnToQuality'
+  cue: 'Every rep is a game rep. #ReturnToQuality',
+  check: '7 of 10 quality at-bats.',
+  bench: { kind: 'count', target: 7, of: 10, prompt: 'Quality at-bats out of 10' }
 };
 
 // Builds a cage session from a player's assigned focus areas (1-3).
@@ -506,3 +508,24 @@ function cageRotationInfo(focusIds) {
 function estimateCageMinutes(focusIds) {
   return cageRotationInfo(focusIds).maxMinutes;
 }
+
+// Benchmark for a drill: how a player knows he hit it.
+// Score drills use their "N of M" target; feel drills become "4 of your last 5 reps".
+function getBenchmark(d) {
+  if (!d) return null;
+  if (d.bench) return { label: d.check, ...d.bench };
+  const m = (d.check || '').match(/(\d+) of (\d+)/);
+  if (m) return { kind: 'count', target: +m[1], of: +m[2], label: d.check, prompt: 'Your best round' };
+  return { kind: 'count', target: 4, of: 5, label: '4 of your last 5 reps: ' + d.check, prompt: 'Of your last 5 reps, how many?' };
+}
+function benchHit(b, v) {
+  if (v == null) return null;
+  return b.kind === 'yesno' ? v === true : v >= b.target;
+}
+// Session result from benchmarks: all hit = mastered, half or more = getting there, less = struggled.
+function sessionResult(hit, total) {
+  if (!total) return 'getting';
+  if (hit === total) return 'nailed';
+  return hit / total >= 0.5 ? 'getting' : 'struggled';
+}
+const SERIES_MASTERY_STREAK = 2;
