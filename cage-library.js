@@ -204,6 +204,12 @@ const CAGE_FOCUS = [
     id: 'bat-speed', name: 'Bat Speed & Intent', pillar: 'SPEED',
     why: 'Swing with intent. Every rep is a game rep: fast, on purpose, and on balance. Quality over quantity.',
     drills: [
+      { id: 'bs-recoil', name: 'Recoil Swings', minutes: 10, feeder: 'none', equip: 'Bat, tee',
+        steps: ['Tee middle-middle. Swing with full intent.', 'Stay through the ball toward the middle of the field, then snap the barrel straight back (recoil) right after contact instead of finishing all the way around.', 'Feel the body create the energy and deliver the barrel. The barrel gets up to speed fast and stays on line to the ball.'],
+        reps: '3 rounds of 6, rest between rounds', cue: 'Create energy. Transfer it. Stay through.',
+        check: 'The barrel stays on line through contact and snaps back under control without you falling off balance.',
+        mistake: 'Cutting the swing off before contact, or letting the barrel wrap around the body instead of staying through the ball.',
+        video: { url: 'https://www.instagram.com/reels/Dd8-WhzsMZd/', label: 'Recoil swings (@okswings)' } },
       { id: 'bs-max', name: 'Max-Intent Rounds', minutes: 12, feeder: 'none', equip: 'Tee',
         steps: ['Tee middle, belt high.', 'Take 5 swings as hard as you can while staying on balance. Rest 30 seconds between rounds.', 'Every swing counts. No lazy swings.'],
         reps: '5 rounds of 5 swings, 30 sec rest', cue: 'Swing it like you mean it, finish on balance.',
