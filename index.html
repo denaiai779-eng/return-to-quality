@@ -1332,6 +1332,10 @@
   .lib-focus summary::-webkit-details-marker { display:none; }
   .lib-focus summary small { color:var(--muted); font-weight:500; font-size:11px; white-space:nowrap; }
   .lib-focus ol { margin:8px 0 8px 20px; font-size:14px; line-height:1.5; color:var(--ink); }
+  .cg-intro { margin:14px 0 0; padding:12px 14px; border-radius:10px; background:rgba(255,71,87,.08); border:1px solid rgba(255,71,87,.35); }
+  .cg-intro b { display:block; font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:2px; font-weight:400; color:#ff6b78; font-size:15px; }
+  .cg-intro p { font-size:13px; color:var(--ink); margin:4px 0 8px; line-height:1.5; }
+  .cg-intro .cg-video { margin:0; }
   /* coach: cage plan rows + assign sheet */
   .cp-plan-row { cursor:pointer; flex-wrap:wrap; }
   .cp-plan-row .cp-focus { width:100%; display:flex; flex-wrap:wrap; gap:4px; padding-left:40px; margin-top:4px; }
@@ -2884,6 +2888,7 @@ function renderCageView() {
   body.innerHTML = note + `
     <div class="cg-progress"><div id="cgBar"></div></div>
     <div class="cg-progress-label" id="cgProgLabel">0 / ${steps.length} done · session #${sessionNo + 1} · about ${session.minutes} min</div>
+    ${((f) => f && f.intro ? `<div class="cg-intro"><b>START HERE · ${cgEsc(f.name.toUpperCase())}</b><p>${cgEsc(f.intro.text)}</p><a class="cg-video" href="${cgEsc(f.intro.url)}" target="_blank" rel="noopener"><b>▶ WATCH</b>${cgEsc(f.intro.label)}</a></div>` : '')(session.todaySeries)}
     ${session.seriesCount > 1 ? `<div class="cg-note" style="border-left-color:var(--cyan);background:rgba(0,191,255,.08)"><b style="color:var(--cyan)">TODAY'S SERIES</b>${cgEsc(session.todaySeries.name)}. Your series rotate each session, so next time you'll get ${cgEsc(buildCageSession(focus, sessionNo + 1).todaySeries.name)}.</div>` : ''}
     ${steps.map((st, i) => {
       const d = st.drill;
@@ -2993,6 +2998,7 @@ function renderLibrary() {
       <h3>${cgEsc(f.name)}</h3>
       <div class="lib-tags"><span>${f.pillar}</span>${f.series ? `<span class="ser">SERIES · ${f.drills.length} STEPS · ${mins} MIN</span>` : `<span>${f.drills.length} DRILLS · ROTATES</span>`}</div>
       <p>${cgEsc(f.why)}</p>
+      ${((f) => f && f.intro ? `<div class="cg-intro"><b>START HERE · ${cgEsc(f.name.toUpperCase())}</b><p>${cgEsc(f.intro.text)}</p><a class="cg-video" href="${cgEsc(f.intro.url)}" target="_blank" rel="noopener"><b>▶ WATCH</b>${cgEsc(f.intro.label)}</a></div>` : '')(f)}
       ${f.drills.map(drill).join('')}
     </div>`;
   }).join('') + '<div style="text-align:center"><button class="cg-back" id="libBack">◂ BACK TO COACH</button></div>';

@@ -75,6 +75,7 @@
       <div class="card">
         <h2>${esc(f.name)}<span class="pillar">${f.pillar}</span>${f.series ? '<span class="pillar" style="background:#f5b400;color:#0a1628">SERIES</span>' : ''}</h2>
         <p class="why">${esc(f.why)}</p>
+        ${f.intro ? `<div class="cue" style="background:#fff0f1;color:#0a1628"><small style="color:#d6334a">START HERE · INTRO VIDEO</small>${esc(f.intro.text)} <a href="${f.intro.url}" target="_blank" rel="noopener">▶ ${esc(f.intro.label)}</a></div>` : ''}
         ${f.drills.map(drillHtml).join('')}
       </div>`).join('') +
     extra(CAGE_FINISHER);

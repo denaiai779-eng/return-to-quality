@@ -15,6 +15,7 @@ const CAGE_WARMUP = {
 const CAGE_FOCUS = [
   {
     id: 'ground-force', name: 'Farm Board Series', pillar: 'POWER', series: true,
+    intro: { url: 'https://www.instagram.com/reel/DdSuLb_gtDR/', label: 'Intro to ground force (@okswings)', text: 'A lot of swing problems start further down the chain than we think. Before you change the hands, barrel or shoulders, look at the foundation: can you create leverage against the ground?' },
     why: 'Ground force, one detail at a time. Feel the ground push back into the back leg, land and brace on the front leg, then take it to the tee. The barrel works north-south through the zone, not around it.',
     drills: [
       { id: 'fb-back-hold', name: 'Back Foot Scale', minutes: 3, feeder: 'none', equip: 'Farm Board',
