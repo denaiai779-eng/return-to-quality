@@ -1446,6 +1446,8 @@
   .fa-email button { border:0; background:rgba(255,71,87,.25); color:#fff; width:20px; height:20px; border-radius:10px; cursor:pointer; font-size:12px; line-height:20px; }
   .fa-add { display:flex; flex-direction:column; gap:8px; margin:8px 0 14px; }
   .fa-add select, .fa-add input { width:100%; padding:11px; border-radius:8px; border:1px solid rgba(0,191,255,.3); background:rgba(10,22,40,.9); color:var(--white); font-size:14px; font-family:inherit; }
+  .div-logo { width:28px; height:28px; object-fit:contain; vertical-align:middle; margin-left:6px; }
+  .ps-card .div-logo { width:40px; height:40px; margin:0 0 0 6px; }
 </style>
 </head>
 <body>
@@ -1780,6 +1782,8 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const TEAM_ID = 'makos-11u';
+const divLogo = p => `<img class="div-logo" src="icons/team-${p.div === 'AAA' ? 'aaa' : 'aa'}.png" alt="">`;
+
 // Midwest Makos 11U 2026-27 (AAA + AA), from the dues roster
 const ROSTER = [
   { id: 'anthony-aboufawaz', name: "Anthony Aboufawaz", num: 7, div: 'AA' },
@@ -2065,7 +2069,7 @@ function renderPlayerSelect() {
     const live = byId[p.id];
     const pts = live ? live.season : 0;
     return `<div class="ps-card" data-id="${p.id}">
-      <div class="ps-num">#${p.num} · ${p.div}</div>
+      <div class="ps-num">#${p.num}${divLogo(p)}</div>
       <div class="ps-name">${p.name}</div>
       <div class="ps-pts">${pts} SEASON PTS</div>
     </div>`;
@@ -2939,7 +2943,7 @@ function renderCoachCagePlans() {
     const chips = focus.length ? focus.map(f => `<span>${cgEsc(focusName(f))}</span>`).join('') : '<span class="none">No plan yet</span>';
     return `<div class="coach-player cp-plan-row" data-pid="${p.id}">
       <div class="cp-num">#${p.num}</div>
-      <div class="cp-name">${cgEsc(p.name)} <span style="color:var(--muted);font-weight:400;font-size:11px">${p.div}</span></div>
+      <div class="cp-name">${cgEsc(p.name)}${divLogo(p)}</div>
       <div class="cp-last">${last}</div>
       <div class="cp-focus">${chips}</div>
       ${masteryBadges(p.id, focus)}
@@ -2987,7 +2991,7 @@ function openCagePlanSheet(pid) {
   if (!p) return;
   cpEditing = pid;
   cpSelected = [...(cagePlans[pid]?.focus || [])];
-  document.getElementById('cpSheetPlayer').textContent = `#${p.num} ${p.name} · ${p.div}`;
+  document.getElementById('cpSheetPlayer').innerHTML = `#${p.num} ${cgEsc(p.name)}${divLogo(p)}`;
   document.getElementById('cpNote').value = cagePlans[pid]?.note || '';
   renderCpOpts();
   document.getElementById('cpSheet').classList.add('open');
@@ -3653,7 +3657,7 @@ function renderFamilyAccess() {
   const chip = r => `<span class="fa-email">${cgEsc(r.email)}<button data-del="${cgEsc(r.email)}|${r.player_id || ''}" title="Remove">×</button></span>`;
   list.innerHTML = ROSTER.map(p => {
     const rows = fam.filter(r => r.player_id === p.id);
-    return `<div class="fa-player"><div class="fa-name">#${p.num} ${cgEsc(p.name)} <span style="color:var(--muted);font-weight:400;font-size:11px">${p.div}</span></div>${rows.length ? rows.map(chip).join('') : '<div class="fa-none">NO EMAIL YET: this family cannot sign in</div>'}</div>`;
+    return `<div class="fa-player"><div class="fa-name">#${p.num} ${cgEsc(p.name)}${divLogo(p)}</div>${rows.length ? rows.map(chip).join('') : '<div class="fa-none">NO EMAIL YET: this family cannot sign in</div>'}</div>`;
   }).join('') + `<div class="fa-player"><div class="fa-name">Coaches</div>${coaches.map(chip).join('')}</div>`;
   list.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', async () => {
     const [email, pid] = b.dataset.del.split('|');
