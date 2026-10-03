@@ -3060,7 +3060,7 @@ document.getElementById('cagePlanBtn').addEventListener('click', openCageView);
 
 // ===== FEEDBACK + VIDEO =====
 const FB_BUCKET = 'cage-videos';
-const FB_MAX_MB = 50, FB_MAX_SEC = 60;
+const FB_MAX_MB = 50, FB_MAX_SEC = 120, FB_SHRINK_OVER_MB = 45;
 const FB_RESULTS = { nailed: { icon: '✅', label: 'Nailed it' }, getting: { icon: '🟡', label: 'Getting there' }, struggled: { icon: '🔴', label: 'Struggled' } };
 let fbRows = [];
 let fbState = null; // player form state
@@ -3098,7 +3098,7 @@ function renderFeedbackForm(targetEl, focus, afterSession) {
   fbState = { result: null, mastered: false, file: null, focus: focus || [] };
   targetEl.innerHTML = `<div class="fb-card">
       <h3>${afterSession ? 'SESSION COMPLETE · +3 PTS' : 'SEND COACH A VIDEO'}</h3>
-      <div class="fb-sub">${afterSession ? 'Tell Coach how it went. Players or parents can fill this out.' : 'Players or parents can send a clip and a note to Coach.'}</div>
+      <div class="fb-sub">${afterSession ? 'Tell Coach how it went. Players or parents can fill this out.' : 'Players or parents can send a clip (up to 2 minutes) and a note to Coach.'}</div>
       <div class="fb-label">HOW DID IT GO?</div>
       <div class="fb-results">${Object.entries(FB_RESULTS).map(([k, r]) => `<button class="fb-res" data-r="${k}"><span>${r.icon}</span>${r.label}</button>`).join('')}</div>
       <div class="fb-label">MASTERED IT?</div>
@@ -3106,7 +3106,7 @@ function renderFeedbackForm(targetEl, focus, afterSession) {
       <div class="fb-label">NOTE FOR COACH (OPTIONAL)</div>
       <textarea class="cp-note-in" id="fbNote" maxlength="400" placeholder="What felt good? What was hard?"></textarea>
       <div class="fb-label">VIDEO (OPTIONAL)</div>
-      <label class="fb-file" id="fbFileLabel">📹 Add a video for Coach to review<small>Up to ${FB_MAX_SEC} seconds. Shoot in 1080p, not 4K.</small><input type="file" id="fbFile" accept="video/*"></label>
+      <label class="fb-file" id="fbFileLabel">📹 Add a video for Coach to review<small>Up to 2 minutes. Big videos get shrunk automatically.</small><input type="file" id="fbFile" accept="video/*"></label>
       <div class="fb-status" id="fbStatus"></div>
       <button class="fb-send" id="fbSend">SEND TO COACH</button>
       <button class="fb-skip" id="fbSkip">${afterSession ? 'Skip for now' : 'Cancel'}</button>
@@ -3124,12 +3124,12 @@ function renderFeedbackForm(targetEl, focus, afterSession) {
     const f = e.target.files[0];
     const st = document.getElementById('fbStatus'); st.classList.remove('err');
     if (!f) { fbState.file = null; return; }
-    if (f.size > FB_MAX_MB * 1024 * 1024) { fbState.file = null; e.target.value = ''; st.classList.add('err'); st.textContent = `That video is ${(f.size / 1048576).toFixed(0)} MB. Max is ${FB_MAX_MB} MB. Trim it or shoot in 1080p.`; return; }
     const dur = await videoDuration(f);
     if (dur && dur > FB_MAX_SEC + 1) { fbState.file = null; e.target.value = ''; st.classList.add('err'); st.textContent = `That video is ${Math.round(dur)} seconds. Max is ${FB_MAX_SEC}. Trim it first.`; return; }
-    fbState.file = f;
+    fbState.file = f; fbState.duration = dur;
     document.getElementById('fbFileLabel').firstChild.textContent = '✓ Video ready: ' + f.name.slice(0, 28) + ' ';
-    st.textContent = `${(f.size / 1048576).toFixed(1)} MB${dur ? ' · ' + Math.round(dur) + ' sec' : ''}`;
+    const big = f.size > FB_SHRINK_OVER_MB * 1048576;
+    st.textContent = `${(f.size / 1048576).toFixed(1)} MB${dur ? ' · ' + Math.round(dur) + ' sec' : ''}${big ? ' · will be shrunk before upload' : ''}`;
   });
   document.getElementById('fbSkip').addEventListener('click', () => {
     if (afterSession) targetEl.innerHTML = `<div class="cg-empty"><b>NICE WORK</b>Your next session rotates to new drills.<br><span style="color:var(--cyan)">#ReturnToQuality</span><br><button class="cg-back" id="cgBack2">◂ BACK TO MAKO</button></div>`;
@@ -3138,6 +3138,43 @@ function renderFeedbackForm(targetEl, focus, afterSession) {
   });
   document.getElementById('fbSend').addEventListener('click', () => submitFeedback(targetEl));
 }
+
+// Shrinks a large phone video on the device (about 480p) so it fits the 50 MB upload limit.
+// Plays the video once at normal speed into a canvas and records it, with its audio. Takes about as long as the clip.
+function shrinkVideo(file, onProgress) {
+  return new Promise((resolve, reject) => {
+    const types = ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
+    const mime = types.find(t => window.MediaRecorder && MediaRecorder.isTypeSupported(t));
+    const canvas = document.createElement('canvas');
+    if (!mime || !canvas.captureStream) { reject(new Error('unsupported')); return; }
+    const v = document.createElement('video');
+    v.playsInline = true; v.preload = 'auto'; v.src = URL.createObjectURL(file);
+    let ctx, audioCtx, rec, raf, chunks = [];
+    const cleanup = () => { cancelAnimationFrame(raf); try { audioCtx && audioCtx.close(); } catch (e) {} URL.revokeObjectURL(v.src); };
+    v.onloadedmetadata = () => {
+      const scale = Math.min(1, 854 / Math.max(v.videoWidth, v.videoHeight));
+      canvas.width = Math.round(v.videoWidth * scale / 2) * 2; canvas.height = Math.round(v.videoHeight * scale / 2) * 2;
+      ctx = canvas.getContext('2d');
+      const stream = canvas.captureStream(30);
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const src = audioCtx.createMediaElementSource(v);
+        const dest = audioCtx.createMediaStreamDestination(); // not connected to the speakers, so it stays silent
+        src.connect(dest);
+        dest.stream.getAudioTracks().forEach(t => stream.addTrack(t));
+      } catch (e) { /* no audio track: video only */ }
+      rec = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 1200000, audioBitsPerSecond: 96000 });
+      rec.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+      rec.onstop = () => { cleanup(); resolve(new File([new Blob(chunks, { type: mime.split(';')[0] })], 'clip.' + (mime.includes('mp4') ? 'mp4' : 'webm'), { type: mime.split(';')[0] })); };
+      const draw = () => { ctx.drawImage(v, 0, 0, canvas.width, canvas.height); if (onProgress && v.duration) onProgress(v.currentTime / v.duration); raf = requestAnimationFrame(draw); };
+      v.onended = () => { if (rec.state !== 'inactive') rec.stop(); };
+      v.onerror = () => { cleanup(); reject(new Error('play')); };
+      rec.start(1000); draw();
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    };
+    v.play().catch(err => { cleanup(); reject(err); });
+  });
+}
 async function submitFeedback(targetEl) {
   const st = document.getElementById('fbStatus'); st.classList.remove('err');
   if (!fbState.result && !fbState.file && !document.getElementById('fbNote').value.trim()) { st.classList.add('err'); st.textContent = 'Pick how it went, add a note, or add a video.'; return; }
@@ -3145,9 +3182,18 @@ async function submitFeedback(targetEl) {
   const player = ROSTER.find(p => p.id === currentPlayerId);
   let videoPath = null;
   try {
+    if (fbState.file && fbState.file.size > FB_SHRINK_OVER_MB * 1048576) {
+      btn.textContent = 'SHRINKING VIDEO…';
+      st.textContent = 'Getting the video ready. Keep this screen open (takes about as long as the video).';
+      let small;
+      try { small = await shrinkVideo(fbState.file, p => { st.textContent = `Getting the video ready… ${Math.round(p * 100)}%. Keep this screen open.`; }); }
+      catch (e) { throw new Error('shrink'); }
+      if (small.size > FB_MAX_MB * 1048576) throw new Error('toobig');
+      fbState.file = small;
+    }
     if (fbState.file) {
       btn.textContent = 'UPLOADING VIDEO…';
-      st.textContent = 'Keep this screen open until it finishes.';
+      st.textContent = 'Uploading. Keep this screen open until it finishes.';
       const ext = (fbState.file.name.split('.').pop() || 'mp4').toLowerCase().replace(/[^a-z0-9]/g, '');
       videoPath = `${TEAM_ID}/${currentPlayerId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
       const { error: upErr } = await supabase.storage.from(FB_BUCKET).upload(videoPath, fbState.file, { contentType: fbState.file.type || 'video/mp4', upsert: false });
@@ -3165,7 +3211,10 @@ async function submitFeedback(targetEl) {
   } catch (e) {
     console.warn(e);
     btn.disabled = false; btn.textContent = 'SEND TO COACH';
-    st.classList.add('err'); st.textContent = 'Upload failed. Check your connection and try again.';
+    st.classList.add('err');
+    st.textContent = e && e.message === 'shrink' ? 'This phone could not shrink the video. Trim it shorter or film in 720p, then try again.'
+      : e && e.message === 'toobig' ? 'Still too big after shrinking. Trim it shorter and try again.'
+      : 'Upload failed. Check your connection and try again.';
   }
 }
 
@@ -3261,8 +3310,10 @@ async function openReview(r) {
       <button class="fb-send" id="rvSend">SEND TO PLAYER</button>
       <div class="fb-status" id="rvSendStatus">${r.coach_reviewed_at ? 'Already replied ' + fbWhen(r.coach_reviewed_at) + '. Sending again replaces it.' : ''}</div>
     </div>
+    <button class="fb-skip" id="rvDelete" style="color:#ff8a9a;font-size:13px;margin-top:16px">🗑 Delete this video and feedback</button>
     <div style="text-align:center"><button class="cg-back" id="rvBack">◂ BACK TO COACH</button></div>`;
   document.getElementById('rvBack').onclick = () => { stopRvStream(); showView('view-coach'); };
+  document.getElementById('rvDelete').onclick = deleteReview;
   document.getElementById('rvSend').onclick = sendReview;
   if (!vurl) return;
   document.querySelectorAll('#rvSpeed button').forEach(b => b.addEventListener('click', () => {
@@ -3305,6 +3356,20 @@ async function toggleRecording() {
   await v.play().catch(() => {});
   btn.classList.add('live'); btn.textContent = '■ STOP';
   st.textContent = 'Recording… talk through what you see.';
+}
+
+async function deleteReview() {
+  const btn = document.getElementById('rvDelete'), r = rvState.row;
+  if (!btn.dataset.armed) { btn.dataset.armed = '1'; btn.textContent = '⚠ Tap again to permanently delete'; setTimeout(() => { if (btn.isConnected) { delete btn.dataset.armed; btn.textContent = '🗑 Delete this video and feedback'; } }, 4000); return; }
+  btn.disabled = true; btn.textContent = 'Deleting…';
+  const paths = [r.video_path, r.coach_audio_path].filter(Boolean);
+  if (paths.length) {
+    const { error: sErr } = await supabase.storage.from(FB_BUCKET).remove(paths);
+    if (sErr) { btn.disabled = false; btn.textContent = 'Delete failed. Try again.'; console.warn(sErr); return; }
+  }
+  const { error } = await supabase.from('cage_feedback').delete().eq('id', r.id);
+  if (error) { btn.disabled = false; btn.textContent = 'Delete failed. Try again.'; console.warn(error); return; }
+  stopRvStream(); showView('view-coach'); refreshCoachFeedback();
 }
 async function sendReview() {
   const r = rvState.row, st = document.getElementById('rvSendStatus'), btn = document.getElementById('rvSend');
