@@ -1781,6 +1781,23 @@ const SUPABASE_URL = 'https://rvmvwijyxeghzchyxeht.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2bXZ3aWp5eGVnaHpjaHl4ZWh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxOTgyNzAsImV4cCI6MjA5NDc3NDI3MH0.2BHCqPngS08Bpa-mOkN3pJW10zhfHosIymmCvdyIY8s';
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+
+// Auto-update: phones cache this page, so check for a newer version on open and when the app comes back on screen.
+const APP_VERSION = '20261003002258';
+async function checkForUpdate() {
+  try {
+    const r = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) return;
+    const { v } = await r.json();
+    if (v && v !== APP_VERSION && sessionStorage.getItem('rtq_reloaded_for') !== v) {
+      sessionStorage.setItem('rtq_reloaded_for', v);
+      location.replace(location.pathname + '?v=' + v);
+    }
+  } catch (e) {}
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkForUpdate(); });
+checkForUpdate();
+
 const TEAM_ID = 'makos-11u';
 const divLogo = p => `<img class="div-logo" src="icons/team-${p.div === 'AAA' ? 'aaa' : 'aa'}.png" alt="">`;
 
