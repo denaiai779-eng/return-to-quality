@@ -1350,6 +1350,11 @@
   .cp-sheet .sheet-content { border-top-color:rgba(0,191,255,.6); }
   .cp-sheet .sheet-title { color:var(--cyan); }
   .cp-opts { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:6px 0 12px; }
+  .side-tabs { grid-column: 1 / -1; display:flex; gap:8px; margin-bottom:6px; }
+  .side-tab { flex:1; padding:10px 8px; border-radius:8px; border:1px solid rgba(0,191,255,.35); background:transparent; color:var(--muted); font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:2px; font-size:15px; cursor:pointer; }
+  .side-tab.on { background: var(--cyan); color:#0a1628; border-color: var(--cyan); }
+  .side-head { font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:3px; color: var(--cyan); font-size:22px; margin:22px 0 4px; border-bottom:1px solid rgba(0,191,255,.35); padding-bottom:6px; }
+  .side-head small { display:block; font-family:'Montserrat', Arial, sans-serif; font-size:11px; letter-spacing:.5px; color: var(--muted); }
   .cp-opt { text-align:left; padding:10px; border-radius:8px; border:1px solid rgba(0,191,255,.25); background:rgba(13,40,71,.6); color:var(--ink); cursor:pointer; font-size:13px; font-weight:700; }
   .cp-opt small { display:block; font-size:9px; letter-spacing:1.5px; color:var(--muted); font-weight:700; margin-top:2px; }
   .cp-opt.on { background:linear-gradient(135deg, var(--cyan), var(--cyan-deep)); color:var(--navy-1); border-color:var(--cyan); }
@@ -1783,7 +1788,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 
 // Auto-update: phones cache this page, so check for a newer version on open and when the app comes back on screen.
-const APP_VERSION = '20261003002258';
+const APP_VERSION = '20261010074809';
 async function checkForUpdate() {
   try {
     const r = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' });
@@ -2979,8 +2984,9 @@ function masteryBadges(playerId, focus) {
   }
   return out.length ? `<div class="cp-star">${out.join('<br>')}</div>` : '';
 }
+let cpSide = 'hitting';
 function renderCpOpts() {
-  document.getElementById('cpOpts').innerHTML = CAGE_FOCUS.map(f =>
+  document.getElementById('cpOpts').innerHTML = `<div class="side-tabs"><button class="side-tab ${cpSide === 'hitting' ? 'on' : ''}" data-side="hitting">⚾ HITTING</button><button class="side-tab ${cpSide === 'pitching' ? 'on' : ''}" data-side="pitching">🎯 PITCHING</button></div>` + CAGE_FOCUS.filter(f => f.side === cpSide).map(f =>
     `<button class="cp-opt ${cpSelected.includes(f.id) ? 'on' : ''}" data-fid="${f.id}">${cgEsc(f.name)}${f.series ? '<span class="ser">SERIES</span>' : ''}<small>${f.pillar}</small></button>`).join('');
   const est = document.getElementById('cpEst');
   if (est) {
@@ -2997,6 +3003,11 @@ function renderCpOpts() {
     else { alertCp('Max 3 focus areas'); return; }
     renderCpOpts();
   }));
+  document.querySelectorAll('#cpOpts .side-tab').forEach(b => b.addEventListener('click', () => {
+    if (b.dataset.side === cpSide) return;
+    if (cpSelected.length) alertCp('Switched sides: picks cleared. A plan is all hitting or all pitching.');
+    cpSide = b.dataset.side; cpSelected = []; renderCpOpts();
+  }));
 }
 function alertCp(msg) {
   const h = document.querySelector('#cpSheet .cp-hint');
@@ -3008,6 +3019,7 @@ function openCagePlanSheet(pid) {
   if (!p) return;
   cpEditing = pid;
   cpSelected = [...(cagePlans[pid]?.focus || [])];
+  cpSide = planSide(cpSelected);
   document.getElementById('cpSheetPlayer').innerHTML = `#${p.num} ${cgEsc(p.name)}${divLogo(p)}`;
   document.getElementById('cpNote').value = cagePlans[pid]?.note || '';
   renderCpOpts();
@@ -3588,9 +3600,10 @@ function renderLibrary() {
       <div class="cg-row"><b>Watch for:</b> ${cgEsc(d.mistake)}</div>
       ${d.video ? `<a class="cg-video" href="${cgEsc(d.video.url)}" target="_blank" rel="noopener"><b>▶ WATCH HOW</b>${cgEsc(d.video.label)}</a>` : (d.source ? `<div class="cg-video pending">▶ Video needed (${cgEsc(d.source)})</div>` : '')}
     </details>`;
-  document.getElementById('libBody').innerHTML = CAGE_FOCUS.map(f => {
+  document.getElementById('libBody').innerHTML = CAGE_FOCUS.map((f, i, arr) => {
+    const sideHead = (i === 0 || arr[i - 1].side !== f.side) ? `<h2 class="side-head">${f.side === 'pitching' ? '🎯 PITCHING SIDE <small>Draft: Coach Duncan to review</small>' : '⚾ HITTING SIDE'}</h2>` : '';
     const mins = f.drills.reduce((t, d) => t + d.minutes, 0);
-    return `<div class="lib-focus">
+    return sideHead + `<div class="lib-focus">
       <h3>${cgEsc(f.name)}</h3>
       <div class="lib-tags"><span>${f.pillar}</span>${f.series ? `<span class="ser">SERIES · ${f.drills.length} STEPS · ${mins} MIN</span>` : `<span>${f.drills.length} DRILLS · ROTATES</span>`}</div>
       <p>${cgEsc(f.why)}</p>

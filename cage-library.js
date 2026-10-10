@@ -1,4 +1,6 @@
-// Makos Cage Plan library: focus areas and drills for 45-minute cage sessions.
+// Makos Cage Plan library: HITTING side and PITCHING side, for 45-minute cage sessions.
+// Every focus area has side: 'hitting' or 'pitching'. A plan uses one side at a time.
+// PITCHING SIDE IS A DRAFT written for Coach Duncan to review and edit.
 // Coaches assign each player 1-3 focus areas; the session builder pulls drills from here.
 // feeder: 'none' = hitter alone, 'tosser' = a parent or teammate feeds (soft toss / front toss).
 
@@ -14,7 +16,7 @@ const CAGE_WARMUP = {
 
 const CAGE_FOCUS = [
   {
-    id: 'ground-force', name: 'Farm Board Series', pillar: 'POWER', series: true,
+    id: 'ground-force', name: 'Farm Board Series', side: 'hitting', pillar: 'POWER', series: true,
     intro: { url: 'https://www.instagram.com/reel/DdSuLb_gtDR/', label: 'Intro to ground force (@okswings)', text: 'A lot of swing problems start further down the chain than we think. Before you change the hands, barrel or shoulders, look at the foundation: can you create leverage against the ground?' },
     why: 'Ground force, one detail at a time. Feel the ground push back into the back leg, land on the front leg and finish in a lunge, then take it to the tee. The barrel works north-south through the zone, not around it.',
     drills: [
@@ -59,7 +61,7 @@ const CAGE_FOCUS = [
     ]
   },
   {
-    id: 'mb-series', name: 'Med Ball Stability Series', pillar: 'POWER', series: true,
+    id: 'mb-series', name: 'Med Ball Stability Series', side: 'hitting', pillar: 'POWER', series: true,
     why: 'A progression from movement prep to the tee. Each step isolates one small detail of stability and rotation, so the swing is driven by the ground and the hips, not the shoulders.',
     drills: [
       { id: 'mb-prep', name: 'Movement Prep', minutes: 3, feeder: 'none', equip: 'Med ball (4-6 lb)',
@@ -103,7 +105,7 @@ const CAGE_FOCUS = [
     ]
   },
   {
-    id: 'tank-series', name: 'Tidal Tank Series', pillar: 'POWER', series: true,
+    id: 'tank-series', name: 'Tidal Tank Series', side: 'hitting', pillar: 'POWER', series: true,
     why: 'The water moves if you move. Build a stable base, control the load, rotate clean, then take that control to the tee.',
     drills: [
       { id: 'tt-brace', name: 'Stance Brace', minutes: 2, feeder: 'none', equip: 'Tidal Tank',
@@ -149,7 +151,7 @@ const CAGE_FOCUS = [
     ]
   },
   {
-    id: 'stable-lower', name: 'Stable Lower Half Series', pillar: 'POWER', series: true,
+    id: 'stable-lower', name: 'Stable Lower Half Series', side: 'hitting', pillar: 'POWER', series: true,
     why: 'Balanced lower half, strong middle. The lower half stays stable and connected to the ground so the middle and upper body can work short, quick and efficient. Tidal Tank first, then Farm Boards, then live.',
     intro: { url: 'https://www.instagram.com/reel/DYPUOCsgxWr/', label: 'Stable lower half (@okswings)', text: 'A stable base gives you a solid foundation to hit from: strong legs, more ground force, better energy transfer. Stay connected to the ground.' },
     drills: [
@@ -183,7 +185,7 @@ const CAGE_FOCUS = [
     ]
   },
   {
-    id: 'middle-series', name: 'Deliver Thru the Middle Series', pillar: 'PRECISION', series: true,
+    id: 'middle-series', name: 'Deliver Thru the Middle Series', side: 'hitting', pillar: 'PRECISION', series: true,
     why: 'Tidal Tank prep into front toss. Stay anchored, move from the middle, rotate in line, and send everything through center field with good posture.',
     drills: [
       { id: 'dm-anchored', name: 'Deliver From the Middle', minutes: 4, feeder: 'none', equip: 'Tidal Tank (sphere)',
@@ -217,7 +219,7 @@ const CAGE_FOCUS = [
     ]
   },
   {
-    id: 'inside-ball', name: 'Stay Inside the Ball Series', pillar: 'PRECISION', series: true,
+    id: 'inside-ball', name: 'Stay Inside the Ball Series', side: 'hitting', pillar: 'PRECISION', series: true,
     why: 'Work from behind and swing from the inside so the barrel stays in the zone longer. The bottom hand and the knob never push to the ball. Start with Inside Lane dry reps and the SHORT BAT (middle and deep-inside contact points only), then progress to your GAME BAT: a tee set up on the net hit UP THE MIDDLE, and a tee deep on the inner half driven the OTHER WAY.',
     drills: [
       { id: 'ib-inside-lane', name: 'Inside Lane Dry Reps', minutes: 3, feeder: 'none', equip: 'Short bat',
@@ -276,7 +278,7 @@ const CAGE_FOCUS = [
     ]
   },
   {
-    id: 'contact-point', name: 'Contact Point', pillar: 'PRECISION',
+    id: 'contact-point', name: 'Contact Point', side: 'hitting', pillar: 'PRECISION',
     why: 'Where you hit the ball decides where it goes. Inside pitch out front, middle pitch even with your front foot, outside pitch deeper.',
     drills: [
       { id: 'cp-three-tee', name: 'Three-Spot Tee', minutes: 12, feeder: 'none', equip: 'Tee',
@@ -297,7 +299,7 @@ const CAGE_FOCUS = [
     ]
   },
   {
-    id: 'bat-speed', name: 'Bat Speed & Intent', pillar: 'SPEED',
+    id: 'bat-speed', name: 'Bat Speed & Intent', side: 'hitting', pillar: 'SPEED',
     why: 'Swing with intent. Every rep is a game rep: fast, on purpose, and on balance. Quality over quantity.',
     drills: [
       { id: 'bs-recoil', name: 'Recoil Swings', minutes: 10, feeder: 'none', equip: 'Bat, tee',
@@ -324,7 +326,7 @@ const CAGE_FOCUS = [
     ]
   },
   {
-    id: 'all-fields', name: 'All Fields / Oppo', pillar: 'PRECISION',
+    id: 'all-fields', name: 'All Fields / Oppo', side: 'hitting', pillar: 'PRECISION',
     why: 'Good hitters use the whole field. Letting the outside pitch travel and driving it the other way keeps you from rolling over.',
     drills: [
       { id: 'af-outside-tee', name: 'Outside Tee Oppo', minutes: 12, feeder: 'none', equip: 'Tee',
@@ -345,7 +347,7 @@ const CAGE_FOCUS = [
     ]
   },
   {
-    id: 'two-strike', name: 'Two-Strike Approach', pillar: 'RELENTLESSNESS',
+    id: 'two-strike', name: 'Two-Strike Approach', side: 'hitting', pillar: 'RELENTLESSNESS',
     why: 'With two strikes you battle. Shorten up, widen out, protect the plate. Put it in play or foul it off. No easy outs.',
     drills: [
       { id: 'ts-choke', name: 'Choke & Battle Tee', minutes: 10, feeder: 'none', equip: 'Tee',
@@ -366,7 +368,7 @@ const CAGE_FOCUS = [
     ]
   },
   {
-    id: 'timing', name: 'Timing & Load Series', pillar: 'SPEED', series: true,
+    id: 'timing', name: 'Timing & Load Series', side: 'hitting', pillar: 'SPEED', series: true,
     why: 'Three phases, one at a time: LOAD (hinge into the hips like you are about to sit in a chair), GATHER (pick the front foot up and get deeper into the hinge), then STRIDE (force stays on the back foot, spine straight, shoulders downhill). Force always goes straight down under your feet, never to the sides.',
     drills: [
       { id: 'tl-hinge', name: 'Hip Hinge Prep', minutes: 2, feeder: 'none', equip: 'Bat',
@@ -428,7 +430,7 @@ const CAGE_FOCUS = [
     ]
   },
   {
-    id: 'zone', name: 'Zone Discipline', pillar: 'RELENTLESSNESS',
+    id: 'zone', name: 'Zone Discipline', side: 'hitting', pillar: 'RELENTLESSNESS',
     why: 'Swing at strikes, take balls. Know the zone and hunt your pitch. This is how you get quality at-bats.',
     drills: [
       { id: 'zn-call', name: 'Ball or Strike Call', minutes: 10, feeder: 'tosser', equip: 'L-screen, balls',
@@ -448,6 +450,149 @@ const CAGE_FOCUS = [
         mistake: 'Deciding late and checking your swing.' }
     ]
   }
+  ,
+  // ===================== PITCHING SIDE (draft for Coach Duncan) =====================
+  // Pitch-count rule for every pitching session: count every throw at game effort. Stop at 50 for the session, finisher included.
+  {
+    id: 'p-lower-half', name: 'Lower Half & Drive Series', side: 'pitching', pillar: 'POWER', series: true,
+    why: 'Velocity and command start in the legs. Balance over the back leg, move down the mound with the hips leading, and land in a strong, closed front side. Small details first, then full throws.',
+    drills: [
+      { id: 'pl-balance', name: 'Balance Point Hold', minutes: 3, feeder: 'none', equip: 'Mound or flat ground',
+        detail: 'Get to the top of your leg lift and own it.',
+        steps: ['Start from the stretch. Lift your front leg to the top.', 'Freeze for 3 seconds. Back knee slightly bent, weight on the middle of the back foot.', 'Head stays over the back leg. No drifting toward the plate yet.'],
+        reps: '2 sets of 5 holds', cue: 'Tall and quiet at the top.',
+        check: 'You hold every lift for 3 seconds without hopping or tipping.',
+        mistake: 'Leaning back toward second base or falling forward early.' },
+      { id: 'pl-hip-lead', name: 'Hip Lead Walk-Through', minutes: 4, feeder: 'none', equip: 'Mound or flat ground, no ball',
+        detail: 'The front hip moves toward the plate first.',
+        steps: ['From the balance point, start moving down the mound by leading with the front hip.', 'Keep the front shoulder closed. Shoulders stay level.', 'Land and freeze. Check the front foot points at the plate.'],
+        reps: '2 sets of 6, no ball', cue: 'Hip first, then everything else.',
+        check: 'Front foot lands on line with the plate and the front shoulder is still closed at landing.',
+        mistake: 'Opening the front shoulder early, or stepping across your body.' },
+      { id: 'pl-landing', name: 'Stride & Stick the Landing', minutes: 4, feeder: 'none', equip: 'Mound or flat ground, ball, net',
+        detail: 'Land firm on the front leg and stay there.',
+        steps: ['Make a full stride and throw at 60 percent into the net.', 'Front knee lands slightly bent and firms up. Do not let it collapse.', 'Hold your finish for 2 seconds with the back leg coming through.'],
+        reps: '8 throws at 60 percent', cue: 'Land firm, finish over the front leg.',
+        check: 'You hold a balanced finish on 6 of 8 throws.',
+        mistake: 'Front knee collapsing toward the plate, or falling off to the glove side.' },
+      { id: 'pl-full', name: 'Full Throws: Put It Together', minutes: 5, feeder: 'none', equip: 'Mound or flat ground, balls, net or catcher',
+        detail: 'Same lower half, now at game effort.',
+        steps: ['Full delivery from the stretch at 80 percent.', 'Think about one thing only: lead with the hip and land firm.', 'Catcher or partner tells you if the ball was a strike.'],
+        reps: '10 throws', cue: 'Legs throw the ball, the arm follows.',
+        check: '6 of 10 are strikes with a balanced finish.',
+        mistake: 'Muscling the ball with the upper body once effort goes up.' }
+    ]
+  },
+  {
+    id: 'p-arm-path', name: 'Arm Path Series', side: 'pitching', pillar: 'PRECISION', series: true,
+    why: 'A clean, repeatable arm path keeps the arm healthy and the ball on line. Build it from short throws to the full delivery.',
+    drills: [
+      { id: 'pa-towel', name: 'Towel Drill', minutes: 4, feeder: 'none', equip: 'Hand towel, a target at chest height',
+        detail: 'Same arm path, no ball, no stress.',
+        steps: ['Hold a hand towel by one end like a ball.', 'Full delivery. Snap the towel down at a target out in front of your front foot.', 'Finish with your chest over your front knee.'],
+        reps: '2 sets of 8', cue: 'Long out front, finish down.',
+        check: 'The towel snaps the target on 6 of 8.',
+        mistake: 'Short-arming the towel or cutting off the finish.' },
+      { id: 'pa-knee', name: 'One-Knee Throws', minutes: 4, feeder: 'none', equip: 'Ball, partner or net 25-30 feet away',
+        detail: 'Upper body only. Elbow at or just below shoulder height.',
+        steps: ['Throwing-side knee on the ground, glove-side foot pointed at the target.', 'Turn the shoulders and throw to chest height.', 'Glove pulls in to the chest as the arm comes through.'],
+        reps: '10 throws', cue: 'Elbow up, ball out front.',
+        check: '8 of 10 throws hit the chest-high target.',
+        mistake: 'Dropping the elbow below the shoulder or slinging sidearm.' },
+      { id: 'pa-rocker', name: 'Rocker Throws', minutes: 4, feeder: 'none', equip: 'Ball, partner or net 40 feet away',
+        detail: 'Feet already in the stride. Rock back, rock forward, throw.',
+        steps: ['Start in your landing position, feet already apart.', 'Rock weight back, then forward, then throw.', 'Same arm path as the one-knee throws.'],
+        reps: '10 throws', cue: 'Rock, separate, throw.',
+        check: '8 of 10 throws land on line with the target.',
+        mistake: 'Rushing the arm before the weight shifts forward.' },
+      { id: 'pa-full', name: 'Arm Path: Full Delivery', minutes: 4, feeder: 'none', equip: 'Mound or flat ground, balls, net or catcher',
+        detail: 'Carry the same arm path into the full delivery.',
+        steps: ['Full delivery at 75 percent.', 'Same high elbow and long finish you felt in the towel and one-knee drills.', 'Partner calls strike or ball.'],
+        reps: '8 throws', cue: 'Same arm every throw.',
+        check: '5 of 8 strikes.',
+        mistake: 'Arm path changing when you add the legs.' }
+    ]
+  },
+  {
+    id: 'p-command', name: 'Fastball Command', side: 'pitching', pillar: 'PRECISION',
+    why: 'Strike one wins at-bats. Throw the fastball to a spot, not just over the plate.',
+    drills: [
+      { id: 'pc-glove', name: 'Hit the Glove', minutes: 8, feeder: 'none', equip: 'Catcher or strike target, balls',
+        steps: ['Catcher sets up middle, then moves glove to a new spot every 3 pitches.', 'Full delivery at 85 percent.', 'Count the pitches that hit the glove or the target box.'],
+        reps: '12 pitches', cue: 'Eyes on the glove the whole way.',
+        check: '8 of 12 hit the glove spot.',
+        mistake: 'Aiming the ball and slowing the arm down.' },
+      { id: 'pc-sides', name: 'Glove Side / Arm Side', minutes: 8, feeder: 'none', equip: 'Catcher or 2-zone target, balls',
+        steps: ['Alternate: one pitch to the glove side, one to the arm side.', 'Reset fully between pitches.', 'Partner calls hit or miss on each side.'],
+        reps: '12 pitches, 6 each side', cue: 'Pick the side, then let it go.',
+        check: '7 of 12 hit the called side.',
+        mistake: 'Missing middle-middle when going for a corner.' }
+    ]
+  },
+  {
+    id: 'p-change', name: 'Changeup Feel', side: 'pitching', pillar: 'PRECISION',
+    why: 'The changeup is the best second pitch for young arms. Same arm speed as the fastball, slower ball.',
+    drills: [
+      { id: 'pch-catch', name: 'Changeup Catch Play', minutes: 6, feeder: 'none', equip: 'Ball, partner 45 feet away',
+        steps: ['Use the grip Coach showed you.', 'Play catch throwing only changeups at normal arm speed.', 'Ball should come out with less speed and a little fade.'],
+        reps: '12 throws', cue: 'Fastball arm, changeup grip.',
+        check: '9 of 12 reach the partner chest-high.',
+        mistake: 'Slowing the arm down to make it slower.' },
+      { id: 'pch-mix', name: 'Fastball / Changeup Mix', minutes: 8, feeder: 'none', equip: 'Catcher, balls',
+        steps: ['Catcher calls the pitch. Same delivery for both.', 'Partner watches: can they tell what is coming from your arm?', 'Change speeds, not the motion.'],
+        reps: '10 pitches (5 and 5)', cue: 'Sell the fastball every time.',
+        check: '6 of 10 strikes, same delivery for both pitches.',
+        mistake: 'Tipping the changeup by slowing the body.' }
+    ]
+  },
+  {
+    id: 'p-intent', name: 'Arm Speed & Intent', side: 'pitching', pillar: 'SPEED',
+    why: 'Build arm speed with intent, at the right volume. Coach sets the effort and the count. Never throw through pain.',
+    drills: [
+      { id: 'pi-long', name: 'Long Toss Build-Up', minutes: 8, feeder: 'none', equip: 'Ball, partner, open space (or longest cage lane)',
+        steps: ['Start at 45 feet and back up 10 feet every 3 throws.', 'Stop at the distance Coach set for you.', 'Throws stay on a line or a slight arc. No hurting yourself to reach.'],
+        reps: '15 throws total', cue: 'Loose arm, long throws.',
+        check: 'You reach your set distance with throws still on line.',
+        mistake: 'Throwing high rainbows or forcing distance.' },
+      { id: 'pi-crow', name: 'Crow Hop Throws', minutes: 6, feeder: 'none', equip: 'Ball, net or partner',
+        steps: ['Crow hop into the throw to build momentum.', 'Throw on a line at game effort into the net.', 'Full rest between throws: walk back, reset.'],
+        reps: '8 throws', cue: 'Move, then throw hard.',
+        check: '6 of 8 are on line and you feel no pain.',
+        mistake: 'Short rest and sloppy throws as you tire.' }
+    ]
+  },
+  {
+    id: 'p-stretch', name: 'Stretch, Tempo & Holding Runners', side: 'pitching', pillar: 'RELENTLESSNESS',
+    why: 'Runners steal on slow pitchers. Be quick to the plate without losing the strike zone.',
+    drills: [
+      { id: 'ps-slide', name: 'Slide Step', minutes: 6, feeder: 'none', equip: 'Catcher, balls',
+        steps: ['From the stretch, use a short leg lift (slide step).', 'Stay closed and still land on line.', 'Partner times you if you have a stopwatch: aim for 1.3 seconds or less to the glove.'],
+        reps: '10 pitches', cue: 'Quick, not rushed.',
+        check: '6 of 10 strikes with the slide step.',
+        mistake: 'Losing the strike zone when you speed up.' },
+      { id: 'ps-holds', name: 'Vary Your Holds', minutes: 6, feeder: 'none', equip: 'Catcher, balls',
+        steps: ['From the set, hold 1 second, then 3 seconds, then step off.', 'Partner calls a pattern. Do not fall into a rhythm.', 'Every pitch you deliver should still be a strike.'],
+        reps: '10 pitches', cue: 'Own the clock.',
+        check: '6 of 10 strikes with the holds mixed up.',
+        mistake: 'Same hold time every pitch.' }
+    ]
+  },
+  {
+    id: 'p-fielding', name: 'Fielding Your Position', side: 'pitching', pillar: 'RELENTLESSNESS',
+    why: 'After the pitch you are an infielder. Finish ready to field.',
+    drills: [
+      { id: 'pf-finish', name: 'Finish in Fielding Position', minutes: 6, feeder: 'tosser', equip: 'Partner, balls, glove',
+        steps: ['Throw a pitch at 60 percent into the net.', 'As you finish, square up with glove out front.', 'Partner rolls or tosses a comebacker right after. Field it clean.'],
+        reps: '8 reps', cue: 'Pitch, then glove up.',
+        check: 'You field 6 of 8 clean.',
+        mistake: 'Falling off the mound and not being ready.' },
+      { id: 'pf-cover', name: 'Cover First Footwork', minutes: 6, feeder: 'none', equip: 'Open space, a base or marker',
+        steps: ['On a ball to the right side, break toward the line.', 'Run a curved path to the bag, then run up the line.', 'Catch, touch the inside of the bag, and get out of the way.'],
+        reps: '6 walk-throughs, then 4 at speed', cue: 'Curve to the line, up the line.',
+        check: '4 of 4 reps at speed hit the bag on the right path.',
+        mistake: 'Running straight at the bag and colliding with the runner.' }
+    ]
+  }
 ];
 
 const CAGE_FINISHER = {
@@ -461,6 +606,34 @@ const CAGE_FINISHER = {
   check: '7 of 10 quality at-bats.',
   bench: { kind: 'count', target: 7, of: 10, prompt: 'Quality at-bats out of 10' }
 };
+
+const PITCH_WARMUP = {
+  id: 'p-warmup', name: 'Arm Care & Catch Warm-Up', minutes: 8,
+  steps: [
+    'Jog the length of the cage and back twice. 10 arm circles each way, 10 trunk twists.',
+    'Band work if you have one: 10 pull-aparts and 10 external rotations each arm.',
+    'Catch play: 10 throws at 30 feet, 10 at 45 feet, 5 at 60 feet. Easy to firm, never max.'
+  ],
+  cue: 'Warm the arm up before you ask anything of it.'
+};
+
+const PITCH_FINISHER = {
+  id: 'p-finisher', name: 'Strike Round', minutes: 6,
+  steps: [
+    'Finish with 12 pitches from the stretch at game effort.',
+    'Partner calls the count and the situation before every pitch (runner on 1st, 2-1 count, etc.).',
+    'Count your strikes. Stop early if your arm feels anything other than normal tired.'
+  ],
+  cue: 'Win strike one, every pitch.',
+  check: '7 of 12 strikes.',
+  bench: { kind: 'count', target: 7, of: 12, prompt: 'Strikes out of 12' }
+};
+
+// Which side a plan is on (a plan is all hitting or all pitching).
+function planSide(focusIds) {
+  const f = (focusIds || []).map(id => CAGE_FOCUS.find(x => x.id === id)).find(Boolean);
+  return f && f.side === 'pitching' ? 'pitching' : 'hitting';
+}
 
 // Builds a cage session from a player's assigned focus areas (1-3).
 // Series run every step in order (small details, prep to tee).
@@ -488,8 +661,10 @@ function buildCageSession(focusIds, sessionNumber) {
   } else {
     regular.forEach(f => blocks.push({ focus: f, drill: pick(f, 0) }));
   }
-  const minutes = CAGE_WARMUP.minutes + CAGE_FINISHER.minutes + blocks.reduce((t, b) => t + b.drill.minutes, 0);
-  return { warmup: CAGE_WARMUP, blocks, finisher: CAGE_FINISHER, minutes, todaySeries, seriesCount: series.length };
+  const pitching = planSide(focusIds) === 'pitching';
+  const warmup = pitching ? PITCH_WARMUP : CAGE_WARMUP, finisher = pitching ? PITCH_FINISHER : CAGE_FINISHER;
+  const minutes = warmup.minutes + finisher.minutes + blocks.reduce((t, b) => t + b.drill.minutes, 0);
+  return { warmup, blocks, finisher, minutes, todaySeries, seriesCount: series.length, side: pitching ? 'pitching' : 'hitting' };
 }
 
 // Longest session in the rotation, plus the rotation order, for the coach sheet.
@@ -500,7 +675,7 @@ function cageRotationInfo(focusIds) {
   const rotation = [];
   for (let i = 0; i < count; i++) {
     const s = buildCageSession(focusIds, i);
-    rotation.push({ name: s.todaySeries ? s.todaySeries.name : 'Hitting drills', minutes: s.minutes });
+    rotation.push({ name: s.todaySeries ? s.todaySeries.name : (s.side === 'pitching' ? 'Pitching drills' : 'Hitting drills'), minutes: s.minutes });
   }
   return { maxMinutes: Math.max(...rotation.map(r => r.minutes)), rotation };
 }
