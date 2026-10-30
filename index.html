@@ -1517,6 +1517,7 @@
 
   <button class="cage-plan-btn" id="cagePlanBtn">⚾ MY CAGE PLAN<small id="cagePlanSub">Your 45-minute session from Coach</small></button>
   <button class="cage-plan-btn mp-btn" id="movementBtn">🤸 MOVEMENT PREP<small>Warm-ups and arm care by age group</small></button>
+  <button class="cage-plan-btn mp-btn" id="balanceBtn">⚖️ BALANCE &amp; STABILITY<small>Own your base: balance and core by age group</small></button>
 
   <main>
     <div class="tabs-wrap">
@@ -1733,8 +1734,8 @@
 <!-- MOVEMENT PREP VIEW -->
 <div class="view" id="view-movement">
   <div class="lb-header">
-    <h2>MOVEMENT PREP</h2>
-    <div class="sub">Warm up right. Pick your age group.</div>
+    <h2 id="mpTitle">MOVEMENT PREP</h2>
+    <div class="sub" id="mpSub">Warm up right. Pick your age group.</div>
   </div>
   <div class="cg-wrap" id="mpBody"></div>
 </div>
@@ -1799,7 +1800,7 @@
 </nav>
 
 <script src="cage-library.js"></script>
-<script src="movement-prep.js?v=20261029221209"></script>
+<script src="movement-prep.js?v=20261029221500"></script>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
@@ -1809,7 +1810,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 
 // Auto-update: phones cache this page, so check for a newer version on open and when the app comes back on screen.
-const APP_VERSION = '20261029221209';
+const APP_VERSION = '20261029221500';
 async function checkForUpdate() {
   try {
     const r = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' });
@@ -3638,7 +3639,13 @@ document.getElementById('openLibrary').addEventListener('click', () => { renderL
 
 // ===== MOVEMENT PREP =====
 // Content lives in movement-prep.js (shared with Hitting 2.0). A move with no video shows "Video coming".
+// One page, two home buttons: Movement Prep shows the warm-ups, Balance & Stability shows the balance routine.
 let mpGroup = localStorage.getItem('mpGroup') || 'mid';
+let mpMode = 'prep';
+const MP_MODES = {
+  prep:    { title: 'MOVEMENT PREP',       sub: 'Warm up right. Pick your age group.',  pick: r => r.id !== 'balance' },
+  balance: { title: 'BALANCE & STABILITY', sub: 'Own your base. Pick your age group.', pick: r => r.id === 'balance' }
+};
 function mpVideo(v) {
   if (!v) return '<div class="cg-video pending">▶ Video coming</div>';
   if (/\.(mp4|mov|webm)(\?|$)/i.test(v)) return `<video class="mp-vid" src="${cgEsc(v)}" controls playsinline preload="metadata"></video>`;
@@ -3649,11 +3656,14 @@ function renderMovement() {
   if (!M) { body.innerHTML = '<div class="cg-note"><b>COMING SOON</b>Movement Prep is not loaded yet.</div>'; return; }
   const g = M.groups.find(x => x.id === mpGroup) || M.groups[0];
   const moves = r => r.phases.reduce((t, p) => t + p.moves.length, 0);
+  const mode = MP_MODES[mpMode];
+  document.getElementById('mpTitle').textContent = mode.title;
+  document.getElementById('mpSub').textContent = mode.sub;
   body.innerHTML = (M.credit ? `<div class="mp-credit">${cgEsc(M.credit)}</div>` : '')
     + (M.draft ? '<div class="cg-note"><b>DRAFT LIST</b>Movements and videos are being finalized by a physical therapist.</div>' : '')
     + `<div class="side-tabs mp-tabs">${M.groups.map(x => `<button class="side-tab ${x.id === g.id ? 'on' : ''}" data-g="${x.id}">${cgEsc(x.short)}</button>`).join('')}</div>`
     + `<div class="mp-note">${cgEsc(g.note)}</div>`
-    + g.routines.map(r => `<div class="lib-focus">
+    + g.routines.filter(mode.pick).map(r => `<div class="lib-focus">
       <h3>${r.icon} ${cgEsc(r.name)}</h3>
       <div class="lib-tags"><span>${r.minutes} MIN</span><span>${moves(r)} MOVES</span></div>
       <p>${cgEsc(r.when)}</p>
@@ -3672,7 +3682,9 @@ function renderMovement() {
   }));
   document.getElementById('mpBack').onclick = () => showView('view-main');
 }
-document.getElementById('movementBtn').addEventListener('click', () => { renderMovement(); showView('view-movement'); window.scrollTo(0, 0); });
+const openMovement = mode => { mpMode = mode; renderMovement(); showView('view-movement'); window.scrollTo(0, 0); };
+document.getElementById('movementBtn').addEventListener('click', () => openMovement('prep'));
+document.getElementById('balanceBtn').addEventListener('click', () => openMovement('balance'));
 
 
 
