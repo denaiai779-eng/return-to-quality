@@ -1360,6 +1360,8 @@
   .mp-phase { margin-top:10px; }
   .mp-ph-head { font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:2px; font-size:16px; color:var(--cyan); padding-top:8px; border-top:1px solid rgba(0,191,255,.25); }
   .mp-ph-head small { display:block; font-family:'Montserrat', Arial, sans-serif; letter-spacing:.3px; font-size:11px; color:var(--muted); text-transform:none; margin-bottom:2px; }
+  .mp-phase summary { align-items:center; }
+  .mp-phase summary small { display:block; white-space:normal; margin-top:3px; }
   .mp-vid { width:100%; border-radius:8px; margin:10px 0 4px; background:#000; }
   .side-head { font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:3px; color: var(--cyan); font-size:22px; margin:22px 0 4px; border-bottom:1px solid rgba(0,191,255,.35); padding-bottom:6px; }
   .side-head small { display:block; font-family:'Montserrat', Arial, sans-serif; font-size:11px; letter-spacing:.5px; color: var(--muted); }
@@ -1807,7 +1809,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 
 // Auto-update: phones cache this page, so check for a newer version on open and when the app comes back on screen.
-const APP_VERSION = '20261029220409';
+const APP_VERSION = '20261029220756';
 async function checkForUpdate() {
   try {
     const r = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' });
@@ -3658,7 +3660,7 @@ function renderMovement() {
       ${r.phases.map(p => `<div class="mp-phase">
         <div class="mp-ph-head">${cgEsc(p.name.toUpperCase())}<small>${cgEsc(p.goal)}</small></div>
         ${p.moves.map(m => `<details>
-          <summary>${cgEsc(m.name)} <small>${cgEsc(m.dose)}</small></summary>
+          <summary><span>${cgEsc(m.name)}<small>${cgEsc(m.dose)}</small></span></summary>
           ${m.cue ? `<div class="cg-cue"><small>CUE</small>${cgEsc(m.cue)}</div>` : ''}
           ${mpVideo(m.video)}
         </details>`).join('')}
