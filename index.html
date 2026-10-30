@@ -1539,7 +1539,7 @@
   <button class="cage-plan-btn" id="cagePlanBtn">⚾ MY CAGE PLAN<small id="cagePlanSub">Your 45-minute session from Coach</small></button>
   <button class="cage-plan-btn mp-btn" id="movementBtn">🤸 MOVEMENT PREP<small>Warm-ups and arm care by age group</small></button>
   <button class="cage-plan-btn mp-btn" id="balanceBtn">⚖️ BALANCE &amp; STABILITY<small>Own your base: balance and core by age group</small></button>
-  <button class="cage-plan-btn mp-btn" id="moveCheckBtn">🤸 SEND A MOVEMENT CHECK<small>Add-on: monthly movement review with Coach Nia, our physical therapist</small></button>
+  <button class="cage-plan-btn mp-btn" id="moveCheckBtn">🤸 SEND A MOVEMENT CHECK<small>Add-on: monthly movement review with Dr. Nia, our physical therapist</small></button>
 
   <main>
     <div class="tabs-wrap">
@@ -1821,8 +1821,8 @@
   </div>
 </nav>
 
-<script src="cage-library.js?v=20261029234040"></script>
-<script src="movement-prep.js?v=20261029234040"></script>
+<script src="cage-library.js?v=20261029234559"></script>
+<script src="movement-prep.js?v=20261029234559"></script>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
@@ -1832,7 +1832,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 
 // Auto-update: phones cache this page, so check for a newer version on open and when the app comes back on screen.
-const APP_VERSION = '20261029234040';
+const APP_VERSION = '20261029234559';
 async function checkForUpdate() {
   try {
     const r = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' });
@@ -3276,7 +3276,7 @@ let fbState = null; // player form state
 let rvState = null; // coach review state
 // Hitting 2.0 also has a Movement Coach (physical therapist) login. Each video is for one reviewer.
 let isPT = false;
-const REVIEWER_LABEL = { coach: 'Coach', pt: 'Coach Nia' };
+const REVIEWER_LABEL = { coach: 'Coach', pt: 'Dr. Nia' };
 const rvOf = r => r.reviewer || 'coach';
 
 async function fetchFeedback(playerId) {
@@ -3348,13 +3348,13 @@ function renderVideoForm(targetEl, focus, reviewer = 'coach') {
   const pt = reviewer === 'pt';
   targetEl.innerHTML = `<div class="fb-card">
       <h3>${pt ? 'SEND A MOVEMENT CHECK' : 'SEND COACH A VIDEO'}</h3>
-      <div class="fb-sub">${pt ? 'Film your Movement Prep or Balance routine (up to 2 minutes). Coach Nia, our physical therapist, reviews how you move and talks over it.' : 'Players or parents can send a clip (up to 2 minutes) for Coach to review and talk over.'}</div>
+      <div class="fb-sub">${pt ? 'Film your Movement Prep or Balance routine (up to 2 minutes). Dr. Nia, our physical therapist, reviews how you move and talks over it.' : 'Players or parents can send a clip (up to 2 minutes) for Coach to review and talk over.'}</div>
       <div class="fb-label">VIDEO</div>
       <label class="fb-file" id="fbFileLabel">📹 Pick or record a video<small>Up to 2 minutes. Big videos get shrunk automatically.</small><input type="file" id="fbFile" accept="video/*"></label>
       <div class="fb-label">${pt ? 'ANYTHING TO KNOW? (OPTIONAL)' : 'WHAT SHOULD COACH LOOK AT? (OPTIONAL)'}</div>
       <textarea class="cp-note-in" id="fbNote" maxlength="400" placeholder="${pt ? 'Example: Single-leg balance, my left side feels wobbly' : 'Example: Inside Lane dry reps, does my barrel stay behind?'}"></textarea>
       <div class="fb-status" id="fbStatus"></div>
-      <button class="fb-send" id="fbSend">${pt ? 'SEND TO COACH NIA' : 'SEND TO COACH'}</button>
+      <button class="fb-send" id="fbSend">${pt ? 'SEND TO DR. NIA' : 'SEND TO COACH'}</button>
       <button class="fb-skip" id="fbSkip">Cancel</button>
     </div>`;
   document.getElementById('fbFile').addEventListener('change', async e => {
@@ -3443,7 +3443,7 @@ async function submitVideo(targetEl) {
     document.getElementById('cgBack3').onclick = () => showView('view-main');
   } catch (e) {
     console.warn(e);
-    btn.disabled = false; btn.textContent = fbState.reviewer === 'pt' ? 'SEND TO COACH NIA' : 'SEND TO COACH';
+    btn.disabled = false; btn.textContent = fbState.reviewer === 'pt' ? 'SEND TO DR. NIA' : 'SEND TO COACH';
     st.classList.add('err');
     st.textContent = e && e.message === 'shrink' ? 'This phone could not shrink the video. Trim it shorter or film in 720p, then try again.'
       : e && e.message === 'toobig' ? 'Still too big after shrinking. Trim it shorter and try again.'
@@ -3775,7 +3775,7 @@ function renderMovement() {
   document.getElementById('mpTitle').textContent = mode.title;
   document.getElementById('mpSub').textContent = mode.sub;
   body.innerHTML = (M.credit ? `<div class="mp-credit">${cgEsc(M.credit)}</div>` : '')
-    + (M.draft ? '<div class="cg-note"><b>DRAFT LIST</b>Movements and videos are being finalized by Nia Ahart, our physical therapist.</div>' : '')
+    + (M.draft ? '<div class="cg-note"><b>DRAFT LIST</b>Movements and videos are being finalized by Dr. Nia Ahart, our physical therapist.</div>' : '')
     + `<div class="side-tabs mp-tabs">${M.groups.map(x => `<button class="side-tab ${x.id === g.id ? 'on' : ''}" data-g="${x.id}">${cgEsc(x.short)}</button>`).join('')}</div>`
     + `<div class="mp-note">${cgEsc(g.note)}</div>`
     + g.routines.filter(mode.pick).map(r => `<div class="lib-focus">
@@ -3960,7 +3960,7 @@ document.getElementById('moveCheckBtn').addEventListener('click', async () => {
     body.innerHTML = '<div class="cg-empty">Checking…</div>';
     const st = await movementStatus(currentPlayerId);
     if (!st || !(st.allowed > 0)) {
-      body.innerHTML = `<div class="cg-empty"><b>MOVEMENT COACHING · ADD-ON</b>Monthly movement checks with Nia Ahart, our physical therapist: send a video of your Movement Prep or Balance routine and she reviews how you move and talks over it. $${MOVE_PRICE}/month add-on, not part of team dues. Ask Coach Devan to sign you up.<br><button class="cg-back" id="mvBack">◂ BACK</button></div>`;
+      body.innerHTML = `<div class="cg-empty"><b>MOVEMENT COACHING · ADD-ON</b>Monthly movement checks with Dr. Nia Ahart, our physical therapist: send a video of your Movement Prep or Balance routine and she reviews how you move and talks over it. $${MOVE_PRICE}/month add-on, not part of team dues. Ask Coach Devan to sign you up.<br><button class="cg-back" id="mvBack">◂ BACK</button></div>`;
       back(); return;
     }
     if (st.left <= 0) {
