@@ -1799,7 +1799,7 @@
 </nav>
 
 <script src="cage-library.js"></script>
-<script src="movement-prep.js"></script>
+<script src="movement-prep.js?v=20261029221209"></script>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
@@ -1809,7 +1809,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 
 // Auto-update: phones cache this page, so check for a newer version on open and when the app comes back on screen.
-const APP_VERSION = '20261029220756';
+const APP_VERSION = '20261029221209';
 async function checkForUpdate() {
   try {
     const r = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' });
