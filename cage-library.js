@@ -576,22 +576,6 @@ const CAGE_FOCUS = [
         check: '6 of 10 strikes with the holds mixed up.',
         mistake: 'Same hold time every pitch.' }
     ]
-  },
-  {
-    id: 'p-fielding', name: 'Fielding Your Position', side: 'pitching', pillar: 'RELENTLESSNESS',
-    why: 'After the pitch you are an infielder. Finish ready to field.',
-    drills: [
-      { id: 'pf-finish', name: 'Finish in Fielding Position', minutes: 6, feeder: 'tosser', equip: 'Partner, balls, glove',
-        steps: ['Throw a pitch at 60 percent into the net.', 'As you finish, square up with glove out front.', 'Partner rolls or tosses a comebacker right after. Field it clean.'],
-        reps: '8 reps', cue: 'Pitch, then glove up.',
-        check: 'You field 6 of 8 clean.',
-        mistake: 'Falling off the mound and not being ready.' },
-      { id: 'pf-cover', name: 'Cover First Footwork', minutes: 6, feeder: 'none', equip: 'Open space, a base or marker',
-        steps: ['On a ball to the right side, break toward the line.', 'Run a curved path to the bag, then run up the line.', 'Catch, touch the inside of the bag, and get out of the way.'],
-        reps: '6 walk-throughs, then 4 at speed', cue: 'Curve to the line, up the line.',
-        check: '4 of 4 reps at speed hit the bag on the right path.',
-        mistake: 'Running straight at the bag and colliding with the runner.' }
-    ]
   }
 ];
 
