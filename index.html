@@ -1376,6 +1376,10 @@
   .cg-pin-row button { flex:1; padding:10px; border-radius:8px; font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:2px; font-size:15px; cursor:pointer; }
   .cg-pin-cancel { background:transparent; border:1px solid #2a3759; color:var(--muted); }
   .cg-pin-ok { background:var(--gold); border:0; color:#0a1628; }
+  body.pt-mode #view-coach .coach-section:not(.cs-fb), body.pt-mode #view-coach .coach-stats, body.pt-mode .bottom-nav { display:none; }
+  .fa-move { margin-top:6px; font-size:12px; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+  .fa-move b { color:var(--white); }
+  .fa-move button { background:transparent; border:1px solid #2a3759; color:var(--cyan); border-radius:4px; padding:3px 8px; font-size:10px; letter-spacing:1px; cursor:pointer; font-family:'Bebas Neue', Impact, sans-serif; }
   .cg-prep-pts.on { background:var(--green); }
   .cg-prep-pts:disabled { cursor:default; }
   .mp-li-vid { color:var(--cyan); font-weight:700; font-size:11px; letter-spacing:1px; text-decoration:none; white-space:nowrap; }
@@ -1535,6 +1539,7 @@
   <button class="cage-plan-btn" id="cagePlanBtn">⚾ MY CAGE PLAN<small id="cagePlanSub">Your 45-minute session from Coach</small></button>
   <button class="cage-plan-btn mp-btn" id="movementBtn">🤸 MOVEMENT PREP<small>Warm-ups and arm care by age group</small></button>
   <button class="cage-plan-btn mp-btn" id="balanceBtn">⚖️ BALANCE &amp; STABILITY<small>Own your base: balance and core by age group</small></button>
+  <button class="cage-plan-btn mp-btn" id="moveCheckBtn">🤸 SEND A MOVEMENT CHECK<small>Add-on: monthly movement review by a physical therapist</small></button>
 
   <main>
     <div class="tabs-wrap">
@@ -1680,7 +1685,7 @@
     <button class="lib-btn" id="openLibrary" style="width:100%;margin:6px 0 10px">📚 DRILL LIBRARY</button>
     <div id="coachCagePlans"></div>
   </div>
-  <div class="coach-section">
+  <div class="coach-section cs-fb">
     <div class="coach-section-head">
       <h3>Videos to Review</h3>
       <div class="cp-last" id="fbSummary"></div>
@@ -1816,8 +1821,8 @@
   </div>
 </nav>
 
-<script src="cage-library.js?v=20261029230426"></script>
-<script src="movement-prep.js?v=20261029230426"></script>
+<script src="cage-library.js?v=20261029233008"></script>
+<script src="movement-prep.js?v=20261029233008"></script>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
@@ -1827,7 +1832,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 
 // Auto-update: phones cache this page, so check for a newer version on open and when the app comes back on screen.
-const APP_VERSION = '20261029230426';
+const APP_VERSION = '20261029233008';
 async function checkForUpdate() {
   try {
     const r = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' });
@@ -2322,6 +2327,7 @@ async function openCoachView() {
   if (!isCoach) return;
   showView('view-coach');
   await Promise.all([fetchTeamFeed(), fetchCagePlans(), fetchCageStats(), refreshCoachFeedback(), refreshFamilyAccess()]);
+  renderFamilyAccess(); // after feedback loads, so movement-check counts are right
   renderCoachCagePlans();
   renderCoachStats();
   renderCoachPlayers();
@@ -3862,15 +3868,17 @@ async function refreshFamilyAccess() {
 function renderFamilyAccess() {
   const list = document.getElementById('faList'); if (!list) return;
   const sel = document.getElementById('faPlayer');
-  if (!sel.options.length) sel.innerHTML = '<option value="">Pick the player…</option>' + ROSTER.map(p => `<option value="${p.id}">#${p.num} ${cgEsc(p.name)}</option>`).join('') + '<option value="__coach">Coach (sees everything)</option>';
-  const fam = faRows.filter(r => r.role === 'family'), coaches = faRows.filter(r => r.role === 'coach');
+  if (!sel.options.length) sel.innerHTML = '<option value="">Pick the player…</option>' + ROSTER.map(p => `<option value="${p.id}">#${p.num} ${cgEsc(p.name)}</option>`).join('') + '<option value="__coach">Coach (sees everything)</option><option value="__pt">Movement Coach (sees movement checks only)</option>';
+  const fam = faRows.filter(r => r.role === 'family'), coaches = faRows.filter(r => r.role === 'coach'), pts = faRows.filter(r => r.role === 'pt');
   const missing = ROSTER.filter(p => !fam.some(r => r.player_id === p.id)).length;
   document.getElementById('faSummary').textContent = `${new Set(fam.map(r => r.email)).size} parents${missing ? ' · ' + missing + ' players with no email' : ''}`;
   const chip = r => `<span class="fa-email">${cgEsc(r.email)}<button data-del="${cgEsc(r.email)}|${r.player_id || ''}" title="Remove">×</button></span>`;
   list.innerHTML = ROSTER.map(p => {
     const rows = fam.filter(r => r.player_id === p.id);
-    return `<div class="fa-player"><div class="fa-name">#${p.num} ${cgEsc(p.name)}${divLogo(p)}</div>${rows.length ? rows.map(chip).join('') : '<div class="fa-none">NO EMAIL YET: this family cannot sign in</div>'}</div>`;
-  }).join('') + `<div class="fa-player"><div class="fa-name">Coaches</div>${coaches.map(chip).join('')}</div>`;
+    return `<div class="fa-player"><div class="fa-name">#${p.num} ${cgEsc(p.name)}${divLogo(p)}</div>${rows.length ? rows.map(chip).join('') : '<div class="fa-none">NO EMAIL YET: this family cannot sign in</div>'}${typeof moveCell === 'function' ? moveCell(p) : ''}</div>`;
+  }).join('') + `<div class="fa-player"><div class="fa-name">Coaches</div>${coaches.map(chip).join('')}</div>`
+    + `<div class="fa-player"><div class="fa-name">Movement Coach</div>${pts.length ? pts.map(chip).join('') : '<div class="fa-none">Not added yet: pick "Movement Coach" above</div>'}</div>`;
+  if (typeof wireMoveToggles === 'function') wireMoveToggles(list);
   list.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', async () => {
     const [email, pid] = b.dataset.del.split('|');
     if (email === authEmail && !pid) { document.getElementById('faStatus').textContent = 'You cannot remove your own coach access.'; return; }
@@ -3886,7 +3894,7 @@ document.getElementById('faAdd').addEventListener('click', async () => {
   const email = document.getElementById('faEmail').value.trim().toLowerCase(), pid = document.getElementById('faPlayer').value, st = document.getElementById('faStatus');
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { st.textContent = 'Enter a valid email.'; return; }
   if (!pid) { st.textContent = 'Pick the player (or Coach).'; return; }
-  const row = pid === '__coach' ? { email, player_id: null, role: 'coach' } : { email, player_id: pid, role: 'family' };
+  const row = pid === '__coach' ? { email, player_id: null, role: 'coach' } : pid === '__pt' ? { email, player_id: null, role: 'pt' } : { email, player_id: pid, role: 'family' };
   const { error } = await supabase.from('family_access').insert(row);
   st.textContent = error ? (error.code === '23505' ? 'That email already has access for this player.' : 'Could not add. Try again.') : `Added ${email}. They can sign in now.`;
   if (!error) document.getElementById('faEmail').value = '';
@@ -3905,6 +3913,14 @@ document.getElementById('faAdd').addEventListener('click', async () => {
   if (!allowed) { await supabase.auth.signOut(); showView('view-login'); renderLogin('email', authEmail, 'That email is not on the Makos list anymore. Ask Coach Devan.'); return; }
   document.body.classList.remove('locked');
   document.querySelector('.bottom-nav button[data-view="coach"]').style.display = isCoach ? '' : 'none';
+  if (isPT) {
+    document.body.classList.add('pt-mode');
+    document.querySelector('#view-coach .lb-header h2').textContent = 'MOVEMENT REVIEWS';
+    document.querySelector('#view-coach .lb-header .sub').textContent = 'Midwest Makos · movement checks';
+    showView('view-coach');
+    await refreshCoachFeedback();
+    return;
+  }
   if (!isCoach && myPlayerIds.length === 1) { currentPlayerId = myPlayerIds[0]; localStorage.setItem(LOCAL_KEY, currentPlayerId); }
   if (currentPlayerId && !visibleRoster().some(p => p.id === currentPlayerId)) { currentPlayerId = null; localStorage.removeItem(LOCAL_KEY); }
   document.getElementById('playerChip').style.display = visibleRoster().length > 1 ? '' : 'none';
@@ -3924,6 +3940,56 @@ document.getElementById('faAdd').addEventListener('click', async () => {
   fetchCagePlans().then(updateCagePlanButton);
   startRealtime();
 })();
+
+// ===== MOVEMENT CHECKS (Makos): paid add-on, not part of dues. Coach turns it on per player in Family Access. =====
+const MOVE_PRICE = 149;
+async function movementStatus(pid) {
+  const { data, error } = await supabase.rpc('movement_status', { pid });
+  if (error) { console.warn('movement_status', error); return null; }
+  return data;
+}
+document.getElementById('moveCheckBtn').addEventListener('click', async () => {
+  if (!currentPlayerId) return;
+  showView('view-cage'); window.scrollTo(0, 0);
+  const p = ROSTER.find(r => r.id === currentPlayerId);
+  document.getElementById('cgPlayer').textContent = p ? `#${p.num} ${p.name}` : '';
+  document.getElementById('cgChips').innerHTML = '';
+  const body = document.getElementById('cgBody');
+  const back = () => { document.getElementById('mvBack').onclick = () => showView('view-main'); };
+  if (!isCoach) {
+    body.innerHTML = '<div class="cg-empty">Checking…</div>';
+    const st = await movementStatus(currentPlayerId);
+    if (!st || !(st.allowed > 0)) {
+      body.innerHTML = `<div class="cg-empty"><b>MOVEMENT COACHING · ADD-ON</b>Monthly movement checks with our physical therapist: send a video of your Movement Prep or Balance routine and she reviews how you move and talks over it. $${MOVE_PRICE}/month add-on, not part of team dues. Ask Coach Devan to sign you up.<br><button class="cg-back" id="mvBack">◂ BACK</button></div>`;
+      back(); return;
+    }
+    if (st.left <= 0) {
+      body.innerHTML = `<div class="cg-empty"><b>${st.used} OF ${st.allowed} USED</b>You've used your movement check for this month. It resets on the 1st.<br><button class="cg-back" id="mvBack">◂ BACK</button></div>`;
+      back(); return;
+    }
+  }
+  renderVideoForm(body, cagePlans[currentPlayerId]?.focus || [], 'pt');
+  document.getElementById('fbSkip').onclick = () => showView('view-main');
+});
+// Coach: per-player paid switch in Family Access
+let moveUsed = {};
+function moveCell(p) {
+  const me = allPlayersData.find(x => x.id === p.id) || {};
+  const lim = me.movement_limit || 0;
+  return `<div class="fa-move">🤸 Movement checks ($${MOVE_PRICE}/mo): <b>${lim > 0 ? `PAID · ${moveUsed[p.id] || 0} of ${lim} used` : 'not signed up'}</b>
+    <button data-mlim="${p.id}" data-to="${lim > 0 ? 0 : 1}">${lim > 0 ? 'TURN OFF' : 'TURN ON 1/MO'}</button></div>`;
+}
+function wireMoveToggles(list) {
+  const month = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Detroit' }).slice(0, 7);
+  moveUsed = {};
+  for (const r of fbRows) if (r.reviewer === 'pt' && r.video_path && new Date(r.created_at).toLocaleDateString('en-CA', { timeZone: 'America/Detroit' }).slice(0, 7) === month) moveUsed[r.player_id] = (moveUsed[r.player_id] || 0) + 1;
+  list.querySelectorAll('[data-mlim]').forEach(b => b.addEventListener('click', async () => {
+    const to = Number(b.dataset.to), st = document.getElementById('faStatus');
+    const { error } = await supabase.from('players').update({ movement_limit: to }).eq('id', b.dataset.mlim);
+    st.textContent = error ? 'Could not change movement checks. Try again.' : (to > 0 ? 'Movement checks on: 1 a month.' : 'Movement checks off.');
+    await fetchPlayers(); renderFamilyAccess();
+  }));
+}
 </script>
 
 </body>
