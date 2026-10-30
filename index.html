@@ -1369,6 +1369,13 @@
   .cg-hw-btns { display:flex; gap:8px; margin-top:8px; }
   .cg-hw-btns .lib-btn { margin:0; flex:1; width:auto; font-size:13px; padding:9px 6px; }
   .cg-prep-pts { display:block; width:100%; margin-top:8px; padding:11px; border-radius:8px; border:0; background:var(--gold); color:#0a1628; font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:2px; font-size:16px; cursor:pointer; }
+  .cg-pin { margin-top:8px; padding:12px; border-radius:8px; background:rgba(0,0,0,.25); border:1px solid var(--gold); }
+  .cg-pin b { color:var(--gold); }
+  .cg-pin p { font-size:13px; line-height:1.45; margin:4px 0 8px; color:var(--ink); }
+  .cg-pin-row { display:flex; gap:8px; margin-top:6px; }
+  .cg-pin-row button { flex:1; padding:10px; border-radius:8px; font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:2px; font-size:15px; cursor:pointer; }
+  .cg-pin-cancel { background:transparent; border:1px solid #2a3759; color:var(--muted); }
+  .cg-pin-ok { background:var(--gold); border:0; color:#0a1628; }
   .cg-prep-pts.on { background:var(--green); }
   .cg-prep-pts:disabled { cursor:default; }
   .mp-li-vid { color:var(--cyan); font-weight:700; font-size:11px; letter-spacing:1px; text-decoration:none; white-space:nowrap; }
@@ -1809,8 +1816,8 @@
   </div>
 </nav>
 
-<script src="cage-library.js?v=20261029223703"></script>
-<script src="movement-prep.js?v=20261029223703"></script>
+<script src="cage-library.js?v=20261029224651"></script>
+<script src="movement-prep.js?v=20261029224651"></script>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
@@ -1820,7 +1827,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 
 // Auto-update: phones cache this page, so check for a newer version on open and when the app comes back on screen.
-const APP_VERSION = '20261029223703';
+const APP_VERSION = '20261029224651';
 async function checkForUpdate() {
   try {
     const r = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' });
@@ -3662,9 +3669,20 @@ function prepPointsBtn() {
 }
 function wirePrepPoints(body) {
   const b = body.querySelector('#cgPrepPts');
-  if (b && !b.disabled) b.onclick = () => claimPrepPoints(b);
+  if (b && !b.disabled) b.onclick = () => isCoach ? awardPrepPoints(b, 'coach') : openParentConfirm(b);
 }
-async function claimPrepPoints(btn) {
+// Parent confirms: the player hands the phone over and the parent taps to confirm
+function openParentConfirm(btn) {
+  const player = ROSTER.find(p => p.id === currentPlayerId);
+  const panel = document.createElement('div');
+  panel.className = 'cg-pin';
+  panel.innerHTML = `<b>PARENT CONFIRM</b><p>Hand the phone to a parent. Parent: ${cgEsc(player.name)} did the full Movement Prep and Balance routines?</p>`
+    + `<div class="cg-pin-row"><button class="cg-pin-cancel">CANCEL</button><button class="cg-pin-ok">✓ PARENT CONFIRMS</button></div>`;
+  btn.replaceWith(panel);
+  panel.querySelector('.cg-pin-cancel').onclick = () => panel.replaceWith(btn);
+  panel.querySelector('.cg-pin-ok').onclick = () => { panel.replaceWith(btn); awardPrepPoints(btn, 'parent'); };
+}
+async function awardPrepPoints(btn, by) {
   btn.disabled = true; btn.textContent = 'SAVING…';
   const player = ROSTER.find(p => p.id === currentPlayerId);
   try {
@@ -3681,7 +3699,7 @@ async function claimPrepPoints(btn) {
       if (upErr) throw upErr;
       const { error: logErr } = await supabase.from('log').insert({
         team_id: TEAM_ID, player_id: currentPlayerId, player_name: player.name,
-        name: 'Full Prep Done (Movement Prep + Balance)', tier: 'silver', pts: PREP_PTS, type: 'challenge'
+        name: `Full Prep Done (${by} confirmed)`, tier: 'silver', pts: PREP_PTS, type: 'challenge'
       });
       if (logErr) throw logErr;
     }
@@ -3691,6 +3709,7 @@ async function claimPrepPoints(btn) {
   } catch (e) {
     console.warn(e);
     btn.disabled = false; btn.textContent = 'SAVE FAILED · TAP TO RETRY';
+    btn.onclick = () => awardPrepPoints(btn, by);
   }
 }
 // ===== END PREP POINTS =====
