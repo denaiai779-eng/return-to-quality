@@ -1826,7 +1826,7 @@
   .wl-next:active { transform: translateY(3px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 2px 0 #005a9e; }
   .wl-replay { display: block; margin: 22px auto 0; background: none; border: 0; color: var(--muted); font: 600 13px 'Inter', 'Montserrat', sans-serif; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 
-  /* Weekly reward alert */
+  /* Monthly reward alert */
   .rw-toast { position: fixed; z-index: 1500; left: 50%; top: calc(env(safe-area-inset-top) + 10px); width: min(calc(100% - 24px), 520px);
     transform: translate(-50%, -140%); transition: transform 0.45s var(--ease); display: flex; gap: 12px; align-items: center; padding: 14px 16px;
     border-radius: 18px; background: var(--lit), rgba(13, 30, 56, 0.92); border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1839,6 +1839,7 @@
   .rw-toast.gold .rw-ic { color: var(--gold); } .rw-toast.diamond .rw-ic { color: var(--diamond); }
   .rw-toast.bronze { border-color: rgba(205, 127, 50, 0.5); } .rw-toast.silver { border-color: rgba(196, 201, 212, 0.5); }
   .rw-toast.gold { border-color: rgba(255, 216, 74, 0.55); } .rw-toast.diamond { border-color: rgba(0, 191, 255, 0.6); }
+
 </style>
 </head>
 <body>
@@ -1901,7 +1902,7 @@
 
   <div class="scorebar">
     <div class="score-card">
-      <span class="label">This Week</span>
+      <span class="label">This Month</span>
       <div><span class="val" id="weeklyVal">0</span><span class="pts">PTS</span></div>
       <div class="sc-bar"><i id="weeklyBar"></i></div><div class="sc-next" id="weeklyNext"></div>
     </div>
@@ -1954,7 +1955,7 @@
     <details open>
       <summary>Rewards & Progress</summary>
       <div class="body ladder-section">
-        <h3>This Week</h3>
+        <h3>This Month</h3>
         <div id="weeklyLadder"></div>
         <h3>Season</h3>
         <div id="seasonLadder"></div>
@@ -1972,7 +1973,7 @@
           <li style="margin: 5px 0;">If he had the chance and didn't → tap <b>✗ DIDN'T</b> (−1 Bronze/Silver, −2 Gold/Diamond)</li>
           <li style="margin: 5px 0;">If it never came up — walk, inning ended — tap <b>N/A</b> (no change)</li>
           <li style="margin: 5px 0;">For lazy ABs / bad behavior → tap <b>− TAKE AWAY</b> and pick the reason (points deducted)</li>
-          <li style="margin: 5px 0;">Stack points toward weekly + season rewards. Weekly resets Mondays.</li>
+          <li style="margin: 5px 0;">Stack points toward monthly + season rewards. Monthly resets on the 1st.</li>
         </ol>
         <div class="legend">
           <span class="bronze">BRONZE · 1 PT</span>
@@ -2004,7 +2005,7 @@
     <div class="sub">Midwest Makos · 11U</div>
   </div>
   <div class="lb-toggle">
-    <button class="active" data-lb="weekly">This Week</button>
+    <button class="active" data-lb="weekly">This Month</button>
     <button data-lb="season">Season</button>
   </div>
   <div class="lb-list" id="lbList"></div>
@@ -2018,7 +2019,7 @@
   </div>
   <div class="reward-summary" id="rewardSummary"></div>
   <div class="rewards-section">
-    <h3>This Week</h3>
+    <h3>This Month</h3>
     <div class="reward-grid" id="weeklyRewards"></div>
   </div>
   <div class="rewards-section">
@@ -2035,7 +2036,7 @@
   </div>
   <div class="coach-stats">
     <div class="coach-stat">
-      <div class="cs-label">Team Weekly</div>
+      <div class="cs-label">Team Monthly</div>
       <div class="cs-val" id="cstWeekly">0</div>
     </div>
     <div class="coach-stat">
@@ -2043,7 +2044,7 @@
       <div class="cs-val" id="cstSeason">0</div>
     </div>
     <div class="coach-stat wide">
-      <div class="cs-label">Top This Week</div>
+      <div class="cs-label">Top This Month</div>
       <div class="cs-top" id="cstTop">—</div>
     </div>
   </div>
@@ -2055,14 +2056,6 @@
     <div class="cp-hint" style="text-align:left">Tap a player to set his focus areas</div>
     <button class="lib-btn" id="openLibrary" style="width:100%;margin:6px 0 10px">DRILL LIBRARY</button>
     <div id="coachCagePlans"></div>
-  </div>
-  <div class="coach-section cs-fb">
-    <div class="coach-section-head">
-      <h3>Videos to Review</h3>
-      <div class="cp-last" id="fbSummary"></div>
-    </div>
-    <div class="cp-hint" style="text-align:left">Tap one to watch and record a voice-over</div>
-    <div id="coachFeedback"></div>
   </div>
   <div class="coach-section">
     <div class="coach-section-head">
@@ -2076,7 +2069,7 @@
     <div class="coach-section-head">
       <h3>All Players</h3>
       <div class="coach-toggle">
-        <button class="active" data-cmode="week">Weekly</button>
+        <button class="active" data-cmode="week">Monthly</button>
         <button data-cmode="season">Season</button>
       </div>
     </div>
@@ -2213,7 +2206,7 @@
       <div class="wl-ic"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg></div>
       <h2>REWARDS · <span class="accent">TEAM</span></h2>
       <ul>
-        <li>Points stack toward <b>weekly</b> and <b>season</b> rewards, shown on the Challenge page. The week resets every Monday.</li>
+        <li>Points stack toward <b>monthly</b> and <b>season</b> rewards, shown on the Challenge page. The month resets on the 1st.</li>
         <li>You get a heads-up when you are close to a reward, and when you unlock it.</li>
         <li><b>Team</b> shows the leaderboard.</li>
       </ul>
@@ -2237,9 +2230,9 @@
   </div>
 </nav>
 
-<script src="cage-library.js?v=20261031011053"></script>
-<script src="fx.js?v=20261031011053"></script>
-<script src="movement-prep.js?v=20261031011053"></script>
+<script src="cage-library.js?v=20261031225602"></script>
+<script src="fx.js?v=20261031225602"></script>
+<script src="movement-prep.js?v=20261031225602"></script>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
@@ -2249,7 +2242,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 
 // Auto-update: phones cache this page, so check for a newer version on open and when the app comes back on screen.
-const APP_VERSION = '20261031011053';
+const APP_VERSION = '20261031225602';
 async function checkForUpdate() {
   try {
     const r = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' });
@@ -2417,10 +2410,10 @@ const DEDUCTIONS = {
 // Rewards are TIME / RECOGNITION / PRIVILEGE — never cash. The standard, not the bribe.
 const REWARDS = {
   weekly: [
-    { pts: 25, name: 'Bronze Week',  tier: 'bronze',  reward: 'Pick the family dinner · control the car music · 30 min extra up' },
-    { pts: 45, name: 'Silver Week',  tier: 'silver',  reward: 'Movie pick for family night · 1-on-1 time with Dad · pick the weekend breakfast' },
-    { pts: 60, name: 'Gold Week',    tier: 'gold',    reward: 'Plan the weekend family activity · skip a chore · friend sleepover' },
-    { pts: 80, name: 'Diamond Week', tier: 'diamond', reward: 'A full day with Dad, your call · Player of the Week recognition' }
+    { pts: 100, name: 'Bronze Month', tier: 'bronze',  reward: 'Pick the family dinner · control the car music · 30 min extra up' },
+    { pts: 180, name: 'Silver Month', tier: 'silver',  reward: 'Movie pick for family night · 1-on-1 time with Dad · pick the weekend breakfast' },
+    { pts: 240, name: 'Gold Month',   tier: 'gold',    reward: 'Plan the weekend family activity · skip a chore · friend sleepover' },
+    { pts: 320, name: 'Diamond Month', tier: 'diamond', reward: 'A full day with Dad, your call · Player of the Month recognition' }
   ],
   season: [
     { pts: 500,  name: 'Rookie',       tier: 'bronze',  reward: 'Your name on the family Wall of Quality · a 1-on-1 training day' },
@@ -2443,13 +2436,10 @@ let teamFeed = []; // recent team-wide log
 const COACH_PIN = '0606';
 const COACH_UNLOCK_KEY = 'rtq_coach_unlocked_v1';
 
-function getMonday(d) {
+// Points reset monthly: the "weekly" column holds this month's points, week_start holds the month (YYYY-MM-01).
+function periodStart(d) {
   const date = new Date(d);
-  const day = date.getDay();
-  const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-  date.setHours(0,0,0,0);
-  date.setDate(diff);
-  return date.toISOString().slice(0,10);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-01`;
 }
 
 // === Sync status ===
@@ -2576,11 +2566,11 @@ function renderMyScores() {
   if (!currentPlayerId) return;
   const me = allPlayersData.find(p => p.id === currentPlayerId);
   if (!me) return;
-  const thisMonday = getMonday(new Date());
+  const thisPeriod = periodStart(new Date());
   let weekly = me.weekly || 0;
-  if (me.week_start !== thisMonday) {
+  if (me.week_start !== thisPeriod) {
     weekly = 0;
-    supabase.from('players').update({ weekly: 0, week_start: thisMonday }).eq('id', currentPlayerId).then();
+    supabase.from('players').update({ weekly: 0, week_start: thisPeriod }).eq('id', currentPlayerId).then();
   }
   const wEl = document.getElementById('weeklyVal');
   const sEl = document.getElementById('totalVal');
@@ -2604,14 +2594,14 @@ function setNextUp(key, tiers, v) {
   txt.textContent = next ? `${next.pts - v} to ${next.name}` : `${tiers[tiers.length - 1].name} reached`;
 }
 
-// Weekly reward alerts: a drop-down when a player is close to the next weekly reward, and when they reach it.
-// Each alert shows once per player per week (stored on this phone).
-const RW_NEAR = 5; // points away that counts as "close"
+// Monthly reward alerts: a drop-down when a player is close to the next monthly reward, and when they reach it.
+// Each alert shows once per player per month (stored on this phone).
+const RW_NEAR = 15; // points away that counts as "close"
 let rwTimer = null;
 function rewardAlert(weekly) {
   if (!currentPlayerId || isCoach) return;
   if (!document.getElementById('welcome').hidden) return; // shown after the welcome closes
-  const key = `mk_rw_${currentPlayerId}_${getMonday(new Date())}`;
+  const key = `mk_rw_${currentPlayerId}_${periodStart(new Date())}`;
   const seen = new Set(JSON.parse(localStorage.getItem(key) || '[]'));
   const reached = REWARDS.weekly.filter(t => weekly >= t.pts).pop();
   const next = REWARDS.weekly.find(t => weekly < t.pts);
@@ -2684,9 +2674,9 @@ function renderLog(rows) {
 function renderLeaderboard() {
   const el = document.getElementById('lbList');
   if (!el) return;
-  const thisMonday = getMonday(new Date());
+  const thisPeriod = periodStart(new Date());
   const rows = allPlayersData.map(p => {
-    const w = p.week_start === thisMonday ? (p.weekly || 0) : 0;
+    const w = p.week_start === thisPeriod ? (p.weekly || 0) : 0;
     return { ...p, displayPts: lbMode === 'weekly' ? w : (p.season || 0) };
   });
   rows.sort((a,b) => (b.displayPts || 0) - (a.displayPts || 0));
@@ -2719,8 +2709,8 @@ function renderRewardsView() {
   if (!p) return;
   document.getElementById('rewardsPlayerName').textContent = `${p.name.toUpperCase()} · #${p.num}`;
 
-  const thisMonday = getMonday(new Date());
-  const weekly = me && me.week_start === thisMonday ? (me.weekly || 0) : 0;
+  const thisPeriod = periodStart(new Date());
+  const weekly = me && me.week_start === thisPeriod ? (me.weekly || 0) : 0;
   const season = me ? (me.season || 0) : 0;
 
   // Summary: next reward callouts
@@ -2728,9 +2718,9 @@ function renderRewardsView() {
   const nextSeason = REWARDS.season.find(t => season < t.pts);
   let summary = '';
   if (nextWeekly) {
-    summary += `<div class="reward-summary-row"><div class="rs-label">Next Weekly</div><div class="rs-value"><b>${nextWeekly.pts - weekly} pts</b> to ${nextWeekly.name}</div></div>`;
+    summary += `<div class="reward-summary-row"><div class="rs-label">Next Monthly</div><div class="rs-value"><b>${nextWeekly.pts - weekly} pts</b> to ${nextWeekly.name}</div></div>`;
   } else {
-    summary += `<div class="reward-summary-row"><div class="rs-label">Weekly</div><div class="rs-value" style="color: var(--green);">✓ ALL EARNED</div></div>`;
+    summary += `<div class="reward-summary-row"><div class="rs-label">Monthly</div><div class="rs-value" style="color: var(--green);">✓ ALL EARNED</div></div>`;
   }
   if (nextSeason) {
     summary += `<div class="reward-summary-row"><div class="rs-label">Next Season</div><div class="rs-value"><b>${nextSeason.pts - season} pts</b> to ${nextSeason.name}</div></div>`;
@@ -2805,11 +2795,11 @@ async function fetchTeamFeed() {
   if (!error) teamFeed = data || [];
 }
 function renderCoachStats() {
-  const thisMonday = getMonday(new Date());
+  const thisPeriod = periodStart(new Date());
   let teamWeekly = 0, teamSeason = 0;
   let topPlayer = null, topPts = -Infinity;
   for (const p of allPlayersData) {
-    const w = p.week_start === thisMonday ? (p.weekly || 0) : 0;
+    const w = p.week_start === thisPeriod ? (p.weekly || 0) : 0;
     teamWeekly += w;
     teamSeason += (p.season || 0);
     if (w > topPts) { topPts = w; topPlayer = p; }
@@ -2823,9 +2813,9 @@ function renderCoachStats() {
 function renderCoachPlayers() {
   const el = document.getElementById('coachPlayers');
   if (!el) return;
-  const thisMonday = getMonday(new Date());
+  const thisPeriod = periodStart(new Date());
   const rows = allPlayersData.map(p => {
-    const w = p.week_start === thisMonday ? (p.weekly || 0) : 0;
+    const w = p.week_start === thisPeriod ? (p.weekly || 0) : 0;
     return { ...p, displayPts: coachMode === 'week' ? w : (p.season || 0) };
   });
   rows.sort((a,b) => (b.displayPts || 0) - (a.displayPts || 0));
@@ -2879,6 +2869,7 @@ function renderCoachFeed() {
     </div>`;
   }).join('');
 }
+
 
 // === Spin / Take-Away ===
 function setCategory(cat) {
@@ -3081,16 +3072,16 @@ async function markSequenceCard(idx, act, challenge) {
   cardEl.querySelectorAll('button').forEach(b => b.disabled = true);
 
   try {
-    const thisMonday = getMonday(new Date());
+    const thisPeriod = periodStart(new Date());
     const me = allPlayersData.find(p => p.id === currentPlayerId);
 
     if (act === 'done') {
       const pts = challenge.pts;
-      const newWeekly = (me && me.week_start === thisMonday ? (me.weekly || 0) : 0) + pts;
+      const newWeekly = (me && me.week_start === thisPeriod ? (me.weekly || 0) : 0) + pts;
       const newSeason = (me ? me.season : 0) + pts;
       const { error: upErr } = await supabase
         .from('players')
-        .update({ weekly: newWeekly, season: newSeason, week_start: thisMonday })
+        .update({ weekly: newWeekly, season: newSeason, week_start: thisPeriod })
         .eq('id', currentPlayerId);
       if (upErr) throw upErr;
       const { error: logErr } = await supabase
@@ -3112,10 +3103,10 @@ async function markSequenceCard(idx, act, challenge) {
       const penalty = missPenalty(challenge.tier);
       let newSeason = (me ? me.season : 0) - penalty;
       if (newSeason < 0) newSeason = 0;
-      const newWeekly = (me && me.week_start === thisMonday ? (me.weekly || 0) : 0) - penalty;
+      const newWeekly = (me && me.week_start === thisPeriod ? (me.weekly || 0) : 0) - penalty;
       const { error: upErr } = await supabase
         .from('players')
-        .update({ weekly: newWeekly, season: newSeason, week_start: thisMonday })
+        .update({ weekly: newWeekly, season: newSeason, week_start: thisPeriod })
         .eq('id', currentPlayerId);
       if (upErr) throw upErr;
       const { error: logErr } = await supabase
@@ -3191,17 +3182,17 @@ function showResult(c) {
 
 // Apply points (+ or −) to EVERY player on the roster — used for team challenges
 async function applyTeamPoints(c, pts, type) {
-  const thisMonday = getMonday(new Date());
+  const thisPeriod = periodStart(new Date());
   const label = (type === 'deduction' ? 'Team Miss — ' : 'Team — ') + c.name;
   const playerUpdates = [];
   const logEntries = [];
   for (const p of allPlayersData) {
-    const curWeekly = p.week_start === thisMonday ? (p.weekly || 0) : 0;
+    const curWeekly = p.week_start === thisPeriod ? (p.weekly || 0) : 0;
     let newSeason = (p.season || 0) + pts;
     if (newSeason < 0) newSeason = 0;
     playerUpdates.push({
       id: p.id, team_id: TEAM_ID, name: p.name, num: p.num,
-      weekly: curWeekly + pts, season: newSeason, week_start: thisMonday
+      weekly: curWeekly + pts, season: newSeason, week_start: thisPeriod
     });
     logEntries.push({
       team_id: TEAM_ID, player_id: p.id, player_name: p.name,
@@ -3224,14 +3215,14 @@ async function missChallenge() {
     if (team) {
       await applyTeamPoints(c, -penalty, 'deduction');
     } else {
-      const thisMonday = getMonday(new Date());
+      const thisPeriod = periodStart(new Date());
       const me = allPlayersData.find(p => p.id === currentPlayerId);
       let newSeason = (me ? me.season : 0) - penalty;
       if (newSeason < 0) newSeason = 0;
-      const newWeekly = (me && me.week_start === thisMonday ? (me.weekly || 0) : 0) - penalty;
+      const newWeekly = (me && me.week_start === thisPeriod ? (me.weekly || 0) : 0) - penalty;
       const { error: updateErr } = await supabase
         .from('players')
-        .update({ weekly: newWeekly, season: newSeason, week_start: thisMonday })
+        .update({ weekly: newWeekly, season: newSeason, week_start: thisPeriod })
         .eq('id', currentPlayerId);
       if (updateErr) throw updateErr;
       const { error: logErr } = await supabase
@@ -3270,13 +3261,13 @@ async function completeChallenge() {
     if (team) {
       await applyTeamPoints(c, c.pts, 'challenge');
     } else {
-      const thisMonday = getMonday(new Date());
+      const thisPeriod = periodStart(new Date());
       const me = allPlayersData.find(p => p.id === currentPlayerId);
-      const newWeekly = (me && me.week_start === thisMonday ? (me.weekly || 0) : 0) + c.pts;
+      const newWeekly = (me && me.week_start === thisPeriod ? (me.weekly || 0) : 0) + c.pts;
       const newSeason = (me ? me.season : 0) + c.pts;
       const { error: updateErr } = await supabase
         .from('players')
-        .update({ weekly: newWeekly, season: newSeason, week_start: thisMonday })
+        .update({ weekly: newWeekly, season: newSeason, week_start: thisPeriod })
         .eq('id', currentPlayerId);
       if (updateErr) throw updateErr;
       const { error: logErr } = await supabase
@@ -3346,13 +3337,13 @@ async function applyDeduction(tier, reason) {
   const player = ROSTER.find(p => p.id === currentPlayerId);
   try {
     const me = allPlayersData.find(p => p.id === currentPlayerId);
-    const thisMonday = getMonday(new Date());
+    const thisPeriod = periodStart(new Date());
     let newSeason = (me ? me.season : 0) + d.pts;
     if (newSeason < 0) newSeason = 0;
-    const newWeekly = (me && me.week_start === thisMonday ? (me.weekly || 0) : 0) + d.pts;
+    const newWeekly = (me && me.week_start === thisPeriod ? (me.weekly || 0) : 0) + d.pts;
     const { error: updateErr } = await supabase
       .from('players')
-      .update({ weekly: newWeekly, season: newSeason, week_start: thisMonday })
+      .update({ weekly: newWeekly, season: newSeason, week_start: thisPeriod })
       .eq('id', currentPlayerId);
     if (updateErr) throw updateErr;
     const { error: logErr } = await supabase
@@ -3698,11 +3689,11 @@ async function completeCageSession() {
   const focus = cagePlans[currentPlayerId]?.focus || [];
   const pts = 3;
   try {
-    const thisMonday = getMonday(new Date());
+    const thisPeriod = periodStart(new Date());
     const me = allPlayersData.find(p => p.id === currentPlayerId);
-    const newWeekly = (me && me.week_start === thisMonday ? (me.weekly || 0) : 0) + pts;
+    const newWeekly = (me && me.week_start === thisPeriod ? (me.weekly || 0) : 0) + pts;
     const newSeason = (me ? me.season : 0) + pts;
-    const { error: upErr } = await supabase.from('players').update({ weekly: newWeekly, season: newSeason, week_start: thisMonday }).eq('id', currentPlayerId);
+    const { error: upErr } = await supabase.from('players').update({ weekly: newWeekly, season: newSeason, week_start: thisPeriod }).eq('id', currentPlayerId);
     if (upErr) throw upErr;
     const { error: logErr } = await supabase.from('log').insert({
       team_id: TEAM_ID, player_id: currentPlayerId, player_name: player.name,
@@ -4169,11 +4160,11 @@ async function awardPrepPoints(btn, by) {
       .like('name', 'Full Prep Done%').gte('ts', today.toISOString()).limit(1);
     if (qErr) throw qErr;
     if (!prior.length) {
-      const thisMonday = getMonday(new Date());
+      const thisPeriod = periodStart(new Date());
       const me = allPlayersData.find(p => p.id === currentPlayerId);
-      const newWeekly = (me && me.week_start === thisMonday ? (me.weekly || 0) : 0) + PREP_PTS;
+      const newWeekly = (me && me.week_start === thisPeriod ? (me.weekly || 0) : 0) + PREP_PTS;
       const newSeason = (me ? me.season : 0) + PREP_PTS;
-      const { error: upErr } = await supabase.from('players').update({ weekly: newWeekly, season: newSeason, week_start: thisMonday }).eq('id', currentPlayerId);
+      const { error: upErr } = await supabase.from('players').update({ weekly: newWeekly, season: newSeason, week_start: thisPeriod }).eq('id', currentPlayerId);
       if (upErr) throw upErr;
       const { error: logErr } = await supabase.from('log').insert({
         team_id: TEAM_ID, player_id: currentPlayerId, player_name: player.name,
