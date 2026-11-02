@@ -2230,9 +2230,9 @@
   </div>
 </nav>
 
-<script src="cage-library.js?v=20261101104048"></script>
-<script src="fx.js?v=20261101104048"></script>
-<script src="movement-prep.js?v=20261101104048"></script>
+<script src="cage-library.js?v=20261101193557"></script>
+<script src="fx.js?v=20261101193557"></script>
+<script src="movement-prep.js?v=20261101193557"></script>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
@@ -2242,7 +2242,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 
 // Auto-update: phones cache this page, so check for a newer version on open and when the app comes back on screen.
-const APP_VERSION = '20261101104048';
+const APP_VERSION = '20261101193557';
 async function checkForUpdate() {
   try {
     const r = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' });
@@ -2272,6 +2272,7 @@ const ROSTER = [
   { id: 'hayden-frye', name: "Hayden Frye", num: 27, div: 'AAA' },
   { id: 'connor-furwa', name: "Connor Furwa", num: 21, div: 'AAA' },
   { id: 'jabril-griffin', name: "Jabril Griffin", num: 99, div: 'AAA' },
+  { id: 'dior-gully', name: "Dior Gully", num: '?', div: 'AAA' },
   { id: 'blake-harrington', name: "Blake Harrington", num: 22, div: 'AAA' },
   { id: 'camden-helms', name: "Camden Helms", num: 17, div: 'AAA' },
   { id: 'robert-hoffman-iii', name: "Robert Hoffman III", num: 57, div: 'AA' },
